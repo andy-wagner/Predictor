@@ -24,7 +24,7 @@ public class Predictor {
     this.maxDistance = maxDistance;
     this.resultLength = resultListLength;
 //        this.dictionary = new Dictionary(new AlphabetRussian(), dictionaryPath);
-    this.metric = new LevensteinMetric(dictionary.maxWordLength());
+    this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
     this.metric = metric;//get metric type by metricName
 
 //        System.out.println("Dictionary file contains " + dictionary.getEntries().size() + " words");
@@ -33,7 +33,7 @@ public class Predictor {
   
   //PUBLIC METHODS
   
-  public Boolean setResultLength(int resultLength) {
+  public boolean setResultLength(int resultLength) {
     try {
       this.resultLength = resultLength;
       return true;
@@ -46,12 +46,11 @@ public class Predictor {
     return this.resultLength;
   }
   
-  public Boolean setMaxDistance(int maxDistance) {
-    try{
+  public boolean setMaxDistance(int maxDistance) {
+    try {
       this.maxDistance = maxDistance;
       return true;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return false;
     }
   }
@@ -64,11 +63,10 @@ public class Predictor {
     return "ru";
   }
   
-  public Boolean setLanguage(String language) {
-    try{
+  public boolean setLanguage(String language) {
+    try {
       return true;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return false;
     }
   }
@@ -84,80 +82,92 @@ public class Predictor {
   }
   
   public Alphabet getReducedAlphabet(String pattern) {
-    try{
+    try {
       return null;//todo>>return index.getReducedAlphabet(pattern)
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return null;
     }
   }
   
-  public Boolean saveAlphabet(String alphabetFileNmae) {
-    try{
+  public boolean saveAlphabet(String alphabetFileNmae) {
+    try {
 //      saves this.dictionary.alphabet into the file
       return true;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return false;
     }
   }
   
-  public Boolean saveAlphabet(Alphabet alphabet, String alphabetFileNmae) {
-    try{
+  public boolean saveAlphabet(Alphabet alphabet, String alphabetFileNmae) {
+    try {
 //        saves alphabet into the file
       return true;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return false;
     }
   }
   
   public Alphabet setAlphabet() {//get alphabet of selected dictionary and then set it to this.dictiomany.alphabet
-    try{
+    try {
       Alphabet alphabet = this.dictionary.getAlphabet();
       this.dictionary.setAlphabet(alphabet);
       return alphabet;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return null;
     }
     
   }
   
-  public Boolean setAlphabet(String alphabetFileName) {//set this.dictionary.alphabet into alphabet loaded from specified file
-    try{
+  public boolean setAlphabet(String alphabetFileName) {//set this.dictionary.alphabet into alphabet loaded from specified file
+    try {
       return true;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return false;
     }
   }
   
   public Alphabet getSymbolsSet(Integer setContentFlags) {
-    try{
+    try {
 //        setContentFlags is bit-field where each bit is flag of symbols subset assigned with addSymbolsSubset(..) function
       return null;//todo>> return sum of subsets of this.specialSymbolsSet converted to Alphabet
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return null;
     }
   }
   
-  public Boolean addSymbolsSubset(Set<Character> symbols, Integer flag) {
-    try{
+  public boolean addSymbolsSubset(Set<Character> symbols, Integer flag) {
+    try {
       return true;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return false;
     }
   }
   
-  public Boolean addDictionaryEntry(DictionaryEntry entry) {
-    try{
+  public boolean addDictionaryEntry(DictionaryEntry entry) {
+    try {
       return true;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return false;
     }
   }
+  
+  public boolean loadDictionary(String dictionaryFileName) {
+    try {
+      return true;
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
+  }
+  
+  public boolean saveDictionary(String dictionaryFileName) {
+    try {
+      return true;
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
+  }
+  
+//  public Dictionary margeDictionaries(Dictionary dictionary1, Dictionary dictionary2){
+//    return new Dictionary();
+//  }
 }

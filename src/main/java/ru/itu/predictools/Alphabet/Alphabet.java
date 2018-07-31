@@ -65,7 +65,7 @@ public class Alphabet {
    * @param substitutes - map of substitutes <"the input character" : "the substitute alphabet character"> available for the given char
    * @return - returns index of character ch in the alphabet
    */
-  int mapChar(char ch, Hashtable<Character, Character> substitutes) {//todo>> use (HashMap<Character, Character> substitutes) instead (char ch)
+  int mapChar(char ch, Hashtable<Character, Character> substitutes) {
     try{
       ch = substitutes.get(ch);
       return new String(chars).indexOf(ch);
