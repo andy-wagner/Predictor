@@ -3,53 +3,29 @@ package ru.itu.predictools.registry;
 
 import java.util.Objects;
 
-public class DictionaryEntry extends Entry implements Comparable<DictionaryEntry> {
-  
-  @SuppressWarnings("WeakerAccess")
-  public DictionaryEntry() {
-    this("", 0L);
-  }
+@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
+public class DictionaryEntry extends Entry {
   
   public DictionaryEntry(String word) {
-    this(word, 0L);
+    this(word, 1L);
   }
   
-  @SuppressWarnings("WeakerAccess")
   public DictionaryEntry(String word, Long frequency) {
-    super();
-    this.word = word;
-    this.frequency = frequency;
+    super(word, frequency);
   }
   
   @Override
   public boolean equals(Object o) {
     if (o == this) return true;
-    if (!(o instanceof SearchResultEntry)) return false;
-    SearchResultEntry entry = (SearchResultEntry) o;
-    return Objects.equals(entry.getWord(), word) || Objects.equals(entry.getFrequency(), frequency);
+    if (!(o instanceof DictionaryEntry)) {
+      return false;
+    }
+    DictionaryEntry entry = (DictionaryEntry) o;
+    return Objects.equals(entry.getWord(), word) && Objects.equals(entry.getFrequency(), frequency);
   }
   
-  @Override //overrides Comparable.compareTo
-  public int compareTo(DictionaryEntry entry) { //@NotNull
-    return equals(entry) ? 0 : frequency > entry.getFrequency() ? 1 : -1;
+  @Override
+  public int compareTo(Entry entry) { //@NotNull
+    return this.equals(entry) ? 0 : frequency > entry.getFrequency() ? 1 : -1;
   }
-  
-  @SuppressWarnings("WeakerAccess")
-  public void setWord(String word) {
-    this.word = word;
-  }
-  
-  @SuppressWarnings("WeakerAccess")
-  public void setFrequency(Long frequency) {
-    this.frequency = frequency;
-  }
-  
-  public String getWord() {
-    return word;
-  }
-  
-  public Long getFrequency() {
-    return frequency;
-  }
-  
 }

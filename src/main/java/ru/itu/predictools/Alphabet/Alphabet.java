@@ -39,7 +39,7 @@ public class Alphabet {
    * @param language - ISO name string
    * @return - true if successful, false otherwise
    */
-  Boolean setIsoLanguageName(String language) {
+  boolean setIsoLanguageName(String language) {
     try {
       this.isoLanguageName = language;
       return true;
@@ -48,7 +48,7 @@ public class Alphabet {
     }
   }
   
-  Boolean isAlphabetChar(char ch) {
+  boolean isAlphabetChar(char ch) {
     return new String(chars).indexOf(ch) > -1;
   }
   
