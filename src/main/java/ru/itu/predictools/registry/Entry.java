@@ -2,16 +2,16 @@ package ru.itu.predictools.registry;
 
 import java.util.Objects;
 
-@SuppressWarnings({"unused", "UnusedReturnValue"})
-public class Entry implements Comparable<Entry>{
+@SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
+public class Entry implements Comparable<Entry> {
   String word;
   Long frequency;
   
-  Entry(String word) {
+  public Entry(String word) {
     this(word, 1L);
   }
   
-  Entry(String word, Long frequency) {
+  public Entry(String word, Long frequency) {
     this.word = word;
     this.frequency = frequency;
   }
@@ -20,16 +20,15 @@ public class Entry implements Comparable<Entry>{
     return Objects.hash(word);
   }
   
-  public Long getFrequency() {
+  public long getFrequency() {
     return this.frequency;
   }
   
   public boolean setFrequency(Long newFrequency) {
-    try{
+    try {
       this.frequency = newFrequency;
       return true;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return false;
     }
   }
@@ -39,18 +38,25 @@ public class Entry implements Comparable<Entry>{
   }
   
   public boolean setWord(String word) {
-    try{
+    try {
       this.word = word;
       return true;
-    }
-    catch(IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       return false;
     }
   }
   
   @Override
   public boolean equals(Object o) {
-    return o == this;
+    try {
+      if (o == this) {
+        return true;
+      }
+      Entry entry = (Entry) o;
+      return Objects.equals(entry.getWord(), this.word) && Objects.equals(entry.getFrequency(), this.frequency);
+    } catch (ClassCastException e) {
+      return false;
+    }
   }
   
   @Override

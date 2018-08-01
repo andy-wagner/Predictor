@@ -18,7 +18,7 @@ public class SearchResultEntry extends Entry {
     this(word, frequency, 0);
   }
   
-  public SearchResultEntry(DictionaryEntry entry, Integer distance) {
+  public SearchResultEntry(Entry entry, Integer distance) {
     this(entry.getWord(), entry.getFrequency(), distance);
   }
   

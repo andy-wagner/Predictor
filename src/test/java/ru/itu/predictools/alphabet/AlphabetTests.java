@@ -1,4 +1,4 @@
-package ru.itu.predictools.Alphabet;
+package ru.itu.predictools.alphabet;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -11,7 +11,7 @@ import java.util.*;
 import static org.junit.Assert.*;
 import static org.junit.runners.MethodSorters.DEFAULT;
 
-@FixMethodOrder(DEFAULT)
+//@FixMethodOrder(DEFAULT)
 public class AlphabetTests {
   private Alphabet alphabet;
   private char[] chars;
@@ -31,7 +31,7 @@ public class AlphabetTests {
   @Test
   public void testAlphabetInstantiatingFromStringRepresentation() {
     alphabet = new Alphabet(new String(chars), "en");//ok
-    assertArrayEquals("Alphabet chars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.chars());
+    assertArrayEquals("alphabet chars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.chars());
     assertEquals("Input isoLanguageName and alphabet.getIsoLanguageName should be equal", "en", alphabet.getIsoLanguageName());
   }
   
@@ -42,7 +42,7 @@ public class AlphabetTests {
       characters.add(c);
     }
     alphabet = new Alphabet(characters, "en");//ok
-    assertArrayEquals("Alphabet chars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.chars());
+    assertArrayEquals("alphabet chars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.chars());
     assertEquals("Input isoLanguageName and alphabet.getIsoLanguageName should be equal", "en", alphabet.getIsoLanguageName());
   }
   

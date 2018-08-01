@@ -1,6 +1,6 @@
 package ru.itu.predictools.console;
 
-import ru.itu.predictools.Alphabet.Alphabet;
+import ru.itu.predictools.alphabet.Alphabet;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -18,7 +18,7 @@ public abstract class Search {
         this.maxDistance = distance;
         this.resultLength = resultingListLength;
 //        this.dictionary = new Dictionary(new AlphabetRussian(), dictionaryPath);
-        this.metric = new LevensteinMetric(dictionary.maxWordLength());
+        this.metric = new LevensteinMetric(dictionary.geMaxWordLength());
 
         System.out.println("Dictionary file contains " + dictionary.getEntries().size() + " words");
 

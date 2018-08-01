@@ -1,21 +1,21 @@
-package ru.itu.predictools.Alphabet;
+package ru.itu.predictools.alphabet;
 
 import java.util.Hashtable;
 import java.util.Set;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class Alphabet {
   private String isoLanguageName;//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
   private char[] chars;//alphabet symbols
   
   protected static final long serialVersionUID = 1L;//todo>> consider serialization
   
-  Alphabet(String alphabetString, String isoLanguageName) {
+  public Alphabet(String alphabetString, String isoLanguageName) {
     this.isoLanguageName = isoLanguageName;
     this.chars = alphabetString.toLowerCase().toCharArray();
   }
   
-  Alphabet(Set<Character> symbolsSet, String isoLanguageName) {
+  public Alphabet(Set<Character> symbolsSet, String isoLanguageName) {
     this(symbolsSet
              .toString()
              .replace("[", "")
@@ -29,7 +29,7 @@ public class Alphabet {
    *
    * @return - string that represent language name according to ISO 639-1
    */
-  String getIsoLanguageName() {
+  public String getIsoLanguageName() {
     return this.isoLanguageName;
   }
   
@@ -39,7 +39,7 @@ public class Alphabet {
    * @param language - ISO name string
    * @return - true if successful, false otherwise
    */
-  boolean setIsoLanguageName(String language) {
+  public boolean setIsoLanguageName(String language) {
     try {
       this.isoLanguageName = language;
       return true;
@@ -48,7 +48,7 @@ public class Alphabet {
     }
   }
   
-  boolean isAlphabetChar(char ch) {
+  public boolean isAlphabetChar(char ch) {
     return new String(chars).indexOf(ch) > -1;
   }
   
@@ -65,7 +65,7 @@ public class Alphabet {
    * @param substitutes - map of substitutes <"the input character" : "the substitute alphabet character"> available for the given char
    * @return - returns index of character ch in the alphabet
    */
-  int mapChar(char ch, Hashtable<Character, Character> substitutes) {
+  public int mapChar(char ch, Hashtable<Character, Character> substitutes) {
     try{
       ch = substitutes.get(ch);
       return new String(chars).indexOf(ch);

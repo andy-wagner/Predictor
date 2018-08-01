@@ -2,7 +2,7 @@ package ru.itu.predictools;
 
 import ru.itu.predictools.metric.LevensteinMetric;
 import ru.itu.predictools.metric.Metric;
-import ru.itu.predictools.Alphabet.Alphabet;
+import ru.itu.predictools.alphabet.Alphabet;
 import ru.itu.predictools.registry.Dictionary;
 import ru.itu.predictools.registry.DictionaryEntry;
 
@@ -24,7 +24,7 @@ public class Predictor {
     this.maxDistance = maxDistance;
     this.resultLength = resultListLength;
 //        this.dictionary = new Dictionary(new AlphabetRussian(), dictionaryPath);
-    this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
+    this.metric = new LevensteinMetric(dictionary.geMaxWordLength());
     this.metric = metric;//get metric type by metricName
 
 //        System.out.println("Dictionary file contains " + dictionary.getEntries().size() + " words");
@@ -72,13 +72,13 @@ public class Predictor {
   }
   
   public Alphabet getAlphabet() {
-//        return set of all this.dictionary letters converted into Alphabet object
-    return this.dictionary.getAlphabet();
+//        return set of all this.dictionary letters converted into alphabet object
+    return this.dictionary.getCharsSet();
   }
   
   public static Alphabet getAlphabet(Dictionary dictionary) {
-//        return set of all dictionary letters converted into Alphabet object
-    return dictionary.getAlphabet();
+//        return set of all dictionary letters converted into alphabet object
+    return dictionary.getCharsSet();
   }
   
   public Alphabet getReducedAlphabet(String pattern) {
@@ -109,7 +109,7 @@ public class Predictor {
   
   public Alphabet setAlphabet() {//get alphabet of selected dictionary and then set it to this.dictiomany.alphabet
     try {
-      Alphabet alphabet = this.dictionary.getAlphabet();
+      Alphabet alphabet = this.dictionary.getCharsSet();
       this.dictionary.setAlphabet(alphabet);
       return alphabet;
     } catch (IllegalArgumentException e) {
@@ -129,7 +129,7 @@ public class Predictor {
   public Alphabet getSymbolsSet(Integer setContentFlags) {
     try {
 //        setContentFlags is bit-field where each bit is flag of symbols subset assigned with addSymbolsSubset(..) function
-      return null;//todo>> return sum of subsets of this.specialSymbolsSet converted to Alphabet
+      return null;//todo>> return sum of subsets of this.specialSymbolsSet converted to alphabet
     } catch (IllegalArgumentException e) {
       return null;
     }

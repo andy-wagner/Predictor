@@ -1,7 +1,7 @@
 package ru.itu.predictools.console;
 
 import ru.itu.predictools.index.IndexPrefixTrie;
-import ru.itu.predictools.Alphabet.Alphabet;
+import ru.itu.predictools.alphabet.Alphabet;
 //import ru.itu.predictools.registry.AlphabetRussian;
 import ru.itu.predictools.registry.Dictionary;
 
@@ -53,7 +53,7 @@ public class Console {
      * returns predictive set of strings depending on content of inputBuffer of editor
      * @return -
      */
-//    public List<DictionaryEntry> getPredictiveSet(){
+//    public List<Entry> getPredictiveSet(){
 //        Set<String> set = new HashSet<>();
 ////            inputBuffer.getFirst().getKeyContent().chars().parallel().forEach();
 ////        for(Key key: inputKeysBuffer){

@@ -1,9 +1,9 @@
 package ru.itu.predictools.index;
 
 import ru.itu.predictools.metric.Metric;
-import ru.itu.predictools.Alphabet.Alphabet;
+import ru.itu.predictools.alphabet.Alphabet;
 import ru.itu.predictools.registry.Dictionary;
-import ru.itu.predictools.registry.DictionaryEntry;
+import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.registry.SearchResultEntry;
 
 import java.util.HashSet;
@@ -32,7 +32,7 @@ public class IndexNGram extends WordIndex {
     
     String word;
     
-    for (DictionaryEntry entry : dictionary.getEntries()) {//for each entry of getDictionary
+    for (Entry entry : dictionary.getEntries()) {//for each entry of getDictionary
       word = entry.getWord();//record.split(" ")[2].toUpperCase();
       wordsCount++;//getDictionary words counter
       for (int k = 0; k < word.length() - n + 1; ++k) {
@@ -64,7 +64,7 @@ public class IndexNGram extends WordIndex {
   }
   
   @Override
-  public void insertEntry(DictionaryEntry entry) {
+  public void insertEntry(Entry entry) {
 /*
         String word = entry.getWord();
         for (int k = 0; k < word.length() - n + 1; ++k) {
@@ -83,14 +83,14 @@ public class IndexNGram extends WordIndex {
   @Override
   public Set<SearchResultEntry> search(String string, int distance, Metric metric) {
     return search(string, distance, metric, false);
-  }//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<DictionaryEntry||SearchResultEntry>
+  }//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchResultEntry>
   
   @Override
-  public Set<SearchResultEntry> search(String string, int distance, Metric metric, boolean prefixSearch) {//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<DictionaryEntry||SearchResultEntry>
+  public Set<SearchResultEntry> search(String string, int distance, Metric metric, boolean prefixSearch) {//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchResultEntry>
     Set<SearchResultEntry> set = new HashSet<>();
 //        string=string.toUpperCase();
     
-    DictionaryEntry entry;
+    Entry entry;
     SearchResultEntry resultEntry;
     String word;
     int currentDistance = 0;

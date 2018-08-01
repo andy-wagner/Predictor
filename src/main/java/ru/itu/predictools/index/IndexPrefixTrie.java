@@ -3,7 +3,7 @@ package ru.itu.predictools.index;
 import ru.itu.predictools.metric.LevensteinMetric;
 import ru.itu.predictools.metric.Metric;
 import ru.itu.predictools.registry.Dictionary;
-import ru.itu.predictools.registry.DictionaryEntry;
+import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.registry.SearchResultEntry;
 
 import java.util.HashSet;
@@ -19,7 +19,7 @@ public class IndexPrefixTrie extends WordIndex {
   
   class PrefixTrieNode {
     PrefixTrieNode[] children;
-    DictionaryEntry entry;
+    Entry entry;
     boolean leaf;
     String chain;
     
@@ -37,7 +37,7 @@ public class IndexPrefixTrie extends WordIndex {
   }
   
   public IndexPrefixTrie(Dictionary dictionary) {
-    super(dictionary, dictionary.getAlphabet());
+    super(dictionary, dictionary.getCharsSet());
     nodesCount = entriesCount = 0;
     root = new PrefixTrieNode();
     dictionary.getEntries().forEach(this::insertEntry);//for each entry in getDictionary
@@ -79,7 +79,7 @@ public class IndexPrefixTrie extends WordIndex {
     int columns = searchStringLength + 2;
     int[] currentRow = new int[columns];
     
-    LevensteinMetric metric = new LevensteinMetric(dictionary.maxWordLength());
+    LevensteinMetric metric = new LevensteinMetric(dictionary.geMaxWordLength());
     
     //Build row for the char (ch), with a columns for each letter in the target word (searchString), plus one for the empty string at column 0 and one for minimum at column searchString.length+1
     int charIndexInNodeChain = node.chain.length() - 1;
@@ -108,7 +108,7 @@ public class IndexPrefixTrie extends WordIndex {
           resultSet.addAll(recursiveSearch(currentRow, node.children[i], searchString, maxDistance, /*metric, */prefixSearch));//TODO ?metric?
     return resultSet;
     /*
-    private void assembleSubtree(PrefixTrieNode node, List<DictionaryEntry> subtree) {
+    private void assembleSubtree(PrefixTrieNode node, List<Entry> subtree) {
         if(node == null) { subtree.clear(); return; }
 
         for (char ch: alphabet.chars()){
@@ -132,7 +132,7 @@ public class IndexPrefixTrie extends WordIndex {
     return nodesCount;
   }
   
-  public void insertEntry(DictionaryEntry entry) {
+  public void insertEntry(Entry entry) {
     PrefixTrieNode selected = root;
     String chain = "";
     for (char ch : entry.getWord().toCharArray()) {
@@ -152,7 +152,7 @@ public class IndexPrefixTrie extends WordIndex {
     //TODO compare performance for realization with and without .word member
   }
   
-  public DictionaryEntry getEntry(String prefix) {
+  public Entry getEntry(String prefix) {
     return getNodeByString(prefix).entry;
   }
   
@@ -179,24 +179,24 @@ public class IndexPrefixTrie extends WordIndex {
     return getNodeByString(string).leaf;
   }
   
-  public Set<DictionaryEntry> getDescendants(PrefixTrieNode startNode) {
-    Set<DictionaryEntry> descendants = new HashSet<>();
+  public Set<Entry> getDescendants(PrefixTrieNode startNode) {
+    Set<Entry> descendants = new HashSet<>();
     assembleSubtree(startNode, descendants);
     return descendants;
   }
   
-  public Set<DictionaryEntry> getDescendants(String prefix) {
-    Set<DictionaryEntry> descendants = new HashSet<>();
+  public Set<Entry> getDescendants(String prefix) {
+    Set<Entry> descendants = new HashSet<>();
     assembleSubtree(prefix, descendants);
     return descendants;
   }
   
-  private void assembleSubtree(String prefix, Set<DictionaryEntry> subtree) {
+  private void assembleSubtree(String prefix, Set<Entry> subtree) {
     PrefixTrieNode node = getNodeByString(prefix);
     assembleSubtree(node, subtree);
   }
   
-  private void assembleSubtree(PrefixTrieNode node, Set<DictionaryEntry> subtree) {
+  private void assembleSubtree(PrefixTrieNode node, Set<Entry> subtree) {
     if (node == null) {
       subtree.clear();
       return;
