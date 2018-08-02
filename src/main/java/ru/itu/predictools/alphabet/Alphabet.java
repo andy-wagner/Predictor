@@ -37,15 +37,9 @@ public class Alphabet {
    * Set ISO Language Name - ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
    *
    * @param language - ISO name string
-   * @return - true if successful, false otherwise
    */
-  public boolean setIsoLanguageName(String language) {
-    try {
+  public void setIsoLanguageName(String language) {
       this.isoLanguageName = language;
-      return true;
-    } catch (IllegalArgumentException e) {
-      return false;
-    }
   }
   
   public boolean isAlphabetChar(char ch) {

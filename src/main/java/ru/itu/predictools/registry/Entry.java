@@ -5,13 +5,13 @@ import java.util.Objects;
 @SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
 public class Entry implements Comparable<Entry> {
   String word;
-  Long frequency;
+  Double frequency;
   
   public Entry(String word) {
-    this(word, 1L);
+    this(word, 1D);
   }
   
-  public Entry(String word, Long frequency) {
+  public Entry(String word, Double frequency) {
     this.word = word;
     this.frequency = frequency;
   }
@@ -20,30 +20,20 @@ public class Entry implements Comparable<Entry> {
     return Objects.hash(word);
   }
   
-  public long getFrequency() {
+  public double getFrequency() {
     return this.frequency;
   }
   
-  public boolean setFrequency(Long newFrequency) {
-    try {
+  public void setFrequency(Double newFrequency) {
       this.frequency = newFrequency;
-      return true;
-    } catch (IllegalArgumentException e) {
-      return false;
-    }
   }
   
   public String getWord() {
     return this.word;
   }
   
-  public boolean setWord(String word) {
-    try {
+  public void setWord(String word) {
       this.word = word;
-      return true;
-    } catch (IllegalArgumentException e) {
-      return false;
-    }
   }
   
   @Override

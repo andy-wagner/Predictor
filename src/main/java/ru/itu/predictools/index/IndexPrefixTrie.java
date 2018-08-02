@@ -2,7 +2,7 @@ package ru.itu.predictools.index;
 
 import ru.itu.predictools.metric.LevensteinMetric;
 import ru.itu.predictools.metric.Metric;
-import ru.itu.predictools.registry.Dictionary;
+import ru.itu.predictools.registry.SearchDictionary;
 import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.registry.SearchResultEntry;
 
@@ -32,15 +32,15 @@ public class IndexPrefixTrie extends WordIndex {
     }
   }
   
-  public Dictionary getDictionary() {
-    return dictionary;
+  public SearchDictionary getDictionary() {
+    return searchDictionary;
   }
   
-  public IndexPrefixTrie(Dictionary dictionary) {
-    super(dictionary, dictionary.getCharsSet());
+  public IndexPrefixTrie(SearchDictionary searchDictionary) {
+    super(searchDictionary, searchDictionary.getAlphabet());
     nodesCount = entriesCount = 0;
     root = new PrefixTrieNode();
-    dictionary.getEntries().forEach(this::insertEntry);//for each entry in getDictionary
+    searchDictionary.getEntries().forEach(this::insertEntry);//for each entry in getDictionary
   }
   
   @Override
@@ -79,7 +79,7 @@ public class IndexPrefixTrie extends WordIndex {
     int columns = searchStringLength + 2;
     int[] currentRow = new int[columns];
     
-    LevensteinMetric metric = new LevensteinMetric(dictionary.geMaxWordLength());
+    LevensteinMetric metric = new LevensteinMetric(searchDictionary.getMaxWordLength());
     
     //Build row for the char (ch), with a columns for each letter in the target word (searchString), plus one for the empty string at column 0 and one for minimum at column searchString.length+1
     int charIndexInNodeChain = node.chain.length() - 1;

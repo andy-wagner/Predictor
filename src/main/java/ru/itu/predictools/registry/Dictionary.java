@@ -1,129 +1,164 @@
 package ru.itu.predictools.registry;
 
-import ru.itu.predictools.alphabet.Alphabet;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Set;
 
-import java.io.*;
-import java.util.*;
-
-// Dictionary contains words and their lexical parameters and other data in structures named Entry
-@SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
-public class Dictionary {//extends registry{
+@SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
+class Dictionary {
+  private Set<Entry> entries;
+  private Set<Character> charsSet;
+  private String isoLanguageName;//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+  private Integer maxWordLength;
   
-  private final List<Entry> entries;//entries in the List because we will need to get an element from a specified position within the list
-  private Alphabet alphabet;
-  private final String isoLanguageName;
-  private int maxWordLength;
-  private String dictionaryFileName;
-  
-  private void loadDictionaryFromFile(){
-  
-  }
-  
-  public Dictionary(String dictionaryFileName, String isoLanguageName) throws IOException {
-    this(dictionaryFileName, null, isoLanguageName);
-  }
-  
-  public Dictionary(String dictionaryFileName, Alphabet alphabet, String isoLanguageName) throws IOException {
-    this.isoLanguageName = isoLanguageName;//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-    this.dictionaryFileName = dictionaryFileName;
-  
-    boolean anAutoAlphabetIsNeeded = false;
-    if (alphabet == null) {
-      anAutoAlphabetIsNeeded = true;
-    }
-    else if(this.isoLanguageName.equals(alphabet.getIsoLanguageName())){
-      this.alphabet = alphabet;
-    }
-    
+  public Dictionary() {
+    //make empty searchDictionary to put into an arbitrary combination of entries and charsSet (for storing search result and
+    // reduced charsSet for instance)
+    this.entries = new HashSet<>();
+    this.charsSet = new HashSet<>();
     this.maxWordLength = 0;
+    this.isoLanguageName = "";
+  }
+  
+  public Dictionary(Set<Entry> entries, String isoLanguageName){
+    this.entries = entries;
+    this.charsSet = new HashSet<>();
+    this.isoLanguageName = isoLanguageName;
+    for(Entry entry: entries){
+      char[] chars = entry.getWord().toCharArray();
+      for(char ch: chars){
+        this.charsSet.add(ch);
+      }
+    }
+    this.maxWordLength = entries
+                             .stream()
+                             .mapToInt(entry -> entry.getWord().length())
+                             .max().orElseThrow(NoSuchElementException::new)
+    ;
+  }
+  
+  public Dictionary(Set<Entry> entries, Set<Character> charsSet, String isoLanguageName) {
+    //make searchDictionary with an arbitrary combination of entries and charsSet (for storing search result and
+    // reduced charsSet for instance)
+    this.entries = entries;
+    this.charsSet = charsSet;
+    this.isoLanguageName = isoLanguageName;
+    this.maxWordLength = entries
+                             .stream()
+                             .mapToInt(entry -> entry.getWord().length())
+                             .max().orElseThrow(NoSuchElementException::new)
+    ;
+  }
+  
+  public Dictionary(String dictionaryFileName) throws IOException {
+    //make searchDictionary from searchDictionary file with entries as a set of distinct words with frequencies
+    // as they specified in the file
+    this();
     
-    Set<Entry> entriesSet = new HashSet<>();//entries in the Set because we need to get list of unique words
-    Set<Character> dictionaryCharsSet = new HashSet<>();//characters in the Set because we need to get list of unique symbols
     BufferedReader reader = new BufferedReader(new FileReader(dictionaryFileName));
-    String line, word;
+    
+    String line, word, command;
+    Double frequency;
+    String[] lineFields;
+    
+    //read header
+    do {
+      line = reader.readLine();
+      lineFields = line.split("=");//todo>> customize delimiter or add several types of delimiters [\s|\,|\;|\t]
+      command = lineFields[0].trim();
+      switch (command.toLowerCase()) {
+        case "lang":
+          this.isoLanguageName = lineFields[1].trim();
+          break;
+      }
+      if(lineFields[0].matches("\\d+\\.?\\d*")) {
+        reader.mark(0);
+        break;
+      }
+    } while (!lineFields[0].equals("start"));
+    
+    //read content
+    try {
+      reader.reset();
+    }
+    catch (IOException e){//do nothing if not marked
+    
+    }
     while ((line = reader.readLine()) != null) {
-      String[] lineFields = line.split(" ");//todo>> customize delimiter or add several types of delimiters [\s|\,|\;|\t]
+      lineFields = line.split(",");//todo>> customize delimiter or add several types of delimiters [\s|\,|\;|\t]
+      
       word = lineFields[2];
+      frequency = Double.parseDouble(lineFields[1]);
+      
       if (word.length() > this.maxWordLength) {
         this.maxWordLength = word.length();
       }
-      Entry entry = new Entry(word, Long.parseLong(lineFields[1]));
+      
+      Entry entry = new Entry(word, frequency);
       char[] wordChars = word.toCharArray();
-      entriesSet.add(entry);
-      if(anAutoAlphabetIsNeeded){
-        for(char i = 0; i<word.length(); i++){
-          dictionaryCharsSet.add(wordChars[i]);
-        }
+      entries.add(entry);
+      for (char i = 0; i < word.length(); i++) {
+        charsSet.add(wordChars[i]);
       }
       
     }
-  
+    
     reader.close();
     
-    this.entries = new ArrayList<>(new HashSet<>(entriesSet));//entries in the ArrayList because we will need to get an element from a specified position within the list (.get(i))
-    if(anAutoAlphabetIsNeeded){
-      this.alphabet = new Alphabet(dictionaryCharsSet, isoLanguageName);
-    }
-    
   }
   
-  //todo>> the stub code
-  public boolean save(boolean backup) {
-    try{
-      this.save(this.dictionaryFileName);
-      return true;
-    }
-    catch(IllegalArgumentException ignored){
-    }
-    return false;
+  public Set<Character> getCharsSet() {
+    return this.charsSet;
   }
   
-  //todo>> the stub code
-  public boolean save(String dictionaryFileName) {
-    try{
-      BufferedWriter writer = new BufferedWriter(new FileWriter(dictionaryFileName));
-      return true;
-    }
-    catch(IllegalArgumentException|IOException e){
-      return false;
-    }
-    
+  public void setCharsSet(Set<Character> charsSet) {
+      this.charsSet = charsSet;
   }
   
-  //todo>> the stub code
-  static public boolean save(String dictionaryFileName, Dictionary dictionary) {
-    try{
-      BufferedWriter writer = new BufferedWriter(new FileWriter(dictionaryFileName));
-      return true;
-    }
-    catch(IllegalArgumentException|IOException e){
-      return false;
-    }
-  
+  public Set<Entry> getEntries() {
+    return this.entries;
   }
   
-  public String getIsoLanguageName() {
+  public void setEntries(Set<Entry> entries) {
+      this.entries = entries;
+  }
+  
+  public String getIsoLanguageName(){
     return this.isoLanguageName;
   }
   
-  //todo>> the stub code
-  public Alphabet getAlphabet() {
-//    return new Alphabet(super.getCharsSet(), isoLanguageName);
-    return new Alphabet("asdf","ru");
+  public int getMaxWordLength() {
+    return this.maxWordLength;
   }
   
-  //todo>> the stub code
-  static public Alphabet getAlphabet(String dictionaryFileName){
-    return new Alphabet("abcde","ru");
+  public void addEntry(Entry entry) {
+      this.entries.add(entry);
   }
   
-  public boolean setAlphabet(Alphabet alphabet) {
-    try {
-      this.alphabet = alphabet;
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+  public void addEntry(String word, Double frequency) {
+      this.entries.add(new Entry(word, frequency));
+  }
+  
+  public void deleteEntry(Entry entry) {
+      this.entries.remove(entry);
+  }
+  
+  public void deleteEntry(String word) {
+      this.entries.removeIf(item -> Objects.equals(item.getWord(), word));
+  }
+  
+  public void updateEntry(Entry entry) {
+      this.deleteEntry(entry.getWord());//delete by word field because it doesn't matter which frequency entry has had
+      this.addEntry(entry);
+  }
+  
+  public void updateEntry(String word, Double frequency) {
+      this.deleteEntry(word);//delete by word field because it doesn't matter which frequency entry has had
+      this.addEntry(new Entry(word, frequency));
   }
   
 }

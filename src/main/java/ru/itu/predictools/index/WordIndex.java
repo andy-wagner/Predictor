@@ -1,12 +1,12 @@
 package ru.itu.predictools.index;
 
 import ru.itu.predictools.alphabet.Alphabet;
-import ru.itu.predictools.registry.Dictionary;
+import ru.itu.predictools.registry.SearchDictionary;
 
 public abstract class WordIndex implements Index {
-    protected final Dictionary dictionary;
+    protected final SearchDictionary searchDictionary;
     protected final Alphabet alphabet;
 
-	WordIndex(Dictionary dictionary, Alphabet alphabet) { this.dictionary = dictionary; this.alphabet = alphabet; }
+	WordIndex(SearchDictionary searchDictionary, Alphabet alphabet) { this.searchDictionary = searchDictionary; this.alphabet = alphabet; }
 
 }

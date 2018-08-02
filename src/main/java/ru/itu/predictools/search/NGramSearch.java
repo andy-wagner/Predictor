@@ -15,7 +15,7 @@ public class NGramSearch extends Search {
         long startTime, endTime;
         ngramN = N;
 //        startTime = System.currentTimeMillis();
-        nGram = new IndexNGram(dictionary, ngramN);
+        nGram = new IndexNGram(searchDictionary, ngramN);
 //        endTime = System.currentTimeMillis();
 
 //        System.out.println("N-Gram Method index creation time: " + (double) (endTime - startTime) / 1000 + " с");
@@ -24,7 +24,7 @@ public class NGramSearch extends Search {
 
     public void setN(Integer N) {
         ngramN = N;
-        nGram = new IndexNGram(dictionary, ngramN);
+        nGram = new IndexNGram(searchDictionary, ngramN);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class NGramSearch extends Search {
 //        super.run(template, prefixMode);
         //noinspection RedundantStreamOptionalCall
         return (Set<SearchResultEntry>) nGram.search(template, maxDistance, metric, prefixMode).stream()
-                .sorted((f1, f2) -> Long.compare(f2.getFrequency(), f1.getFrequency()))
-                .sorted((d1, d2) -> Long.compare(d1.getDistance(), d2.getDistance()))
+                .sorted((f1, f2) -> Double.compare(f2.getFrequency(), f1.getFrequency()))
+                .sorted((d1, d2) -> Double.compare(d1.getDistance(), d2.getDistance()))
                 .limit(resultLength)
             //.map(e -> e.getWord() + " D:" + e.getDistance() + " F:" + e.getFrequency())
                 //.forEach(System.out::println)

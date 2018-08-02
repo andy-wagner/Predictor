@@ -14,9 +14,9 @@ public class EntryTests {
   
   class EntryTestClass extends Entry {
     String word;
-    Long frequency;
+    Double frequency;
     
-    EntryTestClass(String word, Long frequency) {
+    EntryTestClass(String word, Double frequency) {
       super(word, frequency);
       this.word = word;
       this.frequency = frequency;
@@ -26,17 +26,17 @@ public class EntryTests {
   
   @Before
   public void init() {
-    entry = new Entry("test", 1234L);
+    entry = new Entry("test", 1234D);
   }
   
   @Test
   public void testEntryInstantiating() {
     entry = new Entry("test");
     assertEquals("The word should be 'test'", "test", entry.getWord());
-    assertEquals("The frequency should be equal to 1", 1L, entry.getFrequency());
-    entry = new Entry("test2", 282828L);
+    assertEquals("The frequency should be equal to 1", 1D, entry.getFrequency(), 0.001);
+    entry = new Entry("test2", 282828D);
     assertEquals("The word should be 'test2'", "test2", entry.getWord());
-    assertEquals("The frequency should be equal to 1", 282828L, entry.getFrequency());
+    assertEquals("The frequency should be equal to 1", 282828D, entry.getFrequency(), 0.001);
   }
   
   @Test
@@ -47,21 +47,21 @@ public class EntryTests {
   
   @Test
   public void checkGetAndSetFrequency() {
-    assertTrue("If set is successful setFrequency should return 'true'", entry.setFrequency(1L));
-    assertEquals("Frequency should be equal to 1", 1, entry.getFrequency());
-    assertTrue("If set is successful setWord should return 'true'", entry.setWord("TestTest"));
+    entry.setFrequency(1D);
+    assertEquals("Frequency should be equal to 1", 1, entry.getFrequency(), 0.001);
+    entry.setWord("TestTest");
     assertEquals("Frequency should be equal to 'TestTest'", "TestTest", entry.getWord());
   }
   
   @Test
   public void checkOverridenEqualsFromComparableInterface() {
-    Entry entry = new Entry("word", 2L);
-    EntryTestClass entryTest = new EntryTestClass("word", 3L);
-    Entry entry1 = new Entry("wor", 2L);
+    Entry entry = new Entry("word", 2D);
+    EntryTestClass entryTest = new EntryTestClass("word", 3D);
+    Entry entry1 = new Entry("wor", 2D);
     assertNotEquals("'entry' and 'entryTest' shouldn't be equal", entry, entryTest);
     assertNotEquals("'entry' and 'entry1' shouldn't be equal", entry, entry1);
-    entryTest = new EntryTestClass("word", 2L);
-    entry1 = new Entry("word", 2L);
+    entryTest = new EntryTestClass("word", 2D);
+    entry1 = new Entry("word", 2D);
     assertEquals("'entry' and 'entryTest' should be equal", entry, entryTest);
     assertEquals("'entry' and 'entry1' should be equal", entry, entry1);
     assertEquals("'entry' and 'entry1' should be equal", entry, entry);
@@ -69,9 +69,9 @@ public class EntryTests {
   
   @Test
   public void checkOverridenCompareToFromComparableInterface() {
-    Entry entry = new Entry("word", 3L);
-    EntryTestClass entryTest = new EntryTestClass("word", 3L);
-    Entry entry1 = new Entry("wor", 4L);
+    Entry entry = new Entry("word", 3D);
+    EntryTestClass entryTest = new EntryTestClass("word", 3D);
+    Entry entry1 = new Entry("wor", 4D);
     assertEquals("entry and entryTest should be equal", entry, entryTest);
     assertNotEquals("entry1 and entryTest shouldn't be equal", entry1, entryTest);
     assertNotEquals("entry1 and entry shouldn't be equal", entry, entry1);

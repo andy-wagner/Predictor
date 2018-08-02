@@ -1,10 +1,10 @@
 package ru.itu.predictools.index;
 
 import ru.itu.predictools.alphabet.Alphabet;
-import ru.itu.predictools.registry.Dictionary;
+import ru.itu.predictools.registry.SearchDictionary;
 
 public abstract class TrieIndex extends WordIndex{//can be useful for future use
 
-    TrieIndex(Dictionary dictionary, Alphabet alphabet) { super(dictionary, alphabet); }
+    TrieIndex(SearchDictionary searchDictionary, Alphabet alphabet) { super(searchDictionary, alphabet); }
 
 }

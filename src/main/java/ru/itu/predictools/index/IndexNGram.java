@@ -2,7 +2,7 @@ package ru.itu.predictools.index;
 
 import ru.itu.predictools.metric.Metric;
 import ru.itu.predictools.alphabet.Alphabet;
-import ru.itu.predictools.registry.Dictionary;
+import ru.itu.predictools.registry.SearchDictionary;
 import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.registry.SearchResultEntry;
 
@@ -16,8 +16,8 @@ public class IndexNGram extends WordIndex {
   private long wordsCount, nodesCount;
   
   //TODO try this algorithm for different combination of {distance, n} to performance evaluation
-  public IndexNGram(Dictionary dictionary, int n) {//n - n-gram length
-    super(dictionary, dictionary.getAlphabet());
+  public IndexNGram(SearchDictionary searchDictionary, int n) {//n - n-gram length
+    super(searchDictionary, searchDictionary.getAlphabet());
     if (n < 1) {
       n = 1;
     }
@@ -32,7 +32,7 @@ public class IndexNGram extends WordIndex {
     
     String word;
     
-    for (Entry entry : dictionary.getEntries()) {//for each entry of getDictionary
+    for (Entry entry : searchDictionary.getEntries()) {//for each entry of getDictionary
       word = entry.getWord();//record.split(" ")[2].toUpperCase();
       wordsCount++;//getDictionary words counter
       for (int k = 0; k < word.length() - n + 1; ++k) {
@@ -44,8 +44,8 @@ public class IndexNGram extends WordIndex {
     
     ngramMap = new int[mapLength.intValue()][];//n-gram map (n-gram index)
     
-    for (int i = 0; i < dictionary.getEntries().size(); ++i) {
-      word = dictionary.getEntries().get(i).getWord();//getDictionary[i].split(" ")[2].toUpperCase();
+    for (int i = 0; i < searchDictionary.getEntries().size(); ++i) {
+      word = searchDictionary.getEntries().get(i).getWord();//getDictionary[i].split(" ")[2].toUpperCase();
       for (int k = 0; k < word.length() - n + 1; ++k) {
         int ngram = getNGram(alphabet, word, k, n);
         if (ngramMap[ngram] == null) ngramMap[ngram] = new int[ngramCountMap[ngram]];
@@ -102,7 +102,7 @@ public class IndexNGram extends WordIndex {
       
       if (dictIndexes != null)
         for (int k : dictIndexes) {
-          entry = dictionary.getEntries().get(k);
+          entry = searchDictionary.getEntries().get(k);
           word = entry.getWord();
           if (metric != null)
             currentDistance = metric.getDistance(word, string, distance, prefixSearch);

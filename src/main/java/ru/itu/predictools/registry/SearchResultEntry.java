@@ -7,14 +7,14 @@ public class SearchResultEntry extends Entry {
   private Integer distance; //distance from this entry word to search target //TODO absolute or relative distance what kind is preferable???
   
   public SearchResultEntry(String word) {
-    this(word, 1L);
+    this(word, 1D);
   }
   
   public SearchResultEntry(Entry entry) {
     this(entry.getWord(), entry.getFrequency());
   }
   
-  public SearchResultEntry(String word, Long frequency) {
+  public SearchResultEntry(String word, Double frequency) {
     this(word, frequency, 0);
   }
   
@@ -22,7 +22,7 @@ public class SearchResultEntry extends Entry {
     this(entry.getWord(), entry.getFrequency(), distance);
   }
   
-  public SearchResultEntry(String word, Long frequency, Integer distance) {
+  public SearchResultEntry(String word, Double frequency, Integer distance) {
     super(word, frequency);
     this.distance = distance;
   }
@@ -31,14 +31,8 @@ public class SearchResultEntry extends Entry {
     return this.distance;
   }
   
-  public boolean setDistance(Integer distance) {
-    try{
+  public void setDistance(Integer distance) {
       this.distance = distance;
-      return true;
-    }
-    catch(IllegalArgumentException e){
-      return false;
-    }
   }
   
   @Override

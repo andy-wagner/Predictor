@@ -1,7 +1,6 @@
 package ru.itu.predictools.alphabet;
 
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -9,9 +8,7 @@ import org.junit.rules.ExpectedException;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.junit.runners.MethodSorters.DEFAULT;
 
-//@FixMethodOrder(DEFAULT)
 public class AlphabetTests {
   private Alphabet alphabet;
   private char[] chars;
@@ -48,9 +45,9 @@ public class AlphabetTests {
   
   @Test
   public void isoLanguageNameSetAndGetCheck(){
-    assertTrue("setIsoLanguageName should return true if assignment is successful", alphabet.setIsoLanguageName("ru"));
+    alphabet.setIsoLanguageName("ru");
     assertEquals("Should be equal to 'ru' after assignment with setIsoLanguageName", "ru", alphabet.getIsoLanguageName());
-    assertTrue("setIsoLanguageName should return true if assignment is successful", alphabet.setIsoLanguageName("en"));
+    alphabet.setIsoLanguageName("en");
     assertEquals("Should be equal to 'ru' after assignment with setIsoLanguageName", "en", alphabet.getIsoLanguageName());
   }
   

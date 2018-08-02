@@ -13,7 +13,7 @@ public class TrieSearch extends Search {
         super(dictionaryPath, distance, resultingListLength);
         long startTime, endTime;
         startTime = System.currentTimeMillis();
-        trie = new IndexPrefixTrie(dictionary);
+        trie = new IndexPrefixTrie(searchDictionary);
         endTime = System.currentTimeMillis();
 
         System.out.println("Total entries count " + trie.getEntriesCount());
@@ -27,8 +27,8 @@ public class TrieSearch extends Search {
         //noinspection RedundantStreamOptionalCall
         return (Set<SearchResultEntry>) trie.search(template, maxDistance, metric, prefixMode)
                 .stream()
-                .sorted((f1, f2) -> Long.compare(f2.getFrequency(), f1.getFrequency()))
-                .sorted((d1, d2) -> Long.compare(d1.getDistance(), d2.getDistance()))
+                .sorted((f1, f2) -> Double.compare(f2.getFrequency(), f1.getFrequency()))
+                .sorted((d1, d2) -> Double.compare(d1.getDistance(), d2.getDistance()))
                 .map(e -> e.getWord() + " D:" + e.getDistance() + " F:" + e.getFrequency())
                 .limit(resultLength)
             ;//.forEach(System.out::println);

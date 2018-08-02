@@ -9,8 +9,8 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Main {
-    private static final String DICTIONARY_PATH = System.getProperty("user.dir") + File.separator + "dictionary.txt";
-//    private static final String DICTIONARY_PATH = System.getProperty("user.dir") + "\\dictionary-utf8.txt";
+    private static final String DICTIONARY_PATH = System.getProperty("user.dir") + File.separator + "ru-main-v1-win1251.dic";
+//    private static final String DICTIONARY_PATH = System.getProperty("user.dir") + "\\searchDictionary-utf8.txt";
 
     public static void main(String[] args) throws Exception {
         if (!needHelp(args)) {
@@ -22,7 +22,7 @@ public class Main {
         String firstParam = args.length > 0 ? args[0] : "";
 
         if (firstParam.equals("") || !firstParam.matches("\\d+")) {
-            System.out.println("\r\n\r\n  --- Fuzzy search through dictionary utility ---" +
+            System.out.println("\r\n\r\n  --- Fuzzy search through searchDictionary utility ---" +
                     "\r\n\r\n  Usage:" +
                     "\r\n\r\n  predict {max misprinted symbols count} {result list length} {ngram N  ||  trie} [prefix]" +
                     "\r\n\r\n  --Help or -h or /? - shows this help" +
@@ -88,7 +88,7 @@ public class Main {
                 throw new ArrayIndexOutOfBoundsException();
             }
 
-            System.out.println("\r\n\r\n --- Hi there! This is the \"Fuzzy search through dictionary\" utility ---\r\n\r\n");
+            System.out.println("\r\n\r\n --- Hi there! This is the \"Fuzzy search through searchDictionary\" utility ---\r\n\r\n");
             System.out.println("Search:");
             System.out.println(prefixMode?" - prefix mode enabled":" - prefix mode disabled");
             System.out.println(" - index type: " + typeOfIndex + (typeOfIndex.matches("ngram") ? "-" + ngramLength : ""));
