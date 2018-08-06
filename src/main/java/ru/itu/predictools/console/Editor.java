@@ -1,7 +1,7 @@
 package ru.itu.predictools.console;
 
 import ru.itu.predictools.index.IndexPrefixTrie;
-import ru.itu.predictools.registry.SearchResultEntry;
+import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,13 +12,13 @@ public class Editor {//TODO for the whole project - consider & regulate scopes o
     IndexPrefixTrie trie;
     List<String> elements;//entered words in text field
     LinkedList<Key> inputKeysBuffer;//entered keys of next incomplete word
-    LinkedList<SearchResultEntry> variants;//predictive variants of entering word //TODO variants should be sorted by frequency & edit distance
+    LinkedList<SearchDictionaryEntry> variants;//predictive variants of entering word //TODO variants should be sorted by frequency & edit distance
 
     List<String> delimiters;//list of possible delimiters
 
     public Editor(IndexPrefixTrie trie){
         delimiters  = new ArrayList<>(Arrays.asList(new String[] {" ", ",", ".", ",", ";"}));
-        variants = new LinkedList<>(); variants.add(new SearchResultEntry(""));
+        variants = new LinkedList<>(); variants.add(new SearchDictionaryEntry(""));
         elements = new ArrayList<>();
         inputKeysBuffer = new LinkedList<>();
         this.trie = trie;
@@ -31,15 +31,15 @@ public class Editor {//TODO for the whole project - consider & regulate scopes o
             if(variants.size()>0) {
                 elements.add(variants.getLast().getWord());
                 variants.clear();
-                variants.add(new SearchResultEntry(""));
+                variants.add(new SearchDictionaryEntry(""));
             }
             //TODO if there is mistake in some word then variants becomes empty, so we need work with errata
         }
-        else if(variants.contains(new SearchResultEntry(keyContent))) {
+        else if(variants.contains(new SearchDictionaryEntry(keyContent))) {
                 elements.add(keyContent);
                 inputKeysBuffer.clear();
                 variants.clear();
-                variants.add(new SearchResultEntry(""));
+                variants.add(new SearchDictionaryEntry(""));
         }
         else {
             inputKeysBuffer.add(key);
@@ -52,18 +52,18 @@ public class Editor {//TODO for the whole project - consider & regulate scopes o
             String keyString = inputKeysBuffer.poll().getKeyContent();
             int variantsSize = variants.size();
             for (int v = 0; v < variantsSize; v++) {
-                SearchResultEntry variant = variants.poll();
+                SearchDictionaryEntry variant = variants.poll();
                 for (int i = 0; i < keyString.length(); i++) {
 
                     //add every chain as variant frequency is not defined
                     if (trie.getNodeByString(variant.getWord() + keyString.charAt(i)) != null)//exact typing without errata (distance=0)
-                        variants.add(new SearchResultEntry(variant.getWord() + keyString.charAt(i)));
+                        variants.add(new SearchDictionaryEntry(variant.getWord() + keyString.charAt(i)));
 
                     //add every exact word (leaf==true)
 /*
                     if (trie.getNodeByString(variant.getWord() + keyString.charAt(i)) != null)//exact typing without errata (distance=0)
                         if (trie.isLeaf(variant.getWord() + keyString.charAt(i)))
-                            variants.add(new SearchResultEntry(trie.getEntry(variant.getWord() + keyString.charAt(i))));
+                            variants.add(new SearchDictionaryEntry(trie.getEntry(variant.getWord() + keyString.charAt(i))));
 */
                 }
             }//TODO if there is mistake in some word then variants becomes empty end entrance stops
@@ -79,7 +79,7 @@ public class Editor {//TODO for the whole project - consider & regulate scopes o
         }
     }
 
-    public LinkedList<SearchResultEntry> getVariants(){ return variants; }
+    public LinkedList<SearchDictionaryEntry> getVariants(){ return variants; }
 
 //    /**
 //     * returns whole set of string variants depending on content of inputKeysBuffer

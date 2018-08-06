@@ -3,7 +3,7 @@ package ru.itu.predictools.search;
 import ru.itu.predictools.metric.LevensteinMetric;
 import ru.itu.predictools.metric.Metric;
 import ru.itu.predictools.registry.SearchDictionary;
-import ru.itu.predictools.registry.SearchResultEntry;
+import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.io.IOException;
 import java.util.Set;
@@ -40,6 +40,6 @@ public abstract class Search {
         return this.maxDistance;
     }
 
-    public abstract Set<SearchResultEntry> run(String template, boolean prefixMode);
+    public abstract Set<SearchDictionaryEntry> run(String template, boolean prefixMode);
 
 }

@@ -4,7 +4,7 @@ import ru.itu.predictools.metric.Metric;
 import ru.itu.predictools.alphabet.Alphabet;
 import ru.itu.predictools.registry.SearchDictionary;
 import ru.itu.predictools.registry.Entry;
-import ru.itu.predictools.registry.SearchResultEntry;
+import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -76,22 +76,22 @@ public class IndexNGram extends WordIndex {
   }
 
   @Override
-  public Set<SearchResultEntry> search(String string) {
+  public Set<SearchDictionaryEntry> search(String string) {
     return search(string, 0, null);
   }
   
   @Override
-  public Set<SearchResultEntry> search(String string, int distance, Metric metric) {
+  public Set<SearchDictionaryEntry> search(String string, int distance, Metric metric) {
     return search(string, distance, metric, false);
-  }//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchResultEntry>
+  }//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchDictionaryEntry>
   
   @Override
-  public Set<SearchResultEntry> search(String string, int distance, Metric metric, boolean prefixSearch) {//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchResultEntry>
-    Set<SearchResultEntry> set = new HashSet<>();
+  public Set<SearchDictionaryEntry> search(String string, int distance, Metric metric, boolean prefixSearch) {//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchDictionaryEntry>
+    Set<SearchDictionaryEntry> set = new HashSet<>();
 //        string=string.toUpperCase();
     
     Entry entry;
-    SearchResultEntry resultEntry;
+    SearchDictionaryEntry resultEntry;
     String word;
     int currentDistance = 0;
     
@@ -107,10 +107,10 @@ public class IndexNGram extends WordIndex {
           if (metric != null)
             currentDistance = metric.getDistance(word, string, distance, prefixSearch);
           if (currentDistance <= distance) {
-            resultEntry = new SearchResultEntry(entry, currentDistance/*/word.length()*/);//TODO distance - absolute or relative???
+            resultEntry = new SearchDictionaryEntry(entry, currentDistance/*/word.length()*/);//TODO distance - absolute or relative???
             set.add(resultEntry);
           } else if (string.equals(word)) {
-            resultEntry = new SearchResultEntry(entry, 0);
+            resultEntry = new SearchDictionaryEntry(entry, 0);
             set.add(resultEntry);
             return set;
           }

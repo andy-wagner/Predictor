@@ -4,12 +4,15 @@ import ru.itu.predictools.alphabet.Alphabet;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 // SearchDictionary contains words and their lexical parameters and other data in structures named Entry
 @SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
 public class SearchDictionary {//extends dictionary{
   
-  private final List<Entry> entries;//entries in the List because we will need to get an element from a specified position within the list
+  private List<SearchDictionaryEntry> entries;//entries in the List because we will need to get an element from a specified position within the list
+//todo>> it will be needed to save user dictionaries// private final String userWordsDictionaryFileName;
+//todo>> it will be needed to save user dictionaries//  private final String userPhrasesDictionaryFileName;
   private Alphabet alphabet;
   private final String isoLanguageName;
   private int maxWordLength;
@@ -40,10 +43,26 @@ public class SearchDictionary {//extends dictionary{
     Dictionary userPhrasesDictionary = new Dictionary(userPhrasesDictionaryFileName);
     
     this.isoLanguageName = mainDictionary.getIsoLanguageName();//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-    this.dictionaryFileName = mainDictionaryFileName;
-    //entries need to be converted to the ArrayList because we will need to get an element from a specified position within the list (.get(i))
-    this.entries = new ArrayList<>(new HashSet<>(mainDictionary.getEntries()));
-    this.maxWordLength = mainDictionary.getMaxWordLength();
+//todo>> it will be needed to save user dictionaries//    this.userWordsDictionaryFileName = userWordsDictionaryFileName;
+//todo>> it will be needed to save user dictionaries//    this.userPhrasesDictionaryFileName = userPhrasesDictionaryFileName;
+    Set<Entry> mainDictionaryEntries = mainDictionary
+                                           .mergeDictionary(userWordsDictionary, false)
+                                           .mergeDictionary(userPhrasesDictionary, false)
+                                           .getEntries();
+    Set<SearchDictionaryEntry> entriesSet = new HashSet<>();
+    
+    this.maxWordLength = Dictionary.getMaxWordLength(mainDictionaryEntries);
+    
+    entriesSet.addAll(userSpecificInformation(mainDictionaryEntries, userWordsDictionary));
+    entriesSet.addAll(userSpecificInformation(mainDictionaryEntries, userPhrasesDictionary));
+    entriesSet.addAll(mainDictionaryEntries.stream()
+                          .filter(e -> !e.equals(userWordsDictionary.getEntry(e)))
+                          .filter(e -> !e.equals(userPhrasesDictionary.getEntry(e)))
+                          .map(SearchDictionaryEntry::new)
+                          .collect(Collectors.toSet()))
+    ;
+    
+    this.entries = new ArrayList<>(entriesSet);//entries need to be an ArrayList because we will need to be able to get an element from a specific position within the list (with method .get(i))
     
     if (alphabet == null) {
       this.alphabet = new Alphabet(mainDictionary.getCharsSet(), this.isoLanguageName);
@@ -55,7 +74,20 @@ public class SearchDictionary {//extends dictionary{
     
   }
   
-  public List<Entry> getEntries(){
+  private List<SearchDictionaryEntry> userSpecificInformation(Set<Entry> mainDictionary, Dictionary userDictionary) {
+    return
+        mainDictionary.stream()
+            .filter(e -> e.equals(userDictionary.getEntry(e)))
+            .map(e -> new SearchDictionaryEntry(
+                e.getWord(),
+                e.getFrequency(),
+                userDictionary.getEntry(e).getFrequency(),
+                userDictionary.getEntry(e).getLastUseTime()
+            )).collect(Collectors.toList())
+        ;
+  }
+  
+  public List<SearchDictionaryEntry> getEntries() {
     return this.entries;
   }
   
@@ -69,7 +101,7 @@ public class SearchDictionary {//extends dictionary{
   }
   
   public boolean setAlphabet(Alphabet alphabet) {
-    if(alphabet.getIsoLanguageName().equals(this.isoLanguageName)){
+    if (alphabet.getIsoLanguageName().equals(this.isoLanguageName)) {
       this.alphabet = alphabet;
       return true;
     }
@@ -84,19 +116,33 @@ public class SearchDictionary {//extends dictionary{
     return this.maxWordLength;
   }
   
-  //todo>> the stub code
+  /**
+   * get length of the largest word in entries set
+   *
+   * @param entries - entries set to search in
+   * @return - int value of length of the largest word in the entries set
+   */
+  static public int getMaxWordLength(Set<SearchDictionaryEntry> entries) {
+    return entries
+               .stream()
+               .mapToInt(entry -> entry.getWord().length())
+               .max().orElseThrow(NoSuchElementException::new)
+        ;
+  }
+  
+  //todo>> the stub code here
   public void save(boolean backup) throws IOException {
     this.save(this.dictionaryFileName);
   }
   
-  //todo>> the stub code
+  //todo>> the stub code here
   public void save(String dictionaryFileName) throws IOException {
-      BufferedWriter writer = new BufferedWriter(new FileWriter(dictionaryFileName));
+    BufferedWriter writer = new BufferedWriter(new FileWriter(dictionaryFileName));
   }
   
-  //todo>> the stub code
+  //todo>> the stub code here
   static public void save(String dictionaryFileName, SearchDictionary searchDictionary) throws IOException {
-      BufferedWriter writer = new BufferedWriter(new FileWriter(dictionaryFileName));
+    BufferedWriter writer = new BufferedWriter(new FileWriter(dictionaryFileName));
   }
   
 }

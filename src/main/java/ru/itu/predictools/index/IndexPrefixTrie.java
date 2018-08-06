@@ -4,7 +4,7 @@ import ru.itu.predictools.metric.LevensteinMetric;
 import ru.itu.predictools.metric.Metric;
 import ru.itu.predictools.registry.SearchDictionary;
 import ru.itu.predictools.registry.Entry;
-import ru.itu.predictools.registry.SearchResultEntry;
+import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -44,18 +44,18 @@ public class IndexPrefixTrie extends WordIndex {
   }
   
   @Override
-  public Set<SearchResultEntry> search(String string) {
+  public Set<SearchDictionaryEntry> search(String string) {
     return null;
   }//TODO prefix trie search(string) shouldn't return null
   
   @Override
-  public Set<SearchResultEntry> search(String string, int distance, Metric metric) {
+  public Set<SearchDictionaryEntry> search(String string, int distance, Metric metric) {
     return search(string, distance, metric, false);
   }
   
   @Override
-  public Set<SearchResultEntry> search(String string, int distance, Metric metric, boolean prefixSearch) {
-//        Set<SearchResultEntry> set = new HashSet<>();
+  public Set<SearchDictionaryEntry> search(String string, int distance, Metric metric, boolean prefixSearch) {
+//        Set<SearchDictionaryEntry> set = new HashSet<>();
     
     //build first row vector
     int wordLength = string.length();
@@ -66,14 +66,14 @@ public class IndexPrefixTrie extends WordIndex {
     return recursiveSearch(currentRow, root, string, distance, prefixSearch);
   }
   
-  private Set<SearchResultEntry> recursiveSearch(int[] previousRow, IndexPrefixTrie.PrefixTrieNode node, CharSequence searchString,
-                                                 int maxDistance, boolean prefixSearch) {
+  private Set<SearchDictionaryEntry> recursiveSearch(int[] previousRow, IndexPrefixTrie.PrefixTrieNode node, CharSequence searchString,
+                                                     int maxDistance, boolean prefixSearch) {
     // TODO should be optimized - there is no need to calculate matrix when prefix.length=0 or node.chain.length=0 or node.chain.length < prefix.length-maxDistance -->>
     // -->> if (node.chain.length() < searchString.length() - maxDistance) return maxDistance + 1;
     // если длина строки меньше длины префикса на количество символов большее максимально допустимого расстояния (max) то ясно что слово не удовлетворяет условию Ld<max
     
     int searchStringLength = searchString.length();
-    Set<SearchResultEntry> resultSet = new HashSet<>();
+    Set<SearchDictionaryEntry> resultSet = new HashSet<>();
     if (searchStringLength == 0) return resultSet;//no need to do anything to get zero length sequence
     
     int columns = searchStringLength + 2;
@@ -97,9 +97,9 @@ public class IndexPrefixTrie extends WordIndex {
       Integer distance;
       distance = currentRow[searchStringLength]/* / searchStringLength*/;//TODO distance - absolute or relative???
       if (prefixSearch)
-        getDescendants(node).stream().map(e -> new SearchResultEntry(e, distance)).forEach(resultSet::add);
+        getDescendants(node).stream().map(e -> new SearchDictionaryEntry(e, distance)).forEach(resultSet::add);
       else
-        resultSet.add(new SearchResultEntry(node.entry, distance));//if prefixSearch add to the resultSet subtree of node
+        resultSet.add(new SearchDictionaryEntry(node.entry, distance));//if prefixSearch add to the resultSet subtree of node
     } //else
     // if any entry in the row are less than the maximum cost, then recursively search each branch of the trie
     if (currentRow[columns - 1] <= maxDistance) //currentRow[last] - stores minimum of Vector values

@@ -52,7 +52,7 @@ public class Predictor {
     return "ru";
   }
   
-  public void setLanguage(String language) {//todo>> stub code
+  public void setLanguage(String language) {//todo>> stub code here
   }
   
   public Alphabet getAlphabet() {

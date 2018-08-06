@@ -2,6 +2,7 @@ package ru.itu.predictools.alphabet;
 
 import java.util.Hashtable;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Alphabet {
@@ -16,12 +17,13 @@ public class Alphabet {
   }
   
   public Alphabet(Set<Character> symbolsSet, String isoLanguageName) {
-    this(symbolsSet
+    this(symbolsSet.stream().map(ch->Character.toString(ch)).collect(Collectors.joining()), isoLanguageName);
+/*    this(symbolsSet
              .toString()
              .replace("[", "")
              .replace("]", "")
              .replace(", ", "")
-        , isoLanguageName);
+        , isoLanguageName);*/
   }
   
   /**

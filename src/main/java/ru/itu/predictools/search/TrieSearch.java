@@ -1,7 +1,7 @@
 package ru.itu.predictools.search;
 
 import ru.itu.predictools.index.IndexPrefixTrie;
-import ru.itu.predictools.registry.SearchResultEntry;
+import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.io.IOException;
 import java.util.Set;
@@ -22,10 +22,10 @@ public class TrieSearch extends Search {
     }
 
     @Override
-    public Set<SearchResultEntry> run(String template, boolean prefixMode) {
+    public Set<SearchDictionaryEntry> run(String template, boolean prefixMode) {
 //        super.run(template, prefixMode);
         //noinspection RedundantStreamOptionalCall
-        return (Set<SearchResultEntry>) trie.search(template, maxDistance, metric, prefixMode)
+        return (Set<SearchDictionaryEntry>) trie.search(template, maxDistance, metric, prefixMode)
                 .stream()
                 .sorted((f1, f2) -> Double.compare(f2.getFrequency(), f1.getFrequency()))
                 .sorted((d1, d2) -> Double.compare(d1.getDistance(), d2.getDistance()))
