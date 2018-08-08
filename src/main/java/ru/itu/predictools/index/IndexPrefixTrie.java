@@ -3,13 +3,12 @@ package ru.itu.predictools.index;
 import ru.itu.predictools.metric.LevensteinMetric;
 import ru.itu.predictools.metric.Metric;
 import ru.itu.predictools.registry.SearchDictionary;
-import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class IndexPrefixTrie extends WordIndex {
   private static final long serialVersionUID = 1L;//todo>> consider serialization
   
@@ -19,7 +18,7 @@ public class IndexPrefixTrie extends WordIndex {
   
   class PrefixTrieNode {
     PrefixTrieNode[] children;
-    Entry entry;
+    SearchDictionaryEntry entry;
     boolean leaf;
     String chain;
     
@@ -33,7 +32,7 @@ public class IndexPrefixTrie extends WordIndex {
   }
   
   public SearchDictionary getDictionary() {
-    return searchDictionary;
+    return this.searchDictionary;
   }
   
   public IndexPrefixTrie(SearchDictionary searchDictionary) {
@@ -132,7 +131,7 @@ public class IndexPrefixTrie extends WordIndex {
     return nodesCount;
   }
   
-  public void insertEntry(Entry entry) {
+  public void insertEntry(SearchDictionaryEntry entry) {
     PrefixTrieNode selected = root;
     String chain = "";
     for (char ch : entry.getWord().toCharArray()) {
@@ -148,11 +147,14 @@ public class IndexPrefixTrie extends WordIndex {
       selected.entry = entry;
       entriesCount++;//for debugging and testing compare with getDictionary.Entries.size()
     }
-    //TODO it is possible to make it without entry member, but in that case we have to pass word substring by the recursive calls and will lose word parameters such as frequency etc.
-    //TODO compare performance for realization with and without .word member
+    //todo>> it is possible to make it without entry member, but in that case we have to pass word substring by the recursive
+    //todo--> calls and will lose word parameters such as frequency etc. so in that case we will need to find them in the
+    //todo--> SearchDictionary by the word from the trie
+    
+    //todo>> compare performance for realization with and without .entry member
   }
   
-  public Entry getEntry(String prefix) {
+  public SearchDictionaryEntry getEntry(String prefix) {
     return getNodeByString(prefix).entry;
   }
   
@@ -179,24 +181,24 @@ public class IndexPrefixTrie extends WordIndex {
     return getNodeByString(string).leaf;
   }
   
-  public Set<Entry> getDescendants(PrefixTrieNode startNode) {
-    Set<Entry> descendants = new HashSet<>();
+  public Set<SearchDictionaryEntry> getDescendants(PrefixTrieNode startNode) {
+    Set<SearchDictionaryEntry> descendants = new HashSet<>();
     assembleSubtree(startNode, descendants);
     return descendants;
   }
   
-  public Set<Entry> getDescendants(String prefix) {
-    Set<Entry> descendants = new HashSet<>();
+  public Set<SearchDictionaryEntry> getDescendants(String prefix) {
+    Set<SearchDictionaryEntry> descendants = new HashSet<>();
     assembleSubtree(prefix, descendants);
     return descendants;
   }
   
-  private void assembleSubtree(String prefix, Set<Entry> subtree) {
+  private void assembleSubtree(String prefix, Set<SearchDictionaryEntry> subtree) {
     PrefixTrieNode node = getNodeByString(prefix);
     assembleSubtree(node, subtree);
   }
   
-  private void assembleSubtree(PrefixTrieNode node, Set<Entry> subtree) {
+  private void assembleSubtree(PrefixTrieNode node, Set<SearchDictionaryEntry> subtree) {
     if (node == null) {
       subtree.clear();
       return;
@@ -212,6 +214,7 @@ public class IndexPrefixTrie extends WordIndex {
       subtree.add(node.entry);
     }
   }
+  
 /*
     private <P> void processSubtree(PrefixTrieNode node, P param, BiConsumer<PrefixTrieNode, P> processNode){
         for (char ch: alphabet.chars()){
@@ -235,7 +238,7 @@ public class IndexPrefixTrie extends WordIndex {
 //    public Set<Character> reducedAlphabet(String prefix) {//TODO getReducedAlphabet from prefix trie
 //        Set<Character> set = new HashSet<>();
 //
-//        for(Entry entry: getDescendants(prefix)){
+//        for(SearchDictionaryEntry entry: getDescendants(prefix)){
 //
 //        }
 //        return set;

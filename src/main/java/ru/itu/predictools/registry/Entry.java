@@ -10,11 +10,11 @@ public class Entry implements Comparable<Entry> {
   LocalDateTime lastUseTime;
   
   public Entry(String word) {
-    this(word, 1D, LocalDateTime.now());
+    this(word, 1D, null);
   }
   
   public Entry(String word, Double frequency) {
-    this(word, frequency, LocalDateTime.now());
+    this(word, frequency, null);
   }
   
   public Entry(String word, Double frequency, LocalDateTime lastUseTime){

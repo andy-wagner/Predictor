@@ -3,7 +3,6 @@ package ru.itu.predictools.index;
 import ru.itu.predictools.metric.Metric;
 import ru.itu.predictools.alphabet.Alphabet;
 import ru.itu.predictools.registry.SearchDictionary;
-import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.util.HashSet;
@@ -32,11 +31,11 @@ public class IndexNGram extends WordIndex {
     
     String word;
     
-    for (Entry entry : searchDictionary.getEntries()) {//for each entry of getDictionary
-      word = entry.getWord();//record.split(" ")[2].toUpperCase();
-      wordsCount++;//getDictionary words counter
+    for (SearchDictionaryEntry entry : searchDictionary.getEntries()) {//for each entry of getDictionary
+      word = entry.getWord();
+      wordsCount++;//words counter
       for (int k = 0; k < word.length() - n + 1; ++k) {
-        int ngram = getNGram(alphabet, word, k, n);
+        int ngram = IndexNGram.getNGram(alphabet, word, k, n);
         if (ngramCountMap[ngram] == 0) nodesCount++;//unique n-gram counter
         ++ngramCountMap[ngram];//current n-gram counter
       }
@@ -45,9 +44,9 @@ public class IndexNGram extends WordIndex {
     ngramMap = new int[mapLength.intValue()][];//n-gram map (n-gram index)
     
     for (int i = 0; i < searchDictionary.getEntries().size(); ++i) {
-      word = searchDictionary.getEntries().get(i).getWord();//getDictionary[i].split(" ")[2].toUpperCase();
+      word = searchDictionary.getEntries().get(i).getWord();
       for (int k = 0; k < word.length() - n + 1; ++k) {
-        int ngram = getNGram(alphabet, word, k, n);
+        int ngram = IndexNGram.getNGram(alphabet, word, k, n);
         if (ngramMap[ngram] == null) ngramMap[ngram] = new int[ngramCountMap[ngram]];
         ngramMap[ngram][--ngramCountMap[ngram]] = i;
       }
@@ -59,12 +58,14 @@ public class IndexNGram extends WordIndex {
     int ngram = 0;
     for (int i = start; i < start + n; ++i)
       if (alphabet.isAlphabetChar(string.charAt(i)))//if symbol is not alphabetic then it will be ignored
-        ngram = ngram * alphabet.size() + alphabet.mapChar(string.charAt(i));//Presented as positional number system with a base equal to the length of the alphabet (in decimal numbers)
+        //ngram is represented as a number in a positional number system with a base equal to the length of the alphabet
+        //(the calculation is performed in decimal)
+        ngram = ngram * alphabet.size() + alphabet.mapChar(string.charAt(i));
     return ngram;
   }
   
   @Override
-  public void insertEntry(Entry entry) {
+  public void insertEntry(SearchDictionaryEntry entry) {//todo>> make insertEntry into ngram index (when new word added to dictionary)
 /*
         String word = entry.getWord();
         for (int k = 0; k < word.length() - n + 1; ++k) {
@@ -76,27 +77,27 @@ public class IndexNGram extends WordIndex {
   }
 
   @Override
-  public Set<SearchDictionaryEntry> search(String string) {
-    return search(string, 0, null);
+  public Set<SearchDictionaryEntry> search(String pattern) {
+    return search(pattern, 0, null);
   }
   
   @Override
-  public Set<SearchDictionaryEntry> search(String string, int distance, Metric metric) {
-    return search(string, distance, metric, false);
+  public Set<SearchDictionaryEntry> search(String pattern, int distance, Metric metric) {
+    return search(pattern, distance, metric, false);
   }//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchDictionaryEntry>
   
-  @Override
-  public Set<SearchDictionaryEntry> search(String string, int distance, Metric metric, boolean prefixSearch) {//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchDictionaryEntry>
+  @Override//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchDictionaryEntry>
+  public Set<SearchDictionaryEntry> search(String pattern, int distance, Metric metric, boolean prefixSearch) {
     Set<SearchDictionaryEntry> set = new HashSet<>();
 //        string=string.toUpperCase();
     
-    Entry entry;
+    SearchDictionaryEntry entry;
     SearchDictionaryEntry resultEntry;
     String word;
     int currentDistance = 0;
     
-    for (int i = 0; i < string.length() - n + 1; ++i) {
-      int ngram = IndexNGram.getNGram(alphabet, string, i, n);
+    for (int i = 0; i < pattern.length() - n + 1; ++i) {
+      int ngram = IndexNGram.getNGram(alphabet, pattern, i, n);
       
       int[] dictIndexes = ngramMap[ngram];
       
@@ -104,15 +105,22 @@ public class IndexNGram extends WordIndex {
         for (int k : dictIndexes) {
           entry = searchDictionary.getEntries().get(k);
           word = entry.getWord();
-          if (metric != null)
-            currentDistance = metric.getDistance(word, string, distance, prefixSearch);
+          if (metric != null){
+            currentDistance = metric.getDistance(word, pattern, distance, prefixSearch);
+          }
           if (currentDistance <= distance) {
-            resultEntry = new SearchDictionaryEntry(entry, currentDistance/*/word.length()*/);//TODO distance - absolute or relative???
+            resultEntry = new SearchDictionaryEntry(
+                entry.getWord(),
+                entry.getFrequency(),
+                entry.getLocalFrequency(),
+                entry.getLastUseTime(),
+                currentDistance/*/word.length()*/
+            );//TODO distance - absolute or relative???
             set.add(resultEntry);
-          } else if (string.equals(word)) {
-            resultEntry = new SearchDictionaryEntry(entry, 0);
-            set.add(resultEntry);
-            return set;
+          } else if (pattern.equals(word)) {//todo?? Why?? Or pattern.equals(word) is not the same as currentDistance = 0 (and then <= distance anyway)
+//            resultEntry = new SearchDictionaryEntry(entry, 0);
+            set.add(entry);
+            return set;//todo?? why break cycle??
           }
         }
     }

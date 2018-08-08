@@ -26,7 +26,8 @@ public class DictionaryTests {
     entries2 = new HashSet<>();
     entries3 = new HashSet<>();
     characters = new HashSet<>();
-    DICTIONARY_PATH = System.getProperty("user.dir") + File.separator + "ru-main-v1-utf8.dic";
+    DICTIONARY_PATH = System.getProperty("user.dir") + File.separator
+                               + "dictionaries" + File.separator + "ru-main-v1-utf8.dic";
     entries.add(new Entry("four"));
     entries.add(new Entry("five"));
     entries.add(new Entry("six"));
@@ -75,9 +76,9 @@ public class DictionaryTests {
   @Test
   public void testDictionaryInstantiatingByEntriesAndAlphabetSets(){
     dictionary = new Dictionary(entries, characters, "de");
-    assertEquals("CharsSet should be equal to [a, b, c, d, e, f, g, j]","[a, b, c, d, e, f, g, j]", dictionary.getCharsSet().toString());
+    assertEquals("CharsSet should be equal to [e, f, g, h, i, n, o, r, s, t, u, v, x]","[e, f, g, h, i, n, o, r, s, t, u, v, x]", dictionary.getCharsSet().toString());
     assertEquals("dictionary.entries.size should be equal to 5", 5, dictionary.getEntries().size());
-    assertEquals("dictionary.alphabet.size should be equal to 8", 8, dictionary.getCharsSet().size());
+    assertEquals("dictionary.alphabet.size should be equal to 13", 13, dictionary.getCharsSet().size());
     assertEquals("dictionary.isoLanguageName should be equal to 'de'", "de", dictionary.getIsoLanguageName());
     assertEquals("dictionary.maxWordLength should be equal to 6", 5, dictionary.getMaxWordLength());
   }
@@ -85,11 +86,11 @@ public class DictionaryTests {
   @Test
   public void testDictionaryInstantiatingFromFile() throws IOException {
     dictionary = new Dictionary(DICTIONARY_PATH);
-    assertEquals("CharsSet should be equal to [р, с, т, у, ф, х, ц, ч, ш, щ, ъ, ы, ь, э, ю, я,  , а, б, в, г, д, е, ж, з, и, й, к, л, м, н, о, п]","[р, с, т, у, ф, х, ц, ч, ш, щ, ъ, ы, ь, э, ю, я,  , а, б, в, г, д, е, ж, з, и, й, к, л, м, н, о, п]", dictionary.getCharsSet().toString());
+    assertEquals("CharsSet should be equal to [р, с, т, у, ф, х, ц, ч, ш, щ, ъ, ы, ь, э, ю, я, а, б, в, г, д, е, ж, з, и, й, к, л, м, н, о, п]","[р, с, т, у, ф, х, ц, ч, ш, щ, ъ, ы, ь, э, ю, я, а, б, в, г, д, е, ж, з, и, й, к, л, м, н, о, п]", dictionary.getCharsSet().toString());
     assertEquals("dictionary.entries.size should be equal to 69307", 69307, dictionary.getEntries().size());
-    assertEquals("dictionary.alphabet.size should be equal to 33", 33, dictionary.getCharsSet().size());
+    assertEquals("dictionary.alphabet.size should be equal to 32", 32, dictionary.getCharsSet().size());
     assertEquals("dictionary.isoLanguageName should be equal to 'ru'", "ru", dictionary.getIsoLanguageName());
-    assertEquals("dictionary.maxWordLength should be equal to 25", 25, dictionary.getMaxWordLength());
+    assertEquals("dictionary.maxWordLength should be equal to 24", 24, dictionary.getMaxWordLength());
   }
   
   @Test

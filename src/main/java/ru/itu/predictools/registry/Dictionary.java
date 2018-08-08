@@ -27,12 +27,7 @@ class Dictionary {
   
   public Dictionary(Set<Entry> entries, String isoLanguageName) {
     this(entries, new HashSet<>(), isoLanguageName);
-    for (Entry entry : entries) {
-      char[] chars = entry.getWord().toCharArray();
-      for (char ch : chars) {
-        this.charsSet.add(ch);
-      }
-    }
+    this.charsSet = Dictionary.getCharsSet(entries);
   }
   
   public Dictionary(Set<Entry> entries, Set<Character> charsSet, String isoLanguageName) {
@@ -84,7 +79,7 @@ class Dictionary {
       while ((line = reader.readLine()) != null) {
         lineFields = line.split(",");
         
-        word = lineFields[2];
+        word = lineFields[2].trim();
         frequency = Double.parseDouble(lineFields[1]);
         
         if (word.length() > this.maxWordLength) {
@@ -118,7 +113,7 @@ class Dictionary {
   }
   
   public Set<Character> getCharsSet() {
-    return this.charsSet;
+    return Dictionary.getCharsSet(this.getEntries());
   }
   
   /**
@@ -149,10 +144,6 @@ class Dictionary {
     return this.isoLanguageName;
   }
   
-  public int getMaxWordLength() {
-    return this.maxWordLength;
-  }
-  
   /**
    * get length of the largest word in entries set
    *
@@ -167,6 +158,11 @@ class Dictionary {
         ;
   }
   
+  public int getMaxWordLength() {
+    return this.maxWordLength;
+//    return Dictionary.getMaxWordLength(this.getEntries());
+  }
+  
   public boolean addEntry(String word) {
     return this.addEntry(word, 1D, LocalDateTime.now());
   }
@@ -176,15 +172,31 @@ class Dictionary {
   }
   
   public boolean addEntry(String word, Double frequency) {
-    return this.addEntry(new Entry(word, frequency, LocalDateTime.now()));
+    return this.addEntry(new Entry(word, frequency, null));
   }
   
   public boolean addEntry(Entry entry) {
+    try {
+      Integer newWordLength = entry.getWord().length();
+      if (this.maxWordLength < newWordLength) {
+        this.maxWordLength = newWordLength;
+      }
       return this.entries.add(entry);
+    } catch (Exception e) {
+      return false;
+    }
   }
   
   public boolean addAllEntries(Set<Entry> entries) {
-    return this.entries.addAll(entries);
+    try {
+      Integer newWordsMaxLength = Dictionary.getMaxWordLength(entries);
+      if (this.maxWordLength < newWordsMaxLength) {
+        this.maxWordLength = newWordsMaxLength;
+      }
+      return this.entries.addAll(entries);
+    } catch (Exception e) {
+      return false;
+    }
   }
   
   public boolean updateEntry(String word, Double frequency) {
@@ -198,21 +210,19 @@ class Dictionary {
         this.addEntry(entry);
       }
       return true;
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       return false;
     }
   }
   
   public boolean updateAllEntries(Set<Entry> entries) {
     try {
-      if(!this.addAllEntries(entries)){
+      if (!this.addAllEntries(entries)) {
         this.removeAllEntries(entries);
         this.addAllEntries(entries);
       }
       return true;
-    }
-    catch (Exception e){
+    } catch (Exception e) {
       return false;
     }
   }
@@ -228,7 +238,16 @@ class Dictionary {
   }
   
   public boolean removeEntry(Entry entry) {
-    return this.entries.remove(entry);
+    try {
+      if (this.maxWordLength == entry.getWord().length()) {
+        boolean result = this.entries.remove(entry);
+        this.maxWordLength = Dictionary.getMaxWordLength(this.entries);
+        return result;
+      }
+      return this.entries.remove(entry);
+    } catch (IllegalArgumentException e) {
+      return false;
+    }
   }
   
   public boolean removeEntry(String word) {

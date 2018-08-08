@@ -76,7 +76,7 @@ public class AlphabetTests {
   @Test//(expected = RuntimeException.class)
   public void mapCharWithoutSubstitutionsErrorCheck(){
     thrownFromMapCharWithoutSubstitutions.expect(RuntimeException.class);
-    thrownFromMapCharWithoutSubstitutions.expectMessage("Error: The char 'Ё' is not from the alphabet.");
+    thrownFromMapCharWithoutSubstitutions.expectMessage("Error: The char 'Ё' is not from the alphabet and there is no substitutes for it.");
     alphabet.mapChar('Ё');
   }
   
