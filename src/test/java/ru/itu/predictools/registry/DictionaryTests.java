@@ -27,7 +27,7 @@ public class DictionaryTests {
     entries3 = new HashSet<>();
     characters = new HashSet<>();
     DICTIONARY_PATH = System.getProperty("user.dir") + File.separator
-                               + "dictionaries" + File.separator + "ru-main-v1-utf8.dic";
+                               + "dictionaries" + File.separator + "ru-main-test(do not change this file)-utf8.dic";
     entries.add(new Entry("four"));
     entries.add(new Entry("five"));
     entries.add(new Entry("six"));

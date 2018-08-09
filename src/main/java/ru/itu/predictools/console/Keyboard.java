@@ -47,7 +47,7 @@ public class Keyboard {
             String keyString="";
             keyIndex=i/charsPerKey;
             keys[keyIndex] = new Key(keyString, keysCoordinates);
-//            char[] nextKeyChars = Arrays.copyOfRange(alphabet.chars(), i, i + charsPerKey);
+//            char[] nextKeyChars = Arrays.copyOfRange(alphabet.getChars(), i, i + charsPerKey);
             for(int j=0; j < charsPerKey; j++){
                 if(i+j+1 <= alphabet.size()) {
 //                    keyString +=nextKeyChars[j];

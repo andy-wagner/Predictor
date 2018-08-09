@@ -23,7 +23,7 @@ public class Console {
 
     String inputWords;
     Keyboard keyboardS; //Single char per key keyboard
-    Keyboard keyboardM; //Multiple chars per key keyboard
+    Keyboard keyboardM; //Multiple getChars per key keyboard
     Editor phraseS, phraseM;
 
     //public Console() throws IOException { this(PATH+DICTIONARY_FILE, PATH+INPUT_FILE);}
@@ -55,7 +55,7 @@ public class Console {
      */
 //    public List<Entry> getPredictiveSet(){
 //        Set<String> set = new HashSet<>();
-////            inputBuffer.getFirst().getKeyContent().chars().parallel().forEach();
+////            inputBuffer.getFirst().getKeyContent().getChars().parallel().forEach();
 ////        for(Key key: inputKeysBuffer){
 //
 //        return set;
@@ -63,7 +63,7 @@ public class Console {
 
 //    public static void predictor(String... args) throws IOException, InterruptedException {
 //        Console console = new Console(PATH + INPUT_FILE);
-//        "hello home slices".chars().parallel().forEach(c->System.out.print((char)c));
+//        "hello home slices".getChars().parallel().forEach(c->System.out.print((char)c));
 //        System.out.println();
 //    }
 }

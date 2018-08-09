@@ -17,7 +17,7 @@ public abstract class Search {
     Search(String dictionaryPath, Integer distance, Integer resultingListLength) throws IOException {
         this.maxDistance = distance;
         this.resultLength = resultingListLength;
-//        this.searchDictionary = new SearchDictionary(new AlphabetRussian(), dictionaryPath);
+        this.searchDictionary = new SearchDictionary(dictionaryPath);
         this.metric = new LevensteinMetric(searchDictionary.getMaxWordLength());
 
         System.out.println("SearchDictionary file contains " + searchDictionary.getEntries().size() + " words");

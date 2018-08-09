@@ -75,7 +75,7 @@ public class IndexNGram extends WordIndex {
         }
 */
   }
-
+  
   @Override
   public Set<SearchDictionaryEntry> search(String pattern) {
     return search(pattern, 0, null);
@@ -87,7 +87,7 @@ public class IndexNGram extends WordIndex {
   }//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchDictionaryEntry>
   
   @Override//TODO need to clarify type of collection used for subtree Set||Map||Ordered...<Entry||SearchDictionaryEntry>
-  public Set<SearchDictionaryEntry> search(String pattern, int distance, Metric metric, boolean prefixSearch) {
+  public Set<SearchDictionaryEntry> search(String searchPattern, int distance, Metric metric, boolean prefixSearch) {
     Set<SearchDictionaryEntry> set = new HashSet<>();
 //        string=string.toUpperCase();
     
@@ -96,8 +96,8 @@ public class IndexNGram extends WordIndex {
     String word;
     int currentDistance = 0;
     
-    for (int i = 0; i < pattern.length() - n + 1; ++i) {
-      int ngram = IndexNGram.getNGram(alphabet, pattern, i, n);
+    for (int i = 0; i < searchPattern.length() - n + 1; ++i) {
+      int ngram = IndexNGram.getNGram(alphabet, searchPattern, i, n);
       
       int[] dictIndexes = ngramMap[ngram];
       
@@ -105,22 +105,22 @@ public class IndexNGram extends WordIndex {
         for (int k : dictIndexes) {
           entry = searchDictionary.getEntries().get(k);
           word = entry.getWord();
-          if (metric != null){
-            currentDistance = metric.getDistance(word, pattern, distance, prefixSearch);
-          }
-          if (currentDistance <= distance) {
-            resultEntry = new SearchDictionaryEntry(
-                entry.getWord(),
-                entry.getFrequency(),
-                entry.getLocalFrequency(),
-                entry.getLastUseTime(),
-                currentDistance/*/word.length()*/
-            );//TODO distance - absolute or relative???
-            set.add(resultEntry);
-          } else if (pattern.equals(word)) {//todo?? Why?? Or pattern.equals(word) is not the same as currentDistance = 0 (and then <= distance anyway)
-//            resultEntry = new SearchDictionaryEntry(entry, 0);
+          if (metric != null) {
+            currentDistance = metric.getDistance(word, searchPattern, distance, prefixSearch);
+            if (currentDistance <= distance) {
+              resultEntry = new SearchDictionaryEntry(
+                  entry.getWord(),
+                  entry.getFrequency(),
+                  entry.getLocalFrequency(),
+                  entry.getLastUseTime(),
+                  currentDistance/*/word.length()*/
+              );//TODO distance - absolute or relative???
+              set.add(resultEntry);
+            }
+          } else if (searchPattern.equals(word)) {//if there is no metric selected then will search the exact coincidences
             set.add(entry);
-            return set;//todo?? why break cycle??
+            return set;//break the cycle, because the dictionary is a set of unique words and so there is impossible
+            // to find more than one exact coincidence
           }
         }
     }

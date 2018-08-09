@@ -8,9 +8,9 @@ import ru.itu.predictools.search.*;
 import java.io.File;
 import java.util.Scanner;
 
-public class Main {
+public class MainCLI {
     private static final String DICTIONARY_PATH = System.getProperty("user.dir") + File.separator + "ru-main-v1-win1251.dic";
-//    private static final String DICTIONARY_PATH = System.getProperty("user.dir") + "\\searchDictionary-utf8.txt";
+//    private static final String DICTIONARY_PATH = System.getProperty("user.dir") + "\\dictionary-utf8.txt";
 
     public static void main(String[] args) throws Exception {
         if (!needHelp(args)) {

@@ -92,7 +92,7 @@ public class Alphabet {
     return new String(chars).indexOf(ch);
   }
   
-  public char[] chars() {
+  public char[] getChars() {
     return chars;
   }
   

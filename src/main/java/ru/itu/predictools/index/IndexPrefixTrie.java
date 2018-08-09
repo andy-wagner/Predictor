@@ -53,16 +53,16 @@ public class IndexPrefixTrie extends WordIndex {
   }
   
   @Override
-  public Set<SearchDictionaryEntry> search(String string, int distance, Metric metric, boolean prefixSearch) {
+  public Set<SearchDictionaryEntry> search(String searchPattern, int distance, Metric metric, boolean prefixSearch) {
 //        Set<SearchDictionaryEntry> set = new HashSet<>();
     
     //build first row vector
-    int wordLength = string.length();
+    int wordLength = searchPattern.length();
     int[] currentRow = new int[wordLength + 2];
     
     //recursive Levenstein distance search from root note by each branch of the trie till each leaf
     IndexPrefixTrie.PrefixTrieNode root = getNodeByString("");
-    return recursiveSearch(currentRow, root, string, distance, prefixSearch);
+    return recursiveSearch(currentRow, root, searchPattern, distance, prefixSearch);
   }
   
   private Set<SearchDictionaryEntry> recursiveSearch(int[] previousRow, IndexPrefixTrie.PrefixTrieNode node, CharSequence searchString,
@@ -110,7 +110,7 @@ public class IndexPrefixTrie extends WordIndex {
     private void assembleSubtree(PrefixTrieNode node, List<Entry> subtree) {
         if(node == null) { subtree.clear(); return; }
 
-        for (char ch: alphabet.chars()){
+        for (char ch: alphabet.getChars()){
             int childIndex=alphabet.mapChar(ch);
             PrefixTrieNode child = node.children[childIndex];
             if (child != null) assembleSubtree(child, subtree);
@@ -138,7 +138,9 @@ public class IndexPrefixTrie extends WordIndex {
       chain += ch;
       int childIndex = alphabet.mapChar(ch);
       PrefixTrieNode next = selected.children[childIndex];
-      if (next == null) selected.children[childIndex] = next = new PrefixTrieNode();
+      if (next == null) {
+        selected.children[childIndex] = next = new PrefixTrieNode();
+      }
       next.chain = chain;
       selected = next;
     }
@@ -204,7 +206,7 @@ public class IndexPrefixTrie extends WordIndex {
       return;
     }
     
-    for (char ch : alphabet.chars()) {
+    for (char ch : alphabet.getChars()) {
       int childIndex = alphabet.mapChar(ch);
       PrefixTrieNode child = node.children[childIndex];
       if (child != null) assembleSubtree(child, subtree);
@@ -217,7 +219,7 @@ public class IndexPrefixTrie extends WordIndex {
   
 /*
     private <P> void processSubtree(PrefixTrieNode node, P param, BiConsumer<PrefixTrieNode, P> processNode){
-        for (char ch: alphabet.chars()){
+        for (char ch: alphabet.getChars()){
             int childIndex=alphabet.mapChar(ch);
             PrefixTrieNode child = node.children[childIndex];
             if (child != null) processSubtree(child, param, processNode);
@@ -226,7 +228,7 @@ public class IndexPrefixTrie extends WordIndex {
     }
 
     private <F,P> F reduceSubtree(PrefixTrieNode node, P param, BiFunction<PrefixTrieNode, P, F> processNode){
-        for (char ch: alphabet.chars()){
+        for (char ch: alphabet.getChars()){
             int childIndex=alphabet.mapChar(ch);
             PrefixTrieNode child = node.children[childIndex];
             if (child != null) reduceSubtree(child, param, processNode);

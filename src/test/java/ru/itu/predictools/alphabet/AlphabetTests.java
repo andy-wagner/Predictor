@@ -28,7 +28,7 @@ public class AlphabetTests {
   @Test
   public void testAlphabetInstantiatingFromStringRepresentation() {
     alphabet = new Alphabet(new String(chars), "en");//ok
-    assertArrayEquals("alphabet chars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.chars());
+    assertArrayEquals("alphabet getChars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.getChars());
     assertEquals("Input isoLanguageName and alphabet.getIsoLanguageName should be equal", "en", alphabet.getIsoLanguageName());
   }
   
@@ -39,7 +39,7 @@ public class AlphabetTests {
       characters.add(c);
     }
     alphabet = new Alphabet(characters, "en");//ok
-    assertArrayEquals("alphabet chars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.chars());
+    assertArrayEquals("alphabet getChars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.getChars());
     assertEquals("Input isoLanguageName and alphabet.getIsoLanguageName should be equal", "en", alphabet.getIsoLanguageName());
   }
   
@@ -92,7 +92,7 @@ public class AlphabetTests {
   @Test
   public void charsCheck(){
     alphabet = new Alphabet(new String(chars), "en");//ok
-    assertArrayEquals("chars array should be equal to 'abcde'", chars, alphabet.chars());
+    assertArrayEquals("getChars array should be equal to 'abcde'", chars, alphabet.getChars());
   }
   
   @Test

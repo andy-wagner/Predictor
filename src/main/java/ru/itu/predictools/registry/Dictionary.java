@@ -17,7 +17,7 @@ class Dictionary {
   private Integer maxWordLength;
   
   public Dictionary() {
-    //make empty searchDictionary to put into an arbitrary combination of entries and charsSet (for storing search result and
+    //make empty dictionary to put into an arbitrary combination of entries and charsSet (for storing search result and
     // reduced charsSet for instance)
     this.entries = new HashSet<>();
     this.charsSet = new HashSet<>();
@@ -31,7 +31,7 @@ class Dictionary {
   }
   
   public Dictionary(Set<Entry> entries, Set<Character> charsSet, String isoLanguageName) {
-    //make searchDictionary with an arbitrary combination of entries and charsSet (for storing search result and
+    //make dictionary with an arbitrary combination of entries and charsSet (for storing search result and
     // reduced charsSet for instance)
     this.entries = entries;
     this.charsSet = charsSet;
@@ -40,7 +40,7 @@ class Dictionary {
   }
   
   public Dictionary(String dictionaryFileName) throws IOException {
-    //make searchDictionary from searchDictionary file with entries as a set of distinct words with frequencies
+    //make dictionary from dictionary file with entries as a set of distinct words with frequencies
     // as they specified in the file
     this();
     
@@ -52,7 +52,6 @@ class Dictionary {
     
     //read header
     do {
-      
       if ((line = reader.readLine()) == null) {
         throw new RuntimeException("Error: Wrong dictionary file format.");
       }
@@ -95,6 +94,7 @@ class Dictionary {
         
       }
     } catch (TypeMismatchException e) {
+      reader.close();
       throw new TypeMismatchException("Error: Wrong dictionary file format.");
     }
     reader.close();
@@ -117,16 +117,16 @@ class Dictionary {
   }
   
   /**
-   * sets object's set of chars from current object entries
+   * sets object's set of getChars from current object entries
    */
   public void setCharsSet() {
     this.charsSet = Dictionary.getCharsSet(this.entries);
   }
   
   /**
-   * sets object's set of chars from parameter passed
+   * sets object's set of getChars from parameter passed
    *
-   * @param charsSet - set of chars to be set as an object's set of chars
+   * @param charsSet - set of getChars to be set as an object's set of getChars
    */
   public void setCharsSet(Set<Character> charsSet) {
     this.charsSet = charsSet;

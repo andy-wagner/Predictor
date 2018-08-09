@@ -1,47 +1,110 @@
 package ru.itu.predictools;
 
-import ru.itu.predictools.metric.Metric;
-import ru.itu.predictools.alphabet.Alphabet;
+import com.sun.corba.se.impl.io.TypeMismatchException;
+import ru.itu.predictools.metric.LevensteinMetric;
 import ru.itu.predictools.registry.Entry;
+import ru.itu.predictools.alphabet.Alphabet;
 import ru.itu.predictools.registry.SearchDictionary;
+import ru.itu.predictools.metric.Metric;
+import ru.itu.predictools.index.IndexNGram;
+import ru.itu.predictools.registry.SearchDictionaryEntry;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.Map;
 import java.util.Set;
 
 public class Predictor {
-  protected int maxDistance, resultLength;
-  protected SearchDictionary searchDictionary;
-  protected Metric metric;
+  private String mainDictionaryFileName;
+  private String userWordsDictionaryFileName;
+  private String userPhrasesDictionaryFileName;
+  private SearchDictionary dictionary;
+  private IndexNGram index;
+  private int n;
+  private boolean prefix;
+  private int maxDistance;
+  private Metric metric;
+  
   private Map<String, Set<Character>> specialSymbolsSet;//<NameOfCharactersSet, CharactersSet>
   
-  public Predictor(String dictionaryPath, Integer maxDistance, Integer resultListLength) throws IOException {
-//        this(dictionaryPath, maxDistance, resultListLength, );
+  public Predictor(
+      String jsonConfigurationFileName
+  ) throws IOException {
+    String CONFIG_FILE_PATH = System.getProperty("user.dir") + File.separator
+                                  + "config" + File.separator
+                                  + jsonConfigurationFileName;
+    
+    String mainDictionaryFileName = "";
+    String userWordsDictionaryFileName = "";
+    String userPhrasesDictionaryFileName = "";
+    
+    String line, name, value;
+    String[] lineFields;
+    try (BufferedReader reader = new BufferedReader(new FileReader(CONFIG_FILE_PATH))) {
+      
+      while ((line = reader.readLine()) != null) {
+        lineFields = line.split("=");
+        if (line.length() == 0 || lineFields[0].trim().toCharArray()[0] == '#' || lineFields.length != 2) {
+          continue;
+        }
+        name = lineFields[0].trim();
+        value = lineFields[1].trim();
+        switch (name) {
+          case "mainDictionary":
+            this.mainDictionaryFileName = System.getProperty("user.dir") + File.separator
+                                              + "dictionaries" + File.separator
+                                              + value;
+            break;
+          case "userWordsDictionary":
+            this.userWordsDictionaryFileName = System.getProperty("user.dir") + File.separator
+                                                   + "user" + File.separator
+                                                   + "dictionaries" + File.separator
+                                                   + value;
+            break;
+          case "userPhrasesDictionary":
+            this.userPhrasesDictionaryFileName = System.getProperty("user.dir") + File.separator
+                                                     + "user" + File.separator
+                                                     + "dictionaries" + File.separator
+                                                     + value;
+            break;
+          case "prefix":
+            this.prefix = Boolean.parseBoolean(value);
+            break;
+          case "n":
+            this.n = Integer.parseInt(value);
+            break;
+          case "maxDistance":
+            this.maxDistance = Integer.parseInt(value);
+            break;
+        }
+      }
+      
+      this.dictionary = new SearchDictionary(
+          this.mainDictionaryFileName, this.userWordsDictionaryFileName, this.userPhrasesDictionaryFileName);
+      this.index = new IndexNGram(this.dictionary, n);
+      this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
+    } catch (TypeMismatchException e) {
+      throw new TypeMismatchException("Error: Wrong dictionary file format.");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+//    catch (Exception e) {
+//      throw new Error(e.getMessage());
+//    }
+    
   }
   
-  public Predictor(String dictionaryPath, Integer maxDistance, Integer resultListLength, String metricName) throws IOException {
-    this.maxDistance = maxDistance;
-    this.resultLength = resultListLength;
-//        this.searchDictionary = new SearchDictionary(new AlphabetRussian(), dictionaryPath);
-//    this.metric = new LevensteinMetric(searchDictionary.geMaxWordLength());
-    this.metric = metric;//get metric type by metricName
-
-//        System.out.println("SearchDictionary file contains " + searchDictionary.getEntries().size() + " words");
-  
-  }
   
   //PUBLIC METHODS
-  
-  public void setResultLength(int resultLength) {
-      this.resultLength = resultLength;
+  public Set<SearchDictionaryEntry> search(String searchPattern) {
+    return this.index.search(searchPattern, this.maxDistance, this.metric, this.prefix);
   }
   
-  public int getResultLength() {
-    return this.resultLength;
+  public Set<SearchDictionaryEntry> search(String searchPattern, int maxDistance) {
+    return this.index.search(searchPattern, maxDistance, this.metric, this.prefix);
   }
   
   public void setMaxDistance(int maxDistance) {
-      this.maxDistance = maxDistance;
+    this.maxDistance = maxDistance;
   }
   
   public int getMaxDistance() {
@@ -56,12 +119,12 @@ public class Predictor {
   }
   
   public Alphabet getAlphabet() {
-//        return set of all this.searchDictionary letters converted into alphabet object
-    return this.searchDictionary.getAlphabet();
+//        return set of all this.dictionary letters converted into alphabet object
+    return this.dictionary.getAlphabet();
   }
   
   public static Alphabet getAlphabet(SearchDictionary searchDictionary) {
-//        return set of all searchDictionary letters converted into alphabet object
+//        return set of all dictionary letters converted into alphabet object
     return searchDictionary.getAlphabet();
   }
   
@@ -74,17 +137,17 @@ public class Predictor {
   }
   
   public void saveAlphabet(String alphabetFileNmae) {//todo>> stub code
-//      saves this.searchDictionary.alphabet into the file
+//      saves this.dictionary.alphabet into the file
   }
   
   public void saveAlphabet(Alphabet alphabet, String alphabetFileNmae) {
 //        saves alphabet into the file
   }
   
-  public Alphabet setAlphabet() {//get alphabet of selected searchDictionary and then set it to this.dictiomany.alphabet
+  public Alphabet setAlphabet() {//get alphabet of selected dictionary and then set it to this.dictiomany.alphabet
     try {
-      Alphabet alphabet = this.searchDictionary.getAlphabet();
-      this.searchDictionary.setAlphabet(alphabet);
+      Alphabet alphabet = this.dictionary.getAlphabet();
+      this.dictionary.setAlphabet(alphabet);
       return alphabet;
     } catch (IllegalArgumentException e) {
       return null;
@@ -92,7 +155,7 @@ public class Predictor {
     
   }
   
-  public void setAlphabet(String alphabetFileName) {//set this.searchDictionary.alphabet into alphabet loaded from specified file
+  public void setAlphabet(String alphabetFileName) {//set this.dictionary.alphabet into alphabet loaded from specified file
   }
   
   public Alphabet getSymbolsSet(Integer setContentFlags) {
@@ -115,7 +178,7 @@ public class Predictor {
   
   public void saveDictionary(String dictionaryFileName) {
   }
-  
+
 //  public SearchDictionary margeDictionaries(SearchDictionary dictionary1, SearchDictionary dictionary2){
 //    return new SearchDictionary();
 //  }
