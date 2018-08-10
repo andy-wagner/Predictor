@@ -76,8 +76,8 @@ public class MainFX extends Application {
                                          .sorted(Comparator
                                                      .comparingInt(SearchDictionaryEntry::getDistance)
                                                      .reversed()
-                                                     .thenComparingDouble(SearchDictionaryEntry::getFrequency)
                                                      .thenComparingDouble(SearchDictionaryEntry::getLocalFrequency)
+                                                     .thenComparingDouble(SearchDictionaryEntry::getFrequency)
                                                      .reversed()
                                          )
                                          .limit(15)
