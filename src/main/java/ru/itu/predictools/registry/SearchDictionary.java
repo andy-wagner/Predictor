@@ -3,6 +3,10 @@ package ru.itu.predictools.registry;
 import ru.itu.predictools.alphabet.Alphabet;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,6 +22,10 @@ public class SearchDictionary {
   Dictionary mainDictionary;
   Dictionary userWordsDictionary;
   Dictionary userPhrasesDictionary;
+  FileTime mainDictionaryFileLastModifiedTime = FileTime.fromMillis(0);
+  FileTime userWordsDictionaryFileLastModifiedTime = FileTime.fromMillis(0);
+  FileTime userPhrasesDictionaryFileLastModifiedTime = FileTime.fromMillis(0);
+
 //  private int maxWordLength;
   
   public SearchDictionary(
@@ -64,13 +72,19 @@ public class SearchDictionary {
   ) throws IOException {
     
     this.mainDictionary = new Dictionary(mainDictionaryFileName);
+    BasicFileAttributes attributes = Files.readAttributes(Paths.get(mainDictionaryFileName), BasicFileAttributes.class);
+    this.mainDictionaryFileLastModifiedTime = attributes.lastModifiedTime();
     if (!userWordsDictionaryFileName.equals("")) {
       this.userWordsDictionary = new Dictionary(userWordsDictionaryFileName);
+      attributes = Files.readAttributes(Paths.get(userWordsDictionaryFileName), BasicFileAttributes.class);
+      this.userWordsDictionaryFileLastModifiedTime = attributes.lastModifiedTime();
     } else {
       this.userWordsDictionary = new Dictionary();
     }
     if (!userPhrasesDictionaryFileName.equals("")) {
       this.userPhrasesDictionary = new Dictionary(userPhrasesDictionaryFileName);
+      attributes = Files.readAttributes(Paths.get(userPhrasesDictionaryFileName), BasicFileAttributes.class);
+      this.userPhrasesDictionaryFileLastModifiedTime = attributes.lastModifiedTime();
     } else {
       this.userPhrasesDictionary = new Dictionary();
     }
@@ -120,6 +134,16 @@ public class SearchDictionary {
       throw new Error("Error: Language of the alphabet specified doesn't match with searchDictionary language");
     }
     
+  }
+  
+  public FileTime[] getDictionariesLastTimesModified(){
+    return new FileTime[]{this.mainDictionaryFileLastModifiedTime, this.userWordsDictionaryFileLastModifiedTime, this.userPhrasesDictionaryFileLastModifiedTime};
+  }
+  
+  public void setDictionariesLastTimesModified(FileTime[] lastTimesModified){
+    this.mainDictionaryFileLastModifiedTime = lastTimesModified[0];
+    this.userWordsDictionaryFileLastModifiedTime = lastTimesModified[1];
+    this.userPhrasesDictionaryFileLastModifiedTime = lastTimesModified[2];
   }
   
   public List<SearchDictionaryEntry> getEntries() {

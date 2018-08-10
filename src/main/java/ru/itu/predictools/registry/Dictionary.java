@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
-class Dictionary {
+public class Dictionary {
   private Set<Entry> entries;
   //todo>> need to consider the using of Map<String, Entry> instead of Set<Entry>, where field [String word] is a key, and the field [Entry entry] is an instance of data class of word characteristics such as frequency, distance, localFrequency, lastUseTime etc.
   private Set<Character> charsSet;
@@ -271,4 +271,5 @@ class Dictionary {
     }
     return this;
   }
+  
 }

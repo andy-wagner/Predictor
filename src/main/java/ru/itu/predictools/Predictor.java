@@ -10,6 +10,10 @@ import ru.itu.predictools.index.IndexNGram;
 import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,20 +30,11 @@ public class Predictor {
   
   private Map<String, Set<Character>> specialSymbolsSet;//<NameOfCharactersSet, CharactersSet>
   
-  public Predictor(
-      String jsonConfigurationFileName
-  ) throws IOException {
-    String CONFIG_FILE_PATH = System.getProperty("user.dir") + File.separator
-                                  + "config" + File.separator
-                                  + jsonConfigurationFileName;
-    
-    String mainDictionaryFileName = "";
-    String userWordsDictionaryFileName = "";
-    String userPhrasesDictionaryFileName = "";
+  public Predictor(String jsonConfigurationFileName) {
     
     String line, name, value;
     String[] lineFields;
-    try (BufferedReader reader = new BufferedReader(new FileReader(CONFIG_FILE_PATH))) {
+    try (BufferedReader reader = new BufferedReader(new FileReader(jsonConfigurationFileName))) {
       
       while ((line = reader.readLine()) != null) {
         lineFields = line.split("=");
@@ -50,21 +45,13 @@ public class Predictor {
         value = lineFields[1].trim();
         switch (name) {
           case "mainDictionary":
-            this.mainDictionaryFileName = System.getProperty("user.dir") + File.separator
-                                              + "dictionaries" + File.separator
-                                              + value;
+            this.mainDictionaryFileName = System.getProperty("user.dir") + File.separator + value;
             break;
           case "userWordsDictionary":
-            this.userWordsDictionaryFileName = System.getProperty("user.dir") + File.separator
-                                                   + "user" + File.separator
-                                                   + "dictionaries" + File.separator
-                                                   + value;
+            this.userWordsDictionaryFileName = System.getProperty("user.dir") + File.separator + value;
             break;
           case "userPhrasesDictionary":
-            this.userPhrasesDictionaryFileName = System.getProperty("user.dir") + File.separator
-                                                     + "user" + File.separator
-                                                     + "dictionaries" + File.separator
-                                                     + value;
+            this.userPhrasesDictionaryFileName = System.getProperty("user.dir") + File.separator + value;
             break;
           case "prefix":
             this.prefix = Boolean.parseBoolean(value);
@@ -87,20 +74,43 @@ public class Predictor {
     } catch (IOException e) {
       e.printStackTrace();
     }
-//    catch (Exception e) {
-//      throw new Error(e.getMessage());
-//    }
     
   }
   
-  
-  //PUBLIC METHODS
-  public Set<SearchDictionaryEntry> search(String searchPattern) {
-    return this.index.search(searchPattern, this.maxDistance, this.metric, this.prefix);
+  private void reloadIndex() throws IOException {
+    this.dictionary = new SearchDictionary(this.mainDictionaryFileName, this.userWordsDictionaryFileName, this.userPhrasesDictionaryFileName);
+    this.index = new IndexNGram(this.dictionary, n);
+    this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
   }
   
-  public Set<SearchDictionaryEntry> search(String searchPattern, int maxDistance) {
-    return this.index.search(searchPattern, maxDistance, this.metric, this.prefix);
+  //PUBLIC METHODS
+  public Set<SearchDictionaryEntry> search(String searchPattern) throws IOException {
+    return this.search(searchPattern, this.maxDistance, this.metric, this.prefix);
+  }
+  
+  public Set<SearchDictionaryEntry> search(String searchPattern, int maxDistance) throws IOException {
+    return this.search(searchPattern, maxDistance, this.metric, this.prefix);
+  }
+  
+  public Set<SearchDictionaryEntry> search(String searchPattern, int maxDistance, Metric metric, boolean prefix) throws IOException {
+    //check if dictionary files changed, if so rebuild index
+    BasicFileAttributes attributesOfMainDictionary = Files.readAttributes(Paths.get(this.mainDictionaryFileName), BasicFileAttributes.class);
+    BasicFileAttributes attributesOfUserWordsDictionary = Files.readAttributes(Paths.get(this.userWordsDictionaryFileName), BasicFileAttributes.class);
+    BasicFileAttributes attributesOfUserPhrasesDictionary = Files.readAttributes(Paths.get(this.userPhrasesDictionaryFileName), BasicFileAttributes.class);
+    FileTime mainDictionaryLastModified = attributesOfMainDictionary.lastModifiedTime();
+    FileTime userWordsDictionaryLastModified = attributesOfUserWordsDictionary.lastModifiedTime();
+    FileTime userPhrasesDictionaryLastModified = attributesOfUserPhrasesDictionary.lastModifiedTime();
+    FileTime[] previousLastTimesModified = this.dictionary.getDictionariesLastTimesModified();
+    if (!mainDictionaryLastModified.equals(previousLastTimesModified[0])
+            || !userWordsDictionaryLastModified.equals(previousLastTimesModified[1])
+            || !userPhrasesDictionaryLastModified.equals(previousLastTimesModified[2])
+        ) {
+      this.dictionary.setDictionariesLastTimesModified(new FileTime[]{
+          mainDictionaryLastModified, userWordsDictionaryLastModified, userPhrasesDictionaryLastModified}
+      );
+      this.reloadIndex();
+    }
+    return this.index.search(searchPattern, maxDistance, metric, prefix);
   }
   
   public void setMaxDistance(int maxDistance) {

@@ -54,9 +54,9 @@ public class ConfirmBox {
     buttonNo.setCancelButton(true);
     buttonNo.defaultButtonProperty().bind(buttonNo.focusedProperty());
     
-    gridPane.add(label, 0, 1, 2, 1);
+    gridPane.add(label,     0, 1, 2, 1);
     gridPane.add(buttonYes, 0, 4, 1, 1);
-    gridPane.add(buttonNo, 1, 4, 1, 1);
+    gridPane.add(buttonNo,  1, 4, 1, 1);
     
     Scene scene = new Scene(gridPane, 250, 150);
     window.setScene(scene);
