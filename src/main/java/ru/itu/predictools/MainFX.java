@@ -26,7 +26,7 @@ public class MainFX extends Application {
   }
   
   @Override
-  public void start(Stage primaryStage) {
+  public void start(Stage primaryStage) throws IOException {
     window = primaryStage;
     window.setOnCloseRequest(e -> {
       e.consume();
@@ -41,52 +41,66 @@ public class MainFX extends Application {
     
   }
   
-  private GridPane fillGridPane() {
+  private GridPane fillGridPane() throws IOException {
+//    AtomicBoolean internalEditorTextChange = new AtomicBoolean(false);//todo>> to decide if this optimisation is needed use VisualVM
+    Predictor predictor = new Predictor("predictor.conf");
     
     GridPane gridPane = new GridPane();
     gridPane.setPadding(new Insets(10, 20, 30, 20));
     gridPane.setVgap(8);
     gridPane.setHgap(20);
     
-    Label label = new Label("Начните вводить текст...");
-    gridPane.add(label, 0, 1, 1, 1);
+    Label labelOfEditor = new Label("Начните вводить текст...");
     
     TextArea textEditor = new TextArea();
     textEditor.setMinHeight(100);
     textEditor.setWrapText(true);
-    gridPane.add(textEditor, 0, 2, 1, 1);
+    
+    Label labelOfPredictiveListLength = new Label("Длина списка подсказок: ");
+    Label labelOfIndexName = new Label("Индекс: " + "NGram" + predictor.getIndexN());
     
     ListView<String> predictiveText = new ListView<>();
-    gridPane.add(predictiveText, 0, 3, 1, 1);
+    
+    gridPane.add(labelOfEditor,
+        0, 1, 4, 1);
+    gridPane.add(textEditor,
+        0, 2, 4, 1);
+    gridPane.add(labelOfPredictiveListLength,
+        0, 3, 3, 1);
+    gridPane.add(labelOfIndexName,
+        3, 3, 1, 1);
+    gridPane.add(predictiveText,
+        0, 4, 4, 1);
     predictiveText.setOnMouseClicked(e -> {
       String[] words = textEditor.getText().split(" ");
       words[words.length - 1] = predictiveText.getSelectionModel().getSelectedItem();
-      textEditor.setText(Arrays.stream(words).collect(Collectors.joining(" "))+" ");
+//      internalEditorTextChange.set(true);//todo>> to decide if this optimisation is needed use VisualVM
+      textEditor.setText(Arrays.stream(words).collect(Collectors.joining(" ")) + " ");
       textEditor.requestFocus();
       textEditor.end();
+//      internalEditorTextChange.set(false);//todo>> to decide if this optimisation is needed use VisualVM
     });
     textEditor.textProperty().addListener(e -> {
+//      if (internalEditorTextChange.get()) {//todo>> to decide if this optimisation is needed use VisualVM
+//        return;
+//      }
       predictiveText.getItems().clear();
       String[] words = textEditor.getText().split(" ");
-      String lastWord = words[words.length - 1];
-      try {
-        if (lastWord.length() > 1) {
-          Predictor predictor = new Predictor("predictor.conf");
-          String[] predictiveWords = predictor.search(words[words.length - 1]).stream()
-                                         .sorted(Comparator
-                                                     .comparingInt(SearchDictionaryEntry::getDistance)
-                                                     .reversed()
-                                                     .thenComparingDouble(SearchDictionaryEntry::getLocalFrequency)
-                                                     .thenComparingDouble(SearchDictionaryEntry::getFrequency)
-                                                     .reversed()
-                                         )
-                                         .limit(15)
-                                         .map(Entry::getWord).toArray(String[]::new);
-          predictiveText.getItems().addAll(predictiveWords);
-        }
-      } catch (IOException e1) {
-        e1.printStackTrace();
-      }
+//      String lastWord = words[words.length - 1];//todo>> to decide if this optimisation is needed use VisualVM
+//      if (lastWord.length() > 1) {//todo>> to decide if this optimisation is needed use VisualVM
+        String[] predictiveWords = predictor.search(words[words.length - 1]).stream()
+                                       .sorted(Comparator
+                                                   .comparingInt(SearchDictionaryEntry::getDistance)
+                                                   .reversed()
+                                                   .thenComparingDouble(SearchDictionaryEntry::getLocalFrequency)
+                                                   .thenComparingDouble(SearchDictionaryEntry::getFrequency)
+                                                   .reversed()
+                                       )
+//                                       .limit(15)
+                                       .map(Entry::getWord).toArray(String[]::new);
+        labelOfPredictiveListLength.setText("Длина списка подсказок: " + predictiveWords.length);
+        predictiveText.getItems().addAll(predictiveWords);
+//      }
     });
     
     return gridPane;

@@ -178,6 +178,10 @@ public class Predictor {
   
   public void saveDictionary(String dictionaryFileName) {
   }
+  
+  public int getIndexN() {
+    return this.n;
+  }
 
 //  public SearchDictionary margeDictionaries(SearchDictionary dictionary1, SearchDictionary dictionary2){
 //    return new SearchDictionary();
