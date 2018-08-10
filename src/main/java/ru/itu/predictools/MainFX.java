@@ -1,4 +1,4 @@
-package ru.itu.predictools.gui;
+package ru.itu.predictools;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -8,13 +8,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
-import ru.itu.predictools.Predictor;
-import ru.itu.predictools.index.IndexNGram;
+import ru.itu.predictools.gui.ConfirmBox;
 import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
@@ -28,7 +26,7 @@ public class MainFX extends Application {
   }
   
   @Override
-  public void start(Stage primaryStage) throws Exception {
+  public void start(Stage primaryStage) {
     window = primaryStage;
     window.setOnCloseRequest(e -> {
       e.consume();
@@ -43,7 +41,7 @@ public class MainFX extends Application {
     
   }
   
-  private GridPane fillGridPane() throws IOException {
+  private GridPane fillGridPane() {
     
     GridPane gridPane = new GridPane();
     gridPane.setPadding(new Insets(10, 20, 30, 20));

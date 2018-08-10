@@ -11,12 +11,12 @@ import javafx.stage.Stage;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 
-class ConfirmBox {
+public class ConfirmBox {
   
   private static boolean answer;
   
   @SuppressWarnings("SameParameterValue")
-  static boolean display(String title, String message) {
+  public static boolean display(String title, String message) {
     Stage window = new Stage();
     
     window.initModality(Modality.APPLICATION_MODAL);

@@ -8,7 +8,9 @@
   <artifactId>predict00ls</artifactId>
   <version>1.0-SNAPSHOT</version>
   <build>
+    
     <plugins>
+      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -17,45 +19,28 @@
           <target>8</target>
         </configuration>
       </plugin>
+      
+      <plugin>
+        <groupId>com.zenjava</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>8.8.3</version>
+        <configuration>
+          <mainClass>your.package.with.Launcher</mainClass>
+        </configuration>
+      </plugin>
+      
     </plugins>
+    
   </build>
   
   <dependencies>
     
-    <!--
-    <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>javax.servlet-api</artifactId>
-        <version>3.1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>RELEASE</version>
-      <scope>test</scope>
-    </dependency>
-    -->
-    
-    <!-- https://mvnrepository.com/artifact/junit/junit -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
     </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-      <version>2.8.5</version>
-      <scope>compile</scope>
-    </dependency>
-  
-    <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.github.mpkorstanje/simmetrics-core &ndash;&gt;
-            <dependency>
-                <groupid>com.github.mpkorstanje</groupid>
-                <artifactid>simmetrics-core</artifactid>
-                <version>4.1.1</version>
-            </dependency>-->
-  
+    
   </dependencies>
 
 </project>
