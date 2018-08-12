@@ -34,18 +34,17 @@ public class MainFX extends Application {
       closeWindow();
     });
     
-    Scene scene = new Scene(fillGridPane(), 500, 350);
+    Scene scene = new Scene(fillGridPane(), 500, 450);
     
     window.setScene(scene);
-    window.setTitle("Предиктивный ввод демо/тест");
+    window.setTitle(System.getProperty("user.dir") + " Предиктивный ввод демо/тест");
     window.show();
     
   }
   
   private GridPane fillGridPane() {
     Predictor predictor = new Predictor(System.getProperty("user.dir") + File.separator
-                                            + "config" + File.separator + "ru-utf8-ngram2-d1-prefix.conf");
-    
+                                            + "config" + File.separator + "predictor.conf");
     GridPane gridPane = new GridPane();
     gridPane.setPadding(new Insets(10, 20, 30, 20));
     gridPane.setVgap(8);
@@ -80,15 +79,15 @@ public class MainFX extends Application {
       String[] predictiveWords = new String[0];
       try {
         predictiveWords = predictor.search(words[words.length - 1]).stream()
-                                       .sorted(Comparator
-                                                   .comparingInt(SearchDictionaryEntry::getDistance)
-                                                   .reversed()
-                                                   .thenComparingDouble(SearchDictionaryEntry::getLocalFrequency)
-                                                   .thenComparingDouble(SearchDictionaryEntry::getFrequency)
-                                                   .reversed()
-                                       )
-  //                                       .limit(15)
-                                       .map(Entry::getWord).toArray(String[]::new);
+                              .sorted(Comparator
+                                          .comparingInt(SearchDictionaryEntry::getDistance)
+                                          .reversed()
+                                          .thenComparingDouble(SearchDictionaryEntry::getLocalFrequency)
+                                          .thenComparingDouble(SearchDictionaryEntry::getFrequency)
+                                          .reversed()
+                              )
+                              //                                       .limit(15)
+                              .map(Entry::getWord).toArray(String[]::new);
       } catch (IOException e1) {
         e1.printStackTrace();
       }

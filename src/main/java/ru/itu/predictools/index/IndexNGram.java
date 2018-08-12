@@ -94,7 +94,7 @@ public class IndexNGram extends WordIndex {
     SearchDictionaryEntry entry;
     SearchDictionaryEntry resultEntry;
     String word;
-    int currentDistance = 0;
+    int currentDistance;
     
     for (int i = 0; i < searchPattern.length() - n + 1; ++i) {
       int ngram = IndexNGram.getNGram(alphabet, searchPattern, i, n);
