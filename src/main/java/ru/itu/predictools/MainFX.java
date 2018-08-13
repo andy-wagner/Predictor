@@ -18,11 +18,15 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class MainFX extends Application {
-  
+  private static final Logger LOGGER = LogManager.getLogger(MainFX.class.getName());
   private Stage window;
   
   public static void main(String... args) {
+    LOGGER.debug("Predictor demo/test app is starting...");
     launch(args);
   }
   

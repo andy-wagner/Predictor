@@ -30,13 +30,13 @@ Each record consists of three fields:
 Fields of the record are comma-separated and each line ends with CRLF symbol.
 
 ### About relations between different kinds of dictionaries and merging them
-An instance of the Predictor class simultaneously uses three types of dictionaries. File names of that three dictionaries are described in the `predictor.conf` file.
+An instance of the Predictor class simultaneously uses three types of dictionaries. File names of that three dictionaries are described in the ``predictor.conf`` file.
 During initialization of the instance of the Predictor class, these three dictionaries are merged into one search dictionary.
 Records of this search dictionary by default are ordered first by the user's frequency (we call it local frequency) and then by the frequency in IPM from the main dictionary (we call it frequency or global frequency)
-There are some requirement and features for the dictionaries that we have specified in the predictor.conf file that we need to know:
+There are some requirement and features for the dictionaries that we have specified in the `predictor.conf` file that we need to know:
 - language (parameter `lang`) of each dictionary should be the same, if it differs at least in one dictionary the constructor of Predictor class will drop an error
 - if a word exists in the main dictionary and in the user's dictionary then merging could be produced with or without updating
-  - if they are merging with an update then IPM in global frequency field of search dictionary will be replaced with the user frequency (counter of uses) and stored as local frequency too.
-  - if dictionaries merge without update then frequency field in the search dictionary will be equal to an IPM value from the main dictionary and users frequency will be saved in the field of local frequency
-- if a word doesn't exist in the main dictionary then search dictionary will save word's uses counter as global frequency and as the local frequency
+  - if they are merging with an update then IPM in global frequency field of the search dictionary will be replaced with the user frequency (the counter of uses) and will be stored as local frequency too.
+  - if dictionaries merge without update then the frequency field in the search dictionary will be equal to an IPM value from the main dictionary and the user's frequency will be saved in the field of local frequency
+- if a word doesn't exist in the main dictionary then search dictionary will save the word's uses counter as global frequency and as the local frequency too.
 
