@@ -2,7 +2,7 @@
 The initialization information for creating an instance of the Predictor class is in the `config/predictor.conf` file
 
 In the same folder, there are template files with different configuration options.
-To make one of them active copy the contents of the file and put it into the file predictor.conf instead its previous content
+To make one of them active, copy the contents of the file and put it into the file predictor.conf instead its previous content
 
 ## Structure of the predictor.conf and meaning of its fields
 The predictor.conf file consists of comments and name=value pair strings.

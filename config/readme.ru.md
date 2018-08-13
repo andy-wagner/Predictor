@@ -2,18 +2,18 @@
 Информация инициализации для создания экземпляра класса Predictor находится в файле config/predictor.conf
 
 В той же папке `config/` находятся файлы шаблонов с различными вариантами настроек.
-Чтобы сделать один из них активным скопируйте содержимое файла и поместите его в файл predictor.conf вместо его предыдущего содержимого
+Чтобы сделать один из них активным, скопируйте содержимое файла и поместите его в файл predictor.conf вместо его предыдущего содержимого
 
 ## Структура файла predictor.conf и значение его полей
 Файл predictor.conf состоит из комментариев и строк с парами name = value (имя параметра = значение параметра).
 Каждая строка, начинающаяся с #, является строкой комментария и игнорируется парсером.
 Для текущей версии библиотеки Predictor файл конфигурации содержит три типа параметров:
 - имена файлов словарей
-  - mainDictionary - имя основного словарного файла (например, mainDictionary = dictionaries/en-main-v1-utf8.dic)
-  - userWordsDictionary - имя словаря слов пользователя (например, userWordsDictionary = user/dictionary/en-user-words-v1-utf8.dic)
-  - userPhrasesDictionary - имя словаря фразы пользователя (например, userPhrasesDictionary = user/dictionary/en-user-phrases-v1-utf8.dic)
+  - mainDictionary - имя основного словарного файла (например, mainDictionary = dictionaries/en-main-v1-utf8.dic)
+  - userWordsDictionary - имя словаря слов пользователя (например, userWordsDictionary = user/dictionary/en-user-words-v1-utf8.dic)
+  - userPhrasesDictionary - имя словаря фразы пользователя (например, userPhrasesDictionary = user/dictionary/en-user-phrases-v1-utf8.dic)
 - параметры индекса NGram
-  - n - длина n-граммы (e.g. n = 2)
+  - n - длина n-граммы (e.g. n = 2)
 - параметры поиска
-  - maxDistance - максимально разрешенное редакторское расстояние между шаблоном поиска и словом или префиксом слова из словаря поиска (пример: maxDistance = 1)
-  - prefix - режим префикса для поиска (пример: prefix = true)
+  - maxDistance - максимально разрешенное редакторское расстояние между шаблоном поиска и словом или префиксом слова из словаря поиска (пример: maxDistance = 1)
+  - prefix - режим префикса для поиска (пример: prefix = true)

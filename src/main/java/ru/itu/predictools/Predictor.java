@@ -2,6 +2,7 @@ package ru.itu.predictools;
 
 import com.sun.corba.se.impl.io.TypeMismatchException;
 import ru.itu.predictools.metric.LevensteinMetric;
+import ru.itu.predictools.registry.Dictionary;
 import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.alphabet.Alphabet;
 import ru.itu.predictools.registry.SearchDictionary;
@@ -93,7 +94,7 @@ public class Predictor {
   }
   
   public Set<SearchDictionaryEntry> search(String searchPattern, int maxDistance, Metric metric, boolean prefix) throws IOException {
-    //check if dictionary files changed, if so rebuild index
+    //check if dictionary files changed, if this is true rebuild the index
     BasicFileAttributes attributesOfMainDictionary = Files.readAttributes(Paths.get(this.mainDictionaryFileName), BasicFileAttributes.class);
     BasicFileAttributes attributesOfUserWordsDictionary = Files.readAttributes(Paths.get(this.userWordsDictionaryFileName), BasicFileAttributes.class);
     BasicFileAttributes attributesOfUserPhrasesDictionary = Files.readAttributes(Paths.get(this.userPhrasesDictionaryFileName), BasicFileAttributes.class);
@@ -122,14 +123,13 @@ public class Predictor {
   }
   
   public String getLanguage() {
-    return "ru";
+    return this.getAlphabet().getIsoLanguageName();
   }
   
   public void setLanguage(String language) {//todo>> stub code here
   }
   
   public Alphabet getAlphabet() {
-//        return set of all this.dictionary letters converted into alphabet object
     return this.dictionary.getAlphabet();
   }
   
