@@ -7,7 +7,7 @@ There are two kinds of dictionaries - main dictionaries and user dictionaries.
 There is no matter what kind of dictionary it is they all consists of two parts - a header and a content
 #### Header structure
 The header of the dictionary starts from the beginning of the file and ends on the last line before the line with the word `start`.
-The header contains lines with name=value pairs.
+The header contains lines with `name=value` pairs.
 <br> In the current version there is two types of values:
 - lang = [an ISO 639-1 name of language] e.g. lang=en or lang=ru etc. - indicates the language of words of the dictionary.
 This value should be presented in every dictionary type - main and user's

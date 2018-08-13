@@ -5,7 +5,7 @@ In the same folder, there are template files with different configuration option
 To make one of them active, copy the contents of the file and put it into the file predictor.conf instead its previous content
 
 ## Structure of the predictor.conf and meaning of its fields
-The predictor.conf file consists of comments and name=value pair strings.
+The predictor.conf file consists of comments and `name=value` pair strings.
 Each line that begins with # is the comment line and will be ignored by the parser.
 In the current version of the Predictor library there are three types of values
 - dictionaries files names 
