@@ -9,14 +9,14 @@ There is no matter what kind of dictionary it is, they all consists of two parts
 The header of the dictionary starts from the beginning of the file and ends on the last line before the line with the word `start`.
 The header contains lines with `name=value` pairs.
 <br> In the current version there is two types of values:
-- lang = [an ISO 639-1 name of language] e.g. lang=en or lang=ru etc. - indicates the language of words of the dictionary.
+- lang = [an ISO 639-1 name of language] e.g. `lang=en` or `lang=ru` etc. - indicates the language of words of the dictionary.
 This value should be presented in every dictionary type - main and user's
 - user = [some user identifier] - maybe the name of the user or his/here social number or something like this<br>
 This value should be presented only in the users dictionaries.
   Here are some examples:
-  - user=Ivan Smith <br>
+  - `user=Ivan Smith` <br>
   or 
-  - user=014-629-247-39 etc.
+  - `user=014-629-247-39` etc.
 #### Content structure
 The content section of the dictionary starts immediately after the line with the word `start`. 
 The content is a list of lines, let's call they records. 
