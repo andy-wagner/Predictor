@@ -2,7 +2,6 @@ package ru.itu.predictools;
 
 import com.sun.corba.se.impl.io.TypeMismatchException;
 import ru.itu.predictools.metric.LevensteinMetric;
-import ru.itu.predictools.registry.Dictionary;
 import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.alphabet.Alphabet;
 import ru.itu.predictools.registry.SearchDictionary;
@@ -15,10 +14,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class Predictor {
+  private static final Logger LOGGER = LogManager.getLogger();
   private String mainDictionaryFileName;
   private String userWordsDictionaryFileName;
   private String userPhrasesDictionaryFileName;
@@ -28,6 +33,7 @@ public class Predictor {
   private boolean prefix;
   private int maxDistance;
   private Metric metric;
+  private Set<SearchDictionaryEntry> lastSearchResult;
   
   private Map<String, Set<Character>> specialSymbolsSet;//<NameOfCharactersSet, CharactersSet>
   
@@ -71,20 +77,23 @@ public class Predictor {
       this.index = new IndexNGram(this.dictionary, n);
       this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
     } catch (TypeMismatchException e) {
+      LOGGER.error("Error: Wrong dictionary file format.");
       throw new TypeMismatchException("Error: Wrong dictionary file format.");
     } catch (IOException e) {
+      LOGGER.error(e.getMessage());
       e.printStackTrace();
     }
+    LOGGER.info("An instance of Predictor class has been created.");
     
   }
   
-  private void reloadIndex() throws IOException {
-    this.dictionary = new SearchDictionary(this.mainDictionaryFileName, this.userWordsDictionaryFileName, this.userPhrasesDictionaryFileName);
-    this.index = new IndexNGram(this.dictionary, n);
-    this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
-  }
-  
-  //PUBLIC METHODS
+  /**
+   * search search patternd with parameters as they are specified in the predictor.conf file
+   *
+   * @param searchPattern - pattern to search words with
+   * @return
+   * @throws IOException
+   */
   public Set<SearchDictionaryEntry> search(String searchPattern) throws IOException {
     return this.search(searchPattern, this.maxDistance, this.metric, this.prefix);
   }
@@ -109,9 +118,17 @@ public class Predictor {
       this.dictionary.setDictionariesLastTimesModified(new FileTime[]{
           mainDictionaryLastModified, userWordsDictionaryLastModified, userPhrasesDictionaryLastModified}
       );
-      this.reloadIndex();
+      this.makeIndex();
     }
-    return this.index.search(searchPattern, maxDistance, metric, prefix);
+    this.lastSearchResult = this.index.search(searchPattern, maxDistance, metric, prefix);
+    return this.lastSearchResult;
+  }
+  
+  private void makeIndex() throws IOException {
+    this.lastSearchResult = new HashSet<>();
+    this.dictionary = new SearchDictionary(this.mainDictionaryFileName, this.userWordsDictionaryFileName, this.userPhrasesDictionaryFileName);
+    this.index = new IndexNGram(this.dictionary, n);
+    this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
   }
   
   public void setMaxDistance(int maxDistance) {
@@ -126,61 +143,76 @@ public class Predictor {
     return this.getAlphabet().getIsoLanguageName();
   }
   
-  public void setLanguage(String language) {//todo>> stub code here
-  }
-  
   public Alphabet getAlphabet() {
     return this.dictionary.getAlphabet();
   }
   
+  /**
+   * Returns alphabet object of predictor's search dictionary
+   *
+   * @param searchDictionary - search dictionary
+   * @return - alphabet object of search dictionary
+   */
   public static Alphabet getAlphabet(SearchDictionary searchDictionary) {
-//        return set of all dictionary letters converted into alphabet object
     return searchDictionary.getAlphabet();
   }
   
-  public Alphabet getReducedAlphabet(String pattern) {
+  public SearchDictionary getDictionary() {
+    return this.dictionary;
+  }
+  
+  public Alphabet getReducedAlphabet() {
+    return SearchDictionary.getAlphabet(this.lastSearchResult, this.dictionary.getIsoLanguageName());
+  }
+  
+  public Alphabet getReducedAlphabet(String searchPattern) {
     try {
-      return null;//todo>>return index.getReducedAlphabet(pattern)
+      return SearchDictionary.getAlphabet(this.search(searchPattern), this.dictionary.getIsoLanguageName());
     } catch (IllegalArgumentException e) {
+      LOGGER.error(e.getMessage());
+      return null;
+    } catch (IOException e) {
+      LOGGER.error(e.getMessage());
+      e.printStackTrace();
       return null;
     }
   }
   
-  public void saveAlphabet(String alphabetFileNmae) {//todo>> stub code
-//      saves this.dictionary.alphabet into the file
+  public SearchDictionaryEntry getWordEntry(String word){
+    return this.dictionary.getEntry(word);
   }
   
-  public void saveAlphabet(Alphabet alphabet, String alphabetFileNmae) {
-//        saves alphabet into the file
+  public void addWord(String word) {
+    this.dictionary.getUserWordsDictionary().addEntry(word);
+    this.dictionary.makeSearchDictionary();
   }
   
-  public Alphabet setAlphabet() {//get alphabet of selected dictionary and then set it to this.dictiomany.alphabet
+  public void addPhrase(String phrase) {
+    this.dictionary.getUserPhrasesDictionary().addEntry(phrase);
+    this.dictionary.makeSearchDictionary();
+  }
+  
+  public void updateWord(Entry newWordEntry) {
+    this.dictionary.getUserWordsDictionary().updateEntry(newWordEntry);
+    this.dictionary.makeSearchDictionary();
+  }
+  
+  public void updatePhrase(Entry newPhraseEntry) {
+    this.dictionary.getUserPhrasesDictionary().updateEntry(newPhraseEntry);
+    this.dictionary.makeSearchDictionary();
+  }
+  
+  public Alphabet getSymbolsSet(Integer contentFlags) {
     try {
-      Alphabet alphabet = this.dictionary.getAlphabet();
-      this.dictionary.setAlphabet(alphabet);
-      return alphabet;
-    } catch (IllegalArgumentException e) {
-      return null;
-    }
-    
-  }
-  
-  public void setAlphabet(String alphabetFileName) {//set this.dictionary.alphabet into alphabet loaded from specified file
-  }
-  
-  public Alphabet getSymbolsSet(Integer setContentFlags) {
-    try {
-//        setContentFlags is bit-field where each bit is flag of symbols subset assigned with addSymbolsSubset(..) function
+//        contentFlags is bit-field where each bit is flag of symbols subset assigned with addSymbolsSubset(..) function
       return null;//todo>> return sum of subsets of this.specialSymbolsSet converted to alphabet
     } catch (IllegalArgumentException e) {
+      LOGGER.error(e.getMessage());
       return null;
     }
   }
   
   public void addSymbolsSubset(Set<Character> symbols, Integer flag) {
-  }
-  
-  public void addDictionaryEntry(Entry entry) {
   }
   
   public void loadDictionary(String dictionaryFileName) {

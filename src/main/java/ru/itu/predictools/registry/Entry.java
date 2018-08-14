@@ -3,6 +3,9 @@ package ru.itu.predictools.registry;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
 public class Entry implements Comparable<Entry> {
   String word;

@@ -6,6 +6,9 @@ import ru.itu.predictools.registry.SearchDictionaryEntry;
 import java.io.IOException;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class TrieSearch extends Search {
     private IndexPrefixTrie trie;
 
@@ -16,8 +19,8 @@ public class TrieSearch extends Search {
         trie = new IndexPrefixTrie(searchDictionary);
         endTime = System.currentTimeMillis();
 
-        System.out.println("Total entries count " + trie.getEntriesCount());
-        System.out.println("Prefix trie index creation time: " + (double) (endTime - startTime) / 1000 + " с");
+//        System.out.println("Total entries count " + trie.getEntriesCount());
+//        System.out.println("Prefix trie index creation time: " + (double) (endTime - startTime) / 1000 + " с");
 
     }
 

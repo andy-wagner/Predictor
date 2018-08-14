@@ -5,8 +5,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class Alphabet {
+  private static final Logger LOGGER = LogManager.getLogger();
   private String isoLanguageName;//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
   private char[] chars;//alphabet symbols
   private Map<Character, Character> substitutes;
@@ -33,6 +37,7 @@ public class Alphabet {
     this.chars = alphabetString.toLowerCase().toCharArray();
     this.isoLanguageName = isoLanguageName;
     this.substitutes = substitutes;
+    LOGGER.info("An alphabet instance has been created -> {}", alphabetString.toUpperCase());
   }
   
   /**
@@ -85,7 +90,8 @@ public class Alphabet {
       try {
         ch = substitutes.get(ch);
         return new String(chars).indexOf(ch);
-      } catch (NullPointerException e) {
+      } catch (Exception e) {
+        LOGGER.error(e.getMessage());
         throw new RuntimeException("Error: The char '" + ch + "' is not from the alphabet and there is no substitutes for it.");
       }
     }

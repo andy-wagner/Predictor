@@ -1,6 +1,5 @@
 package ru.itu.predictools.index;
 
-import ru.itu.predictools.metric.LevensteinMetric;
 import ru.itu.predictools.metric.Metric;
 import ru.itu.predictools.registry.SearchDictionary;
 import ru.itu.predictools.registry.SearchDictionaryEntry;
@@ -8,13 +7,15 @@ import ru.itu.predictools.registry.SearchDictionaryEntry;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @SuppressWarnings({"unused", "WeakerAccess"})
 public class IndexPrefixTrie extends WordIndex {
+  private static final Logger LOGGER = LogManager.getLogger();
   private static final long serialVersionUID = 1L;//todo>> consider serialization
-  
   private PrefixTrieNode root;
-  
-  private int nodesCount, entriesCount;
+  //  private int nodesCount, entriesCount;
   
   class PrefixTrieNode {
     PrefixTrieNode[] children;
@@ -27,34 +28,30 @@ public class IndexPrefixTrie extends WordIndex {
       leaf = false;
       chain = "";
       entry = null;
-      nodesCount++;
+//      nodesCount++;
     }
-  }
-  
-  public SearchDictionary getDictionary() {
-    return this.searchDictionary;
   }
   
   public IndexPrefixTrie(SearchDictionary searchDictionary) {
     super(searchDictionary, searchDictionary.getAlphabet());
-    nodesCount = entriesCount = 0;
+    LOGGER.info("Building of trie index has been started...");
+//    nodesCount = entriesCount = 0;
     root = new PrefixTrieNode();
-    searchDictionary.getEntries().forEach(this::insertEntry);//for each entry in getDictionary
+    searchDictionary.getSearchDictionaryEntries().forEach(this::insertEntry);//for each entry in getDictionary
+    LOGGER.info("Building of trie index has been finished...");
   }
   
   @Override
-  public Set<SearchDictionaryEntry> search(String string) {
-    return null;
-  }//TODO prefix trie search(string) shouldn't return null
-  
-  @Override
-  public Set<SearchDictionaryEntry> search(String string, int distance, Metric metric) {
-    return search(string, distance, metric, false);
+  public Set<SearchDictionaryEntry> search(String searchPattern) {
+    return search(searchPattern, 0, null);
   }
   
-  @Override
+  public Set<SearchDictionaryEntry> search(String searchPattern, int distance, Metric metric) {
+    return search(searchPattern, distance, metric, false);
+  }
+  
   public Set<SearchDictionaryEntry> search(String searchPattern, int distance, Metric metric, boolean prefixSearch) {
-//        Set<SearchDictionaryEntry> set = new HashSet<>();
+    LOGGER.info("Searching of {} has been started ...", searchPattern);
     
     //build first row vector
     int wordLength = searchPattern.length();
@@ -62,31 +59,34 @@ public class IndexPrefixTrie extends WordIndex {
     
     //recursive Levenstein distance search from root note by each branch of the trie till each leaf
     IndexPrefixTrie.PrefixTrieNode root = getNodeByString("");
-    return recursiveSearch(currentRow, root, searchPattern, distance, prefixSearch);
+    return recursiveSearch(currentRow, root, searchPattern, metric, distance, prefixSearch);
   }
   
-  private Set<SearchDictionaryEntry> recursiveSearch(int[] previousRow, IndexPrefixTrie.PrefixTrieNode node, CharSequence searchString,
-                                                     int maxDistance, boolean prefixSearch) {
-    // TODO should be optimized - there is no need to calculate matrix when prefix.length=0 or node.chain.length=0 or node.chain.length < prefix.length-maxDistance -->>
+  private Set<SearchDictionaryEntry> recursiveSearch(int[] previousRow, IndexPrefixTrie.PrefixTrieNode node, CharSequence searchPattern,
+                                                     Metric metric, int maxDistance, boolean prefixSearch) {
+    // todo>> should be optimized - there is no need to calculate matrix when prefix.length=0 or node.chain.length=0 or node.chain.length < prefix.length-maxDistance -->>
     // -->> if (node.chain.length() < searchString.length() - maxDistance) return maxDistance + 1;
     // если длина строки меньше длины префикса на количество символов большее максимально допустимого расстояния (max) то ясно что слово не удовлетворяет условию Ld<max
-    
-    int searchStringLength = searchString.length();
+  
+    LOGGER.info("Next iteration of recursive searching of {} has been started ...", searchPattern);
+    int searchStringLength = searchPattern.length();
     Set<SearchDictionaryEntry> resultSet = new HashSet<>();
     if (searchStringLength == 0) return resultSet;//no need to do anything to get zero length sequence
     
     int columns = searchStringLength + 2;
     int[] currentRow = new int[columns];
     
-    LevensteinMetric metric = new LevensteinMetric(searchDictionary.getMaxWordLength());
-    
-    //Build row for the char (ch), with a columns for each letter in the target word (searchString), plus one for the empty string at column 0 and one for minimum at column searchString.length+1
+    //Build row for the char (ch), with a columns for each letter in the target word (searchString),
+    // plus one for the empty string at column 0 and one for minimum at column searchString.length+1
     int charIndexInNodeChain = node.chain.length() - 1;
-    if (charIndexInNodeChain < 0) for (int i = 1; i <= searchStringLength; i++)
-      currentRow[i] = i;//the first row for null-length string of root element of trie
+    if (charIndexInNodeChain < 0) {
+      for (int i = 1; i <= searchStringLength; i++) {
+        currentRow[i] = i;//the first row for null-length string of root element of trie
+      }
+    }
     else {
       char lastCharInNodeChain = node.chain.charAt(charIndexInNodeChain);
-      currentRow = metric.getLevensteinVector(previousRow, lastCharInNodeChain, charIndexInNodeChain, searchString, maxDistance);
+      currentRow = metric.getVector(previousRow, lastCharInNodeChain, charIndexInNodeChain, searchPattern, maxDistance);
     }
     
     // if the last entry in the row indicates the optimal cost is less than the maximum cost (distance), and there
@@ -104,7 +104,8 @@ public class IndexPrefixTrie extends WordIndex {
     if (currentRow[columns - 1] <= maxDistance) //currentRow[last] - stores minimum of Vector values
       for (int i = 0; i < alphabet.size(); i++)
         if (node.children[i] != null)
-          resultSet.addAll(recursiveSearch(currentRow, node.children[i], searchString, maxDistance, /*metric, */prefixSearch));//TODO ?metric?
+          resultSet.addAll(recursiveSearch(currentRow, node.children[i], searchPattern, metric, maxDistance, prefixSearch));
+    LOGGER.info("Next iteration of recursive searching of {} has been finished...", searchPattern);
     return resultSet;
     /*
     private void assembleSubtree(PrefixTrieNode node, List<Entry> subtree) {
@@ -121,14 +122,8 @@ public class IndexPrefixTrie extends WordIndex {
     * */
   }
   
-  @Override
-  public long getEntriesCount() {
-    return entriesCount;
-  }
-  
-  @Override
-  public long getNodesCount() {
-    return nodesCount;
+  public SearchDictionary getDictionary() {
+    return this.searchDictionary;
   }
   
   public void insertEntry(SearchDictionaryEntry entry) {
@@ -147,13 +142,8 @@ public class IndexPrefixTrie extends WordIndex {
     if (!selected.leaf) {//if word not in the index yet then add it, this one is new
       selected.leaf = true;
       selected.entry = entry;
-      entriesCount++;//for debugging and testing compare with getDictionary.Entries.size()
+//      entriesCount++;//for debugging and testing compare with getDictionary.Entries.size()
     }
-    //todo>> it is possible to make it without entry member, but in that case we have to pass word substring by the recursive
-    //todo--> calls and will lose word parameters such as frequency etc. so in that case we will need to find them in the
-    //todo--> SearchDictionary by the word from the trie
-    
-    //todo>> compare performance for realization with and without .entry member
   }
   
   public SearchDictionaryEntry getEntry(String prefix) {
@@ -164,7 +154,7 @@ public class IndexPrefixTrie extends WordIndex {
     String currentString = "";
     PrefixTrieNode selected = root;
     for (char ch : prefix.toCharArray()) {
-      if (alphabet.isAlphabetChar(Character.toUpperCase(ch))) {//TODO the char is not from & upper/lower case
+      if (alphabet.isAlphabetChar(Character.toUpperCase(ch))) {
         int childIndex = alphabet.mapChar(ch);
         if (childIndex > alphabet.size() - 1 || childIndex < 0) return null;
         PrefixTrieNode next = selected.children[childIndex];
@@ -237,7 +227,7 @@ public class IndexPrefixTrie extends WordIndex {
     }
 */
 
-//    public Set<Character> reducedAlphabet(String prefix) {//TODO getReducedAlphabet from prefix trie
+//    public Set<Character> reducedAlphabet(String prefix) {
 //        Set<Character> set = new HashSet<>();
 //
 //        for(SearchDictionaryEntry entry: getDescendants(prefix)){

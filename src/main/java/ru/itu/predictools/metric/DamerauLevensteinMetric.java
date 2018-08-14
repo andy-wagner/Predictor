@@ -1,18 +1,26 @@
 package ru.itu.predictools.metric;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Метрика Дамерау-Левенштейна.
  */
-public class DamerauLevensteinMetric extends Metric {
+public class DamerauLevensteinMetric extends LevensteinMetric {
+	private static final Logger LOGGER = LogManager.getLogger();
 
 	public DamerauLevensteinMetric() {
 		this(DEFAULT_LENGTH);
 	}
 
 	public DamerauLevensteinMetric(int maxLength) {
-		currentRow = new int[maxLength + 1];
-		previousRow = new int[maxLength + 1];
+		super(maxLength);
+//		previousVector = new int[maxStringLength + 2]; //first cell for distance from zero length char-sequence, and last value for minimum from all values of vector
+//		currentVector = new int[maxStringLength + 2];
+//		currentRow = new int[maxLength + 1];
+//		previousRow = new int[maxLength + 1];
 		transpositionRow = new int[maxLength + 1];
+		LOGGER.info("Damerau Levenstein Metric is has been created.");
 	}
 
 	/**

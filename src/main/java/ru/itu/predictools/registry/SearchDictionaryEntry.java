@@ -3,6 +3,9 @@ package ru.itu.predictools.registry;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @SuppressWarnings({/*"unused",*/ "WeakerAccess", "UnusedReturnValue"})
 public class SearchDictionaryEntry extends Entry {
   private Integer distance; //distance from this entry word to search target //TODO absolute or relative distance what kind is preferable???

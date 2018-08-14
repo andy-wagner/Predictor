@@ -8,6 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Label;
+import ru.itu.predictools.alphabet.Alphabet;
 import ru.itu.predictools.gui.ConfirmBox;
 import ru.itu.predictools.registry.Entry;
 import ru.itu.predictools.registry.SearchDictionaryEntry;
@@ -22,11 +23,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MainFX extends Application {
-  private static final Logger LOGGER = LogManager.getLogger(MainFX.class.getName());
+  private static final Logger LOGGER = LogManager.getLogger();
   private Stage window;
   
   public static void main(String... args) {
-    LOGGER.debug("Predictor demo/test app is starting...");
+//    LOGGER.debug("debug log message test: Predictor demo/test app is starting...");
+    LOGGER.info("Predictor demo/test app is starting...");
+//    LOGGER.error("error log message test: Predictor demo/test app is starting...");
     launch(args);
   }
   
@@ -62,6 +65,7 @@ public class MainFX extends Application {
     
     Label labelOfPredictiveListLength = new Label("Длина списка подсказок: ");
     Label labelOfIndexName = new Label("Индекс: " + "NGram" + predictor.getIndexN());
+    Label labelOfReducedAlphabet = new Label("Алфавит: ");
     
     ListView<String> predictiveText = new ListView<>();
     
@@ -69,7 +73,8 @@ public class MainFX extends Application {
     gridPane.add(textEditor, 0, 2, 4, 1);
     gridPane.add(labelOfPredictiveListLength, 0, 3, 3, 1);
     gridPane.add(labelOfIndexName, 3, 3, 1, 1);
-    gridPane.add(predictiveText, 0, 4, 4, 1);
+    gridPane.add(labelOfReducedAlphabet, 0, 4, 4, 1);
+    gridPane.add(predictiveText, 0, 5, 4, 1);
     predictiveText.setOnMouseClicked(e -> {
       String[] words = textEditor.getText().split(" ");//[\\s,.{}();\\[\\]\\n]
       words[words.length - 1] = predictiveText.getSelectionModel().getSelectedItem();
@@ -93,10 +98,25 @@ public class MainFX extends Application {
                               //                                       .limit(15)
                               .map(Entry::getWord).toArray(String[]::new);
       } catch (IOException e1) {
+        LOGGER.error(e1.getMessage());
         e1.printStackTrace();
       }
       labelOfPredictiveListLength.setText("Длина списка подсказок: " + predictiveWords.length);
       predictiveText.getItems().addAll(predictiveWords);
+      Alphabet reducedAlphabet = predictor.getReducedAlphabet();
+      char[] chars;
+      if(reducedAlphabet != null){
+        chars = reducedAlphabet.getChars();
+      }
+      else{
+        chars = new char[0];
+      }
+      Arrays.sort(chars);
+      labelOfReducedAlphabet.setText( "Алфавит: " + Arrays.toString(chars)
+                                                         .replace("[","")
+                                                         .replace(",","")
+                                                         .replace("]","")
+                                                         .toUpperCase());
     });
     
     return gridPane;
@@ -105,8 +125,9 @@ public class MainFX extends Application {
   private void closeWindow() {
 //    if (ConfirmBox.display("Confirm closing please", "Are you really want to close the window?")) {
     if (ConfirmBox.display("Закрыть", "Действительно хотите закрыть?")) {
-      System.out.println("Data is saved and window is closed");
+//      System.out.println("Data is saved and window is closed");
       window.close();
+      LOGGER.info("Predictor demo/test app is closed...");
     }
   }
 }

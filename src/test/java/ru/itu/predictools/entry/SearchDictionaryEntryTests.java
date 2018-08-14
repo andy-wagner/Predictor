@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 
-public class SearchDictionaryEntryTests {//todo>> Search Dictionary Entry tests
+public class SearchDictionaryEntryTests {
   
   @Test
-  public void chectSearchDictionaryInstantiating() {
+  public void checkSearchDictionaryInstantiating() {
     SearchDictionaryEntry entry = new SearchDictionaryEntry("some word");
     assertEquals("Word should be equal to 'some word", "some word", entry.getWord());
     

@@ -8,12 +8,15 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 @SuppressWarnings({"unused", "WeakerAccess", "UnusedReturnValue"})
 public class Dictionary {
+  private static final Logger LOGGER = LogManager.getLogger();
   private Set<Entry> entries;
-  //todo>> need to consider the using of Map<String, Entry> instead of Set<Entry>, where field [String word] is a key, and the field [Entry entry] is an instance of data class of word characteristics such as frequency, distance, localFrequency, lastUseTime etc.
   private Set<Character> charsSet;
-  private String isoLanguageName;//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes//todo>> create class DictionaryHeader and move language information into header object along with user id and other information specific to the dictionary as a whole
+  private String isoLanguageName;//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
   private Integer maxWordLength;
   
   public Dictionary() {
@@ -23,6 +26,7 @@ public class Dictionary {
     this.charsSet = new HashSet<>();
     this.maxWordLength = 0;
     this.isoLanguageName = "";
+    LOGGER.info("Empty dictionary has been created");
   }
   
   public Dictionary(Set<Entry> entries, String isoLanguageName) {
@@ -37,12 +41,14 @@ public class Dictionary {
     this.charsSet = charsSet;
     this.isoLanguageName = isoLanguageName;
     this.maxWordLength = Dictionary.getMaxWordLength(entries);
+    LOGGER.info("Dictionary has been created from an entries set.");
   }
   
   public Dictionary(String dictionaryFileName) throws IOException {
     //make dictionary from dictionary file with entries as a set of distinct words with frequencies
     // as they specified in the file
-    this();
+    this();//Create empty dictionary first
+    LOGGER.info("The empty dictionary has been created to be filled with data from a dictionary file.");
     
     BufferedReader reader = new BufferedReader(new FileReader(dictionaryFileName));
     
@@ -62,17 +68,16 @@ public class Dictionary {
           this.isoLanguageName = lineFields[1].trim();
           break;
       }
-      if (lineFields[0].matches("\\d+\\.?\\d*")) {
-        reader.mark(0);
-        break;
+      if (lineFields[0].matches("\\d+\\.?\\d*")) {  //if the numeric value in the first field then it should be a content part of the dictionary file
+        reader.mark(0);                      //so mark this position to reposition to it on next steps
+        break;                                             //and break current cycle
       }
     } while (!lineFields[0].equals("start"));
     
     //read content
     try {
-      reader.reset();
-    } catch (IOException e) {//do nothing if not marked
-    
+      reader.reset();                                      //reposition the reader if it was marked earlier
+    } catch (IOException ignore) {                          //do nothing if not marked
     }
     try {
       while ((line = reader.readLine()) != null) {
@@ -87,7 +92,7 @@ public class Dictionary {
         
         Entry entry = new Entry(word, frequency);
         char[] wordChars = word.toCharArray();
-        entries.add(entry);
+        this.entries.add(entry);
         for (char i = 0; i < word.length(); i++) {
           charsSet.add(wordChars[i]);
         }
@@ -95,10 +100,11 @@ public class Dictionary {
       }
     } catch (TypeMismatchException e) {
       reader.close();
+      LOGGER.error(e.getMessage());
       throw new TypeMismatchException("Error: Wrong dictionary file format.");
     }
     reader.close();
-    
+    LOGGER.info("Dictionary has been created from a file.");
   }
   
   public static Set<Character> getCharsSet(Set<Entry> entries) {
@@ -160,7 +166,7 @@ public class Dictionary {
   
   public int getMaxWordLength() {
     return this.maxWordLength;
-//    return Dictionary.getMaxWordLength(this.getEntries());
+//    return Dictionary.getMaxWordLength(this.getSearchDictionaryEntries());
   }
   
   public boolean addEntry(String word) {
@@ -183,6 +189,7 @@ public class Dictionary {
       }
       return this.entries.add(entry);
     } catch (Exception e) {
+      LOGGER.error(e.getMessage());
       return false;
     }
   }
@@ -195,6 +202,7 @@ public class Dictionary {
       }
       return this.entries.addAll(entries);
     } catch (Exception e) {
+      LOGGER.error(e.getMessage());
       return false;
     }
   }
@@ -211,6 +219,7 @@ public class Dictionary {
       }
       return true;
     } catch (Exception e) {
+      LOGGER.error(e.getMessage());
       return false;
     }
   }
@@ -223,6 +232,7 @@ public class Dictionary {
       }
       return true;
     } catch (Exception e) {
+      LOGGER.error(e.getMessage());
       return false;
     }
   }
@@ -246,6 +256,7 @@ public class Dictionary {
       }
       return this.entries.remove(entry);
     } catch (IllegalArgumentException e) {
+      LOGGER.error(e.getMessage());
       return false;
     }
   }

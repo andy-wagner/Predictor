@@ -62,6 +62,8 @@ public abstract class Metric {
 	public int getDistance(CharSequence first, CharSequence second, int max, boolean prefix) {
 		return prefix ? getPrefixDistance(first, second, max) : getDistance(first, second, max);
 	}
+	
+	public abstract int[] getVector(int[] previousRow, char ch, int chIndex, CharSequence prefix, int max);
 }
 
     //public getPrefixDistance(CharSequence string, CharSequence prefix, int max)

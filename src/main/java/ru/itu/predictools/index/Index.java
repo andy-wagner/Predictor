@@ -12,7 +12,6 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public interface Index extends Serializable {
   
-  void insertEntry(SearchDictionaryEntry entry);
   
   //TODO need to settle usage of metric parameter of interface constructors inheritance
   Set<SearchDictionaryEntry> search(String string);
@@ -20,9 +19,10 @@ public interface Index extends Serializable {
   Set<SearchDictionaryEntry> search(String string, int distance, Metric metric);
   
   Set<SearchDictionaryEntry> search(String string, int distance, Metric metric, boolean prefixSearch);
+  
   //Set<SearchDictionaryEntry> search(String string, int distance, Metric metric, boolean substringSearch);//TODO substring prefix search (the search substring could be in the middle of strings)
-  
-  long getEntriesCount();
-  
-  long getNodesCount();
+
+//  void insertEntry(SearchDictionaryEntry entry);
+//  long getEntriesCount();
+//  long getNodesCount();
 }

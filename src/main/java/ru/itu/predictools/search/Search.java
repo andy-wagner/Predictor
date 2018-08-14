@@ -20,7 +20,7 @@ public abstract class Search {
         this.searchDictionary = new SearchDictionary(dictionaryPath);
         this.metric = new LevensteinMetric(searchDictionary.getMaxWordLength());
 
-        System.out.println("SearchDictionary file contains " + searchDictionary.getEntries().size() + " words");
+        System.out.println("SearchDictionary file contains " + searchDictionary.getSearchDictionaryEntries().size() + " words");
 
     }
 

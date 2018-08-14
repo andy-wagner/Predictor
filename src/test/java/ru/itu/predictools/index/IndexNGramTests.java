@@ -8,15 +8,10 @@ import ru.itu.predictools.registry.SearchDictionaryEntry;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.comparingDouble;
-import static java.util.Collections.reverseOrder;
-
-public class IndexNGramTests {
+public class IndexNGramTests{
   private IndexNGram index;
   private SearchDictionary dictionary;
 //  private String MAIN_DICTIONARY_PATH, USER_WORDS_DICTIONARY_PATH, USER_PHRASES_DICTIONARY_PATH;
@@ -47,13 +42,13 @@ public class IndexNGramTests {
   public void checkNGramIndexInstantiating() {
     Set<SearchDictionaryEntry> entries =
         index.search(
-            "как "
+            "хоккей "
             , 2
             , new LevensteinMetric(dictionary.getMaxWordLength())
             , true);
-    System.out.println("entries: " + index.getEntriesCount()
-                           + "; index nodes: " + index.getNodesCount()
-                           + "; result strings: " + entries.size());
+//    System.out.println("entries: " + index.getEntriesCount()
+//                           + "; index nodes: " + index.getNodesCount()
+//                           + "; result strings: " + entries.size());
     entries.stream()
         .sorted(Comparator
                     .comparingInt(SearchDictionaryEntry::getDistance)
@@ -68,6 +63,7 @@ public class IndexNGramTests {
                       + " лч:" + e.getLocalFrequency()
                       + " пссл.время:" + e.getLastUseTime()
         )
-        .forEach(System.out::println);
+        .forEach(System.out::println)
+    ;
   }
 }

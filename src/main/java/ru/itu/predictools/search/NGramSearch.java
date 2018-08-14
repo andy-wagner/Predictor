@@ -6,6 +6,9 @@ import ru.itu.predictools.registry.SearchDictionaryEntry;
 import java.io.IOException;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class NGramSearch extends Search {
     private Integer ngramN;
     private IndexNGram nGram;

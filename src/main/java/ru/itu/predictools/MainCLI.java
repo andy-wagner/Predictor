@@ -8,6 +8,9 @@ import ru.itu.predictools.search.*;
 import java.io.File;
 import java.util.Scanner;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class MainCLI {
     private static final String DICTIONARY_PATH = System.getProperty("user.dir") + File.separator + "ru-main-v1-win1251.dic";
 //    private static final String DICTIONARY_PATH = System.getProperty("user.dir") + "\\dictionary-utf8.txt";

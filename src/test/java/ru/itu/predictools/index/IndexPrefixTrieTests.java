@@ -45,9 +45,9 @@ public class IndexPrefixTrieTests {
             , 1
             , new LevensteinMetric(dictionary.getMaxWordLength())
             , false);
-    System.out.println("entries: " + index.getEntriesCount()
-                           + "; index nodes: " + index.getNodesCount()
-                           + "; result strings: " + entries.size());
+//    System.out.println("entries: " + index.getEntriesCount()
+//                           + "; index nodes: " + index.getNodesCount()
+//                           + "; result strings: " + entries.size());
     for (SearchDictionaryEntry entry : entries) {
       System.out.println(
           entry.getWord()
