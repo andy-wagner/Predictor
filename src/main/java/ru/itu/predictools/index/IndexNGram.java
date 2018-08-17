@@ -35,7 +35,7 @@ public class IndexNGram extends WordIndex {
     int[] ngramCountMap = new int[mapLength.intValue()];//array of counters for each kind of n-gram
     
     String word;
-  
+    
     LOGGER.info("Counting of n-grams has been started...");
     for (SearchDictionaryEntry entry : searchDictionary.getSearchDictionaryEntries()) {//for each entry of getDictionary
       word = entry.getWord();
@@ -49,7 +49,7 @@ public class IndexNGram extends WordIndex {
     LOGGER.info("Counting of n-grams has been finished...");
     
     ngramMap = new int[mapLength.intValue()][];//n-gram map (n-gram index)
-  
+    
     LOGGER.info("Filling up of the n-gram map has been started...");
     for (int i = 0; i < searchDictionary.getSearchDictionaryEntries().size(); ++i) {
       word = searchDictionary.getSearchDictionaryEntries().get(i).getWord();
@@ -92,7 +92,7 @@ public class IndexNGram extends WordIndex {
     SearchDictionaryEntry resultEntry;
     String word;
     int currentDistance;
-  
+    
     LOGGER.info("Searching of {} has been started ...", searchPattern);
     for (int i = 0; i < searchPattern.length() - n + 1; ++i) {
       int ngram = IndexNGram.getNGram(alphabet, searchPattern, i, n);
@@ -125,12 +125,12 @@ public class IndexNGram extends WordIndex {
     LOGGER.info("Searching of {} has been finished ...", searchPattern);
     return set;
   }
-  
+
 //  @Override
 //  public long getEntriesCount() {
 //    return wordsCount;
 //  }
-  
+
 //  @Override
 //  public long getNodesCount() {
 //    return nodesCount;

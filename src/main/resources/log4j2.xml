@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="warn">
+<Configuration status="off">
   
   <Properties>
     <Property name="basePath">G:\\My Drive\\Studio\\ITU\\projects\\Predictor\\predict00ls v2.0.0\\logs</Property>
@@ -17,20 +17,20 @@
     </RollingFile>
     
     <Console name="console" target="SYSTEM_OUT">
-      <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"/>
+      <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %C{1}.%M(%F:%L) - %msg%n"/>
     </Console>
     
   </Appenders>
   
   <Loggers>
     
-    <Logger name="ru.itu.predictools" level="info" additivity="true">
-      <appender-ref ref="fileLogger" level="info"/>
+    <Logger name="ru.itu.predictools" level="off" additivity="true">
+      <appender-ref ref="fileLogger"/>
     </Logger>
     
-    <Root level="warn" additivity="false">
+    <Logger name="ru.itu.predictools" level="warn" additivity="false">
       <appender-ref ref="console"/>
-    </Root>
+    </Logger>
     
   </Loggers>
   

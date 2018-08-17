@@ -1,4 +1,4 @@
-lang = ru
+language = ru
 user = boris
 start
 1, 999.999, привет

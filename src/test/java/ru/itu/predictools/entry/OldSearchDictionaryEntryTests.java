@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 
-public class SearchDictionaryEntryTests {
+public class OldSearchDictionaryEntryTests {
   
   @Test
   public void checkSearchDictionaryInstantiating() {

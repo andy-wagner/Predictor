@@ -6,14 +6,11 @@ import ru.itu.predictools.registry.SearchDictionaryEntry;
 import java.io.IOException;
 import java.util.Set;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-public class NGramSearch extends Search {
+public class NGramOldSearch extends OldSearch {
     private Integer ngramN;
     private IndexNGram nGram;
 
-    public NGramSearch(String dictionaryPath, Integer distance, Integer N, Integer resultingListLength) throws IOException {
+    public NGramOldSearch(String dictionaryPath, Integer distance, Integer N, Integer resultingListLength) throws IOException {
         super(dictionaryPath, distance, resultingListLength);
         long startTime, endTime;
         ngramN = N;

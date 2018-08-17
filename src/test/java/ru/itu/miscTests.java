@@ -1,6 +1,7 @@
 package ru.itu;
 
 import org.junit.Test;
+import ru.itu.predictools.registry.Entry;
 
 import java.io.*;
 import java.util.Arrays;
@@ -8,9 +9,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.lang.Integer.min;
+
 public class miscTests {
   
-  @Test
+  //  @Test
   public void streamReduceTest() {
     int reducedParallel = Arrays.asList(new Integer[]{1, 2, 3}).parallelStream()
                               .reduce(10, (a, b) -> {
@@ -25,7 +28,7 @@ public class miscTests {
                                   });
   }
   
-  @Test
+  //  @Test
   public void streamsCollectTest() {
     String[] arr = {"a", "b", "c", "d"};
     Set<String> characters = new HashSet<>(Arrays.asList(arr));
@@ -33,7 +36,7 @@ public class miscTests {
     System.out.println(result);
   }
   
-  @Test
+    @Test
   public void convertDictionary() throws IOException {
     String line;
     String[] lineFields;
@@ -43,11 +46,17 @@ public class miscTests {
         BufferedWriter writer = new BufferedWriter(new FileWriter(System.getProperty("user.dir") + File.separator + "dictionaries" + File.separator + "en-main-v1-utf8.dic", true))) {
       while ((line = reader.readLine()) != null) {
         lineFields = line.split("\\s");
-        line = Integer.toString(++n) + "," + lineFields[1] + "," + lineFields[0] +"\r\n";
+        line = Integer.toString(++n) + "," + lineFields[1] + "," + lineFields[0] + "\r\n";
         writer.append(line);
       }
     } catch (IOException e) {
       throw new IOException(e);
     }
+  }
+  
+  @Test
+  public void testClassMeta(){
+    System.out.println(Entry.class.getName());
+    System.out.println(Arrays.toString(Entry.class.getDeclaredFields()));
   }
 }

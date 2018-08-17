@@ -67,7 +67,7 @@ public class IndexPrefixTrie extends WordIndex {
     // todo>> should be optimized - there is no need to calculate matrix when prefix.length=0 or node.chain.length=0 or node.chain.length < prefix.length-maxDistance -->>
     // -->> if (node.chain.length() < searchString.length() - maxDistance) return maxDistance + 1;
     // если длина строки меньше длины префикса на количество символов большее максимально допустимого расстояния (max) то ясно что слово не удовлетворяет условию Ld<max
-  
+    
     LOGGER.info("Next iteration of recursive searching of {} has been started ...", searchPattern);
     int searchStringLength = searchPattern.length();
     Set<SearchDictionaryEntry> resultSet = new HashSet<>();
@@ -83,8 +83,7 @@ public class IndexPrefixTrie extends WordIndex {
       for (int i = 1; i <= searchStringLength; i++) {
         currentRow[i] = i;//the first row for null-length string of root element of trie
       }
-    }
-    else {
+    } else {
       char lastCharInNodeChain = node.chain.charAt(charIndexInNodeChain);
       currentRow = metric.getVector(previousRow, lastCharInNodeChain, charIndexInNodeChain, searchPattern, maxDistance);
     }

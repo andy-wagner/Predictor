@@ -8,9 +8,6 @@ import ru.itu.predictools.search.*;
 import java.io.File;
 import java.util.Scanner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class MainCLI {
     private static final String DICTIONARY_PATH = System.getProperty("user.dir") + File.separator + "ru-main-v1-win1251.dic";
 //    private static final String DICTIONARY_PATH = System.getProperty("user.dir") + "\\dictionary-utf8.txt";
@@ -92,16 +89,16 @@ public class MainCLI {
             }
 
             System.out.println("\r\n\r\n --- Hi there! This is the \"Fuzzy search through searchDictionary\" utility ---\r\n\r\n");
-            System.out.println("Search:");
+            System.out.println("OldSearch:");
             System.out.println(prefixMode?" - prefix mode enabled":" - prefix mode disabled");
             System.out.println(" - index type: " + typeOfIndex + (typeOfIndex.matches("ngram") ? "-" + ngramLength : ""));
             System.out.println(" - distance: " + distance);
             System.out.println(" - number of displayed result lines: " + resultListLength + "\r\n");
 //            Arrays.stream(args).forEach(System.out::println); //debug - show parameters
             if (typeOfIndex.matches("ngram")) {
-                index = (Index) new NGramSearch(DICTIONARY_PATH, distance, ngramLength, resultListLength);
+                index = (Index) new NGramOldSearch(DICTIONARY_PATH, distance, ngramLength, resultListLength);
             } else {
-                index = (Index) new TrieSearch(DICTIONARY_PATH, distance, resultListLength);
+                index = (Index) new TrieOldSearch(DICTIONARY_PATH, distance, resultListLength);
             }
 
             System.out.println("Enter template to search:\r\n\r\n");
@@ -124,7 +121,7 @@ public class MainCLI {
                                         System.out.println("new size for ngram is " + number);
                                         ngramLength = Integer.valueOf(number);
                                         //noinspection ConstantConditions
-                                        ((NGramSearch) index).setN(ngramLength);
+                                        ((NGramOldSearch) index).setN(ngramLength);
                                         //</editor-fold>
                                     } else {
                                         System.out.println("This command available only for ngram index mode, but current is " + typeOfIndex);
@@ -148,11 +145,11 @@ public class MainCLI {
                             switch (template.substring(1)) {
                                 case "trie":
                                     System.out.println("switching into trie index mode");
-//                                    index = new TrieSearch(DICTIONARY_PATH, distance, resultListLength);
+//                                    index = new TrieOldSearch(DICTIONARY_PATH, distance, resultListLength);
                                     break;
                                 case "ngram":
                                     System.out.println("switch into ngram index mode");
-//                                    index = new NGramSearch(DICTIONARY_PATH, distance, ngramLength, resultListLength);
+//                                    index = new NGramOldSearch(DICTIONARY_PATH, distance, ngramLength, resultListLength);
                                     break;
                                 case "prefix":
                                     System.out.println("switch into prefix search mode");

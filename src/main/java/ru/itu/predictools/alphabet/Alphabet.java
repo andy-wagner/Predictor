@@ -1,8 +1,6 @@
 package ru.itu.predictools.alphabet;
 
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +36,16 @@ public class Alphabet {
     this.isoLanguageName = isoLanguageName;
     this.substitutes = substitutes;
     LOGGER.info("An alphabet instance has been created -> {}", alphabetString.toUpperCase());
+  }
+  
+  public static Alphabet getAlphabet(Set<String> strings, String isoLanguageName) {
+    Set<Character> characters = new HashSet<>();
+    strings.forEach(e -> {
+      for (char ch : e.toCharArray()) {
+        characters.add(ch);
+      }
+    });
+    return new Alphabet(characters, isoLanguageName);
   }
   
   /**

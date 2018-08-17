@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
 public class Entry implements Comparable<Entry> {
+  private static final Logger LOGGER = LogManager.getLogger();
   String word;
   Double frequency;
   LocalDateTime lastUseTime;
@@ -30,7 +31,7 @@ public class Entry implements Comparable<Entry> {
     return Objects.hash(this.word);
   }
   
-  public double getFrequency() {
+  public Double getFrequency() {
     return this.frequency;
   }
   
@@ -61,7 +62,6 @@ public class Entry implements Comparable<Entry> {
       }
       Entry entry = (Entry) o;
       return Objects.equals(entry.getWord(), this.word)
-//                 && Objects.equals(entry.getFrequency(), this.frequency)
       ;
     } catch (ClassCastException e) {
       return false;
