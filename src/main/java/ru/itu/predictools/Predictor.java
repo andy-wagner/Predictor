@@ -35,7 +35,7 @@ import org.apache.logging.log4j.Logger;
  * <a href ="https://en.wikipedia.org/wiki/Levenshtein_distance">https://en.wikipedia.org/wiki/Levenshtein_distance</a>
  * <p>
  * Predictor class makes possible using several different groups of dictionaries of a variety of languages. There is no
- * difference for searching algorithm which language the dictionaries are have if the dictionaries are the list of words
+ * difference for the searching algorithm which language the dictionaries have if the dictionaries are the list of words
  * composed from letters that could be organized into an alphabet
  *
  * @author Boris Bronovitsky
@@ -49,11 +49,11 @@ public class Predictor {
   private Map<Integer, Set<Character>> specialSymbolsSet = new HashMap<>();
   
   /**
-   * Construct a new Predictor object using configuration file and active language equal to current keyboard layout context
+   * Construct a new Predictor object using configuration file and active language equal to current local default keyboard language
    *
    * @param configFileName - String - path to Predictor's configuration file
    */
-  public Predictor(String configFileName) {
+  public Predictor(String configFileName) {//todo>>
     String line;
     String[] lineFields;
     Map<String, String> searchConfigurationFiles = new HashMap<>();

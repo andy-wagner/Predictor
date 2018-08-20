@@ -51,17 +51,13 @@ public class MainFX extends Application {
   }
   
   private GridPane fillGridPane() {
-    Locale currentLocale = Locale.getDefault();
-    LOGGER.info("Current language is {}", currentLocale.getLanguage());
+//    Locale currentLocale = Locale.getDefault();
 //    LOGGER.info("User language is {}", System.getProperty("user.language"));
     Predictor predictor = new Predictor(System.getProperty("user.dir") + File.separator
                                             + "config" + File.separator
                                             + "predictor.conf"
-    
     );
-//    Search search = new Search(System.getProperty("user.dir") + File.separator
-//                                   + "config" + File.separator
-//                                   + "ru-utf8-ngram2-d1-prefix.conf");
+    LOGGER.info("Current language is {}", predictor.getLanguage());
     GridPane gridPane = new GridPane();
     gridPane.setPadding(new Insets(10, 20, 30, 20));
     gridPane.setVgap(8);
@@ -98,7 +94,7 @@ public class MainFX extends Application {
     //noinspection unchecked
     comboBox.getSelectionModel().select(predictor.getLanguage());
   
-    comboBox.setOnAction(e->{
+    comboBox.setOnAction(e->{//todo>> change keyboard layout language
       System.out.println(comboBox.getSelectionModel().getSelectedItem().toString());
       predictor.setLanguage(comboBox.getSelectionModel().getSelectedItem().toString());
     });
