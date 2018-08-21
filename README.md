@@ -1,2 +1,2 @@
-# predict00ls
-predictive text tests and experiments
+# Predictor
+Fuzzy search provider

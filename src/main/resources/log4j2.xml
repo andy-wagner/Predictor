@@ -2,36 +2,40 @@
 <Configuration status="off">
   
   <Properties>
-    <Property name="basePath">G:\\My Drive\\Studio\\ITU\\projects\\Predictor\\predict00ls v2.0.0\\logs</Property>
+    <Property name="basePath">logs</Property>
   </Properties>
   
   <Appenders>
     
-    <RollingFile name="fileLogger" fileName="${basePath}/predictor.log" filePattern="${basePath}/app-info-%d{yyyy-MM-dd}.log">
+    <RollingFile name="fileLogger" fileName="${basePath}/predictor.log"
+                 filePattern="${basePath}/app-info-%d{yyyy-MM-dd}.log">
+      
       <PatternLayout>
-        <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+        <Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</Pattern>
       </PatternLayout>
+      
       <Policies>
         <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
       </Policies>
+    
     </RollingFile>
     
     <Console name="console" target="SYSTEM_OUT">
       <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %C{1}.%M(%F:%L) - %msg%n"/>
     </Console>
-    
+  
   </Appenders>
   
   <Loggers>
     
-    <Logger name="ru.itu.predictools" level="off" additivity="true">
-      <appender-ref ref="fileLogger"/>
+    <Logger name="ru.itu.predictor" level="off" additivity="true">
+      <AppenderRef ref="fileLogger"/>
     </Logger>
     
-    <Logger name="ru.itu.predictools" level="warn" additivity="false">
-      <appender-ref ref="console"/>
-    </Logger>
-    
-  </Loggers>
+    <Root level="off" additivity="false">
+      <AppenderRef ref="console"/>
+    </Root>
   
+  </Loggers>
+
 </Configuration>

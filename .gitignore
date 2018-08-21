@@ -10,8 +10,7 @@ uml.asta
 **/release.properties
 **/pom.xml.releaseBackup
 **/pom.xml.tag
-module_predict00ls.xml
-predict00ls.xml
+predictor.xml
 
 #
 # Default excludes
