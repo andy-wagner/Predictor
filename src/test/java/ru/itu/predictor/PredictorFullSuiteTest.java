@@ -19,6 +19,6 @@ import ru.itu.predictor.search.SearchTests;
     SearchTests.class,
     PredictorTests.class
 })
-public class PredictorFullSuitTest {
+public class PredictorFullSuiteTest {
 
 }
