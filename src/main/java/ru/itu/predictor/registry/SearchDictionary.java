@@ -14,8 +14,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-// SearchDictionary contains words and their lexical parameters and other data in structures named Entry
-//@SuppressWarnings({"UnusedReturnValue", "unused", "WeakerAccess"})
+// SearchDictionary contains some strings and their lexical parameters and other data in structures named SearchDictionaryEntry
 @SuppressWarnings({"WeakerAccess", "unused", "FieldCanBeLocal", "UnusedReturnValue"})
 public class SearchDictionary {
   private static final Logger LOGGER = LogManager.getLogger();
@@ -39,9 +38,9 @@ public class SearchDictionary {
   private FileTime userPhrasesDictionaryFileLastModifiedTime;
   
   //statistical values
-  private Integer maxWordLength;
+  private Integer maxStringLength;
   private Double maxIPM;
-  private Double totalUserWordsUses;
+  private Double totalUserStringsUses;
   
   public SearchDictionary(Dictionary mainDictionary, Dictionary userWordsDictionary, Dictionary userPhrasesDictionary) {
     this(mainDictionary, userWordsDictionary, userPhrasesDictionary, null);
@@ -110,20 +109,19 @@ public class SearchDictionary {
         LOGGER.warn("There is no user's phrases dictionary file name");
         this.userPhrasesDictionary = new Dictionary();
       }
-  
+      
       this.isoLanguageName = mainDictionary.getIsoLanguageName();//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
       this.userId = userWordsDictionary.getUserId();
-  
+      
       this.makeSearchDictionary(alphabet);
-  
+      
       LOGGER.debug("Building of the search dictionary with dictionaries:" +
                        "\r\n\t - main dictionary '{}'" +
                        "\r\n\t - user words dictionary '{}' " +
                        "\r\n\t - user phrases dictionary '{}'" +
                        "\r\n has finished..."
           , mainDictionaryFileName, userWordsDictionaryFileName, userPhrasesDictionaryFileName);
-    }
-    catch (IOException e){
+    } catch (IOException e) {
       LOGGER.error(e.getMessage());
       e.printStackTrace();
     }
@@ -136,21 +134,21 @@ public class SearchDictionary {
       LOGGER.error("Error: main dictionary and users dictionary should be the same language to make search dictionary.");
       throw new RuntimeException("Error: main dictionary and users dictionary should be the same language to make search dictionary.");
     }
-  
+    
     this.isoLanguageName = this.mainDictionary.getIsoLanguageName();//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
     this.userId = this.userWordsDictionary.getUserId();
-  
+    
     Set<SearchDictionaryEntry> entriesSet = new HashSet<>();
     entriesSet.addAll(this.userWordsDictionary.getEntries().stream()
-                          .map(e -> new SearchDictionaryEntry(e.getWord(), 0D, e.getFrequency(), e.getLastUseTime()))
+                          .map(e -> new SearchDictionaryEntry(e.getString(), 0D, e.getFrequency(), e.getLastUseTime()))
                           .collect(Collectors.toSet())
     );
     entriesSet.addAll(this.userPhrasesDictionary.getEntries().stream()
-                          .map(e -> new SearchDictionaryEntry(e.getWord(), 0D, e.getFrequency(), e.getLastUseTime()))
+                          .map(e -> new SearchDictionaryEntry(e.getString(), 0D, e.getFrequency(), e.getLastUseTime()))
                           .collect(Collectors.toSet())
     );
     entriesSet.addAll(this.mainDictionary.getEntries().stream()
-                          .map(e -> new SearchDictionaryEntry(e.getWord(), e.getFrequency(), 0D))
+                          .map(e -> new SearchDictionaryEntry(e.getString(), e.getFrequency(), 0D))
                           .collect(Collectors.toSet())
     );
     
@@ -158,9 +156,9 @@ public class SearchDictionary {
         .mergeDictionary(this.userWordsDictionary, false)
         .mergeDictionary(this.userPhrasesDictionary, false)
     ;
-    this.maxWordLength = this.mainDictionary.getMaxWordLength();
+    this.maxStringLength = this.mainDictionary.getMaxStringLength();
     this.maxIPM = this.mainDictionary.getEntries().stream().map(Entry::getFrequency).max(Double::compare).orElse(0D);
-    this.totalUserWordsUses = this.userWordsDictionary.getEntries().stream().mapToDouble(Entry::getFrequency).sum()
+    this.totalUserStringsUses = this.userWordsDictionary.getEntries().stream().mapToDouble(Entry::getFrequency).sum()
                                   + this.userPhrasesDictionary.getEntries().stream().mapToDouble(Entry::getFrequency).sum();
     
     entriesSet.stream()
@@ -169,7 +167,7 @@ public class SearchDictionary {
     ;
     
     this.entries = new ArrayList<>(entriesSet);
-  
+    
     if (alphabet == null) {
 //      this.alphabet = new Alphabet(this.getCharSet(), this.isoLanguageName);
       this.alphabet = new Alphabet(mainDictionary.getCharSet(), this.isoLanguageName);
@@ -179,7 +177,15 @@ public class SearchDictionary {
       LOGGER.error("Runtime error in SearchDictionary constructor: Language of the alphabet specified doesn't match with searchDictionary language");
       throw new RuntimeException("Error: Language of the alphabet specified doesn't match with searchDictionary language");
     }
+    
+  }
   
+  public String getUserWordsDictionaryFileName() {
+    return this.userWordsDictionaryFileName;
+  }
+  
+  public String getUserPhrasesDictionaryFileName() {
+    return this.userPhrasesDictionaryFileName;
   }
   
   public Dictionary getMainDictionary() {
@@ -198,8 +204,8 @@ public class SearchDictionary {
     return this.maxIPM;
   }
   
-  public Double getTotalUserWordsUses() {
-    return this.totalUserWordsUses;
+  public Double getTotalUserStringsUses() {
+    return this.totalUserStringsUses;
   }
   
   public FileTime[] getDictionariesLastModifiedTimes() {
@@ -215,7 +221,7 @@ public class SearchDictionary {
   public static Set<Character> getCharSet(List<SearchDictionaryEntry> entries) {
     Set<Character> result = new HashSet<>();
     for (Entry entry : entries) {
-      char[] chars = entry.getWord().toCharArray();
+      char[] chars = entry.getString().toCharArray();
       for (char ch : chars) {
         result.add(ch);
       }
@@ -238,7 +244,7 @@ public class SearchDictionary {
     }
     Set<Character> charSet = new HashSet<>();
     for (Entry entry : entries) {
-      char[] chars = entry.getWord().toCharArray();
+      char[] chars = entry.getString().toCharArray();
       for (char ch : chars) {
         charSet.add(ch);
       }
@@ -267,42 +273,42 @@ public class SearchDictionary {
   }
   
   /**
-   * Returns length of the largest word in entries set of the dictionary.
+   * Returns length of the largest string in entries set of the dictionary.
    *
    * @param entries - entries set to search in
-   * @return - int value of length of the largest word in the entries set
+   * @return - int value of length of the largest string in the entries set
    */
-  static public int getMaxWordLength(Set<SearchDictionaryEntry> entries) {
-    return entries.stream().mapToInt(entry -> entry.getWord().length()).max().orElse(0);
+  static public int getMaxStringLength(Set<SearchDictionaryEntry> entries) {
+    return entries.stream().mapToInt(entry -> entry.getString().length()).max().orElse(0);
   }
   
-  static public int getMaxWordLength(List<SearchDictionaryEntry> entries) {
-    return entries.stream().mapToInt(entry -> entry.getWord().length()).max().orElse(0);
+  static public int getMaxStringLength(List<SearchDictionaryEntry> entries) {
+    return entries.stream().mapToInt(entry -> entry.getString().length()).max().orElse(0);
   }
   
-  public int getMaxWordLength() {
-    return this.getMaxWordLength(false);
+  public int getMaxStringLength() {
+    return this.getMaxStringLength(false);
   }
   
-  public int getMaxWordLength(boolean recalculate) {
+  public int getMaxStringLength(boolean recalculate) {
     if (recalculate) {
-      this.maxWordLength = SearchDictionary.getMaxWordLength(this.entries);
+      this.maxStringLength = SearchDictionary.getMaxStringLength(this.entries);
     } else {
-      LOGGER.warn("maxWordLength returned without recalculation be sure that its value is actual");
+      LOGGER.warn("maxStringLength returned without recalculation be sure that its value is actual");
     }
-    return this.maxWordLength;
+    return this.maxStringLength;
   }
   
   public SearchDictionaryEntry getSearchDictionaryEntry(SearchDictionaryEntry entry) {
-    return this.getSearchDictionaryEntry(entry.getWord());
+    return this.getSearchDictionaryEntry(entry.getString());
   }
   
   public SearchDictionaryEntry getSearchDictionaryEntry(Entry entry) {
-    return this.getSearchDictionaryEntry(entry.getWord());
+    return this.getSearchDictionaryEntry(entry.getString());
   }
   
-  public SearchDictionaryEntry getSearchDictionaryEntry(String word) {
-    return this.entries.stream().filter(e -> e.getWord().equals(word)).findAny().orElse(null);
+  public SearchDictionaryEntry getSearchDictionaryEntry(String string) {
+    return this.entries.stream().filter(e -> e.getString().equals(string)).findAny().orElse(null);
   }
   
   public List<SearchDictionaryEntry> getSearchDictionaryEntries() {
@@ -313,28 +319,28 @@ public class SearchDictionary {
     this.entries = entries;
   }
   
-  public boolean addSearchDictionaryEntry(Dictionary userDictionary, String word) {
-    return this.addSearchDictionaryEntry(userDictionary, word, 1D, 1D, null);
+  public boolean addSearchDictionaryEntry(Dictionary userDictionary, String string) {
+    return this.addSearchDictionaryEntry(userDictionary, string, 1D, 1D, null);
   }
   
-  public boolean addSearchDictionaryEntry(Dictionary userDictionary, String word, Double frequency) {
-    return this.addSearchDictionaryEntry(userDictionary, word, frequency, frequency, null);
+  public boolean addSearchDictionaryEntry(Dictionary userDictionary, String string, Double frequency) {
+    return this.addSearchDictionaryEntry(userDictionary, string, frequency, frequency, null);
   }
   
   public boolean addSearchDictionaryEntry(Dictionary userDictionary, Entry entry) {
-    return this.addSearchDictionaryEntry(userDictionary, entry.getWord(), entry.frequency, entry.frequency, null);
+    return this.addSearchDictionaryEntry(userDictionary, entry.getString(), entry.frequency, entry.frequency, null);
   }
   
-  public boolean addSearchDictionaryEntry(Dictionary userDictionary, String word, Double frequency, Double localFrequency, LocalDateTime lastUseTime) {
-    return this.addSearchDictionaryEntry(userDictionary, new SearchDictionaryEntry(word, frequency, localFrequency, lastUseTime));
+  public boolean addSearchDictionaryEntry(Dictionary userDictionary, String string, Double frequency, Double localFrequency, LocalDateTime lastUseTime) {
+    return this.addSearchDictionaryEntry(userDictionary, new SearchDictionaryEntry(string, frequency, localFrequency, lastUseTime));
   }
   
   public boolean addSearchDictionaryEntry(Dictionary userDictionary, SearchDictionaryEntry entry) {
     try {
-      String word = entry.getWord();
-      if (userDictionary.addEntry(word, entry.getFrequency())) {
-        if (word.length() > this.maxWordLength) {
-          this.maxWordLength = word.length();
+      String string = entry.getString();
+      if (userDictionary.addEntry(string, entry.getFrequency())) {
+        if (string.length() > this.maxStringLength) {
+          this.maxStringLength = string.length();
         }
         return this.entries.add(entry);
       }
@@ -347,9 +353,9 @@ public class SearchDictionary {
   
   public boolean addAllEntries(Set<SearchDictionaryEntry> entries) {
     try {
-      int newWordsMaxLength = SearchDictionary.getMaxWordLength(entries);
-      if (this.maxWordLength < newWordsMaxLength) {
-        this.maxWordLength = newWordsMaxLength;
+      int newStringsMaxLength = SearchDictionary.getMaxStringLength(entries);
+      if (this.maxStringLength < newStringsMaxLength) {
+        this.maxStringLength = newStringsMaxLength;
       }
       return this.entries.addAll(entries);
     } catch (Exception e) {
@@ -359,19 +365,19 @@ public class SearchDictionary {
   }
   
   public SearchDictionaryEntry removeSearchDictionaryEntry(SearchDictionaryEntry entry) {
-    return this.removeSearchDictionaryEntry(entry.getWord());
+    return this.removeSearchDictionaryEntry(entry.getString());
   }
   
   public SearchDictionaryEntry removeSearchDictionaryEntry(Entry entry) {
-    return this.removeSearchDictionaryEntry(entry.getWord());
+    return this.removeSearchDictionaryEntry(entry.getString());
   }
   
-  public SearchDictionaryEntry removeSearchDictionaryEntry(String word) {
-    SearchDictionaryEntry entry = this.getSearchDictionaryEntry(word);
+  public SearchDictionaryEntry removeSearchDictionaryEntry(String string) {
+    SearchDictionaryEntry entry = this.getSearchDictionaryEntry(string);
     if (entry != null) {
       this.entries.remove(entry);
-      if (this.maxWordLength == word.length()) {
-        this.maxWordLength = this.getMaxWordLength(true);
+      if (this.maxStringLength == string.length()) {
+        this.maxStringLength = this.getMaxStringLength(true);
       }
       return entry;
     } else {
@@ -380,19 +386,19 @@ public class SearchDictionary {
   }
   
   public boolean removeAllSearchDictionaryEntries(List<SearchDictionaryEntry> entries) {
-    Integer removedWordsMaxLength = SearchDictionary.getMaxWordLength(entries);
+    Integer removedStringsMaxLength = SearchDictionary.getMaxStringLength(entries);
     boolean isAnythingRemoved = this.entries.removeAll(entries);
-    if (isAnythingRemoved && this.maxWordLength.equals(removedWordsMaxLength)) {
-      this.maxWordLength = SearchDictionary.getMaxWordLength(this.entries);
+    if (isAnythingRemoved && this.maxStringLength.equals(removedStringsMaxLength)) {
+      this.maxStringLength = SearchDictionary.getMaxStringLength(this.entries);
     }
     return isAnythingRemoved;
   }
   
-  public SearchDictionaryEntry updateSearchDictionaryEntry(String word, Double frequency) {
-    SearchDictionaryEntry searchDictionaryEntryToBeReplaced = this.getSearchDictionaryEntry(word);
+  public SearchDictionaryEntry updateSearchDictionaryEntry(String string, Double frequency) {
+    SearchDictionaryEntry searchDictionaryEntryToBeReplaced = this.getSearchDictionaryEntry(string);
     return this.updateSearchDictionaryEntry(
         new SearchDictionaryEntry(
-            word,
+            string,
             frequency,
             searchDictionaryEntryToBeReplaced.getLocalFrequency(),
             searchDictionaryEntryToBeReplaced.lastUseTime));
@@ -402,26 +408,26 @@ public class SearchDictionary {
     SearchDictionaryEntry searchDictionaryEntry = this.getSearchDictionaryEntry(entry);
     return this.updateSearchDictionaryEntry(
         new SearchDictionaryEntry(
-            entry.getWord(),
+            entry.getString(),
             entry.getFrequency(),
             searchDictionaryEntry.getFrequency(),
             searchDictionaryEntry.lastUseTime));
   }
   
-  public SearchDictionaryEntry updateSearchDictionaryEntry(String word, Double frequency, Double localFrequency) {
-    SearchDictionaryEntry searchDictionaryEntry = this.getSearchDictionaryEntry(word);
+  public SearchDictionaryEntry updateSearchDictionaryEntry(String string, Double frequency, Double localFrequency) {
+    SearchDictionaryEntry searchDictionaryEntry = this.getSearchDictionaryEntry(string);
     return this.updateSearchDictionaryEntry(
         new SearchDictionaryEntry(
-            word,
+            string,
             frequency,
             localFrequency,
             searchDictionaryEntry.lastUseTime));
   }
   
-  public SearchDictionaryEntry updateSearchDictionaryEntry(String word, Double frequency, Double localFrequency, LocalDateTime lastUseTime) {
+  public SearchDictionaryEntry updateSearchDictionaryEntry(String string, Double frequency, Double localFrequency, LocalDateTime lastUseTime) {
     return this.updateSearchDictionaryEntry(
         new SearchDictionaryEntry(
-            word,
+            string,
             frequency,
             localFrequency,
             lastUseTime));
@@ -435,25 +441,12 @@ public class SearchDictionary {
     return null;
   }
   
-  public boolean save(String fileName) { //todo>> add a backup flag (if flag set into true then before saving a new version of the dictionary file old one will be copied into the backup file with an autogenerated name)
-    String line;
-    int n = 0;
-    try (BufferedWriter writer = new BufferedWriter(new FileWriter(System.getProperty("user.dir") + File.separator + fileName, false))) {
-      line = "en = " + this.isoLanguageName + "\r\n";
-      writer.append(line);
-      line = "user = " + this.userId + "\r\n";
-      writer.append(line);
-      line = "start\r\n";
-      writer.append(line);
-      for (SearchDictionaryEntry e : this.entries) {
-        line = Integer.toString(++n) + "," + Double.toString(e.getFrequency()) + "," + Double.toString(e.getLocalFrequency()) + "," + e.getLastUseTime() + "," + e.getWord() + "\r\n";
-        writer.append(line);
-      }
-    } catch (IOException e) {
-      LOGGER.error(e.getMessage());
-      return false;
-    }
-    return true;
+  public boolean saveUserWords() throws IOException { //todo>> add a backup flag (if flag set into true then before saving a new version of the dictionary file old one will be copied into the backup file with an autogenerated name)
+    return this.userWordsDictionary.save(this.userWordsDictionaryFileName);
+  }
+  
+  public boolean saveUserPhrases() throws IOException { //todo>> add a backup flag (if flag set into true then before saving a new version of the dictionary file old one will be copied into the backup file with an autogenerated name)
+    return this.userPhrasesDictionary.save(this.userPhrasesDictionaryFileName);
   }
   
 }

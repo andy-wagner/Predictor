@@ -33,16 +33,16 @@ public class EntryTests {
   @Test
   public void testEntryInstantiating() {
     entry = new Entry("test");
-    assertEquals("The word should be 'test'", "test", entry.getWord());
+    assertEquals("The word should be 'test'", "test", entry.getString());
     assertEquals("The frequency should be equal to 1", 1D, entry.getFrequency(), 0.001);
     entry = new Entry("test2", 282828D);
-    assertEquals("The word should be 'test2'", "test2", entry.getWord());
+    assertEquals("The word should be 'test2'", "test2", entry.getString());
     assertEquals("The frequency should be equal to 1", 282828D, entry.getFrequency(), 0.001);
   }
   
   @Test
   public void hashCodeCheck() {
-    int hash = Objects.hash(entry.getWord());
+    int hash = Objects.hash(entry.getString());
     assertEquals("Hash code check failed", hash, entry.hashCode());
   }
   
@@ -50,8 +50,8 @@ public class EntryTests {
   public void checkGettersAndSetters() {
     entry.setFrequency(1D);
     assertEquals("Frequency should be equal to 1", 1, entry.getFrequency(), 0.001);
-    entry.setWord("TestTest");
-    assertEquals("Frequency should be equal to 'TestTest'", "TestTest", entry.getWord());
+    entry.setString("TestTest");
+    assertEquals("Frequency should be equal to 'TestTest'", "TestTest", entry.getString());
     LocalDateTime time = LocalDateTime.parse("1970-10-27T20:30:00");
     entry.setLastUseTime(time);
     assertEquals("Time should be equal to 1970-10-27T20:30:00", time, entry.getLastUseTime());

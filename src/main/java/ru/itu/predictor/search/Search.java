@@ -1,9 +1,9 @@
 package ru.itu.predictor.search;
 
+import ru.itu.predictor.alphabet.Alphabet;
 import ru.itu.predictor.metric.LevensteinMetric;
 import ru.itu.predictor.registry.Dictionary;
 import ru.itu.predictor.registry.Entry;
-import ru.itu.predictor.alphabet.Alphabet;
 import ru.itu.predictor.registry.SearchDictionary;
 import ru.itu.predictor.metric.Metric;
 import ru.itu.predictor.index.IndexNGram;
@@ -84,7 +84,7 @@ public class Search {
       this.dictionary = new SearchDictionary(
           this.mainDictionaryFileName, this.userWordsDictionaryFileName, this.userPhrasesDictionaryFileName);
       this.index = new IndexNGram(this.dictionary, n);
-      this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
+      this.metric = new LevensteinMetric(dictionary.getMaxStringLength());
       
       LOGGER.debug("An instance of Search class has created with configuration from  '{}'", configurationFileName);
       
@@ -148,7 +148,7 @@ public class Search {
       this.dictionary = new SearchDictionary(this.mainDictionaryFileName, this.userWordsDictionaryFileName, this.userPhrasesDictionaryFileName);
     }
     this.index = new IndexNGram(this.dictionary, n);
-    this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
+    this.metric = new LevensteinMetric(dictionary.getMaxStringLength());
   }
   
   public int getIndexN() {
@@ -197,7 +197,7 @@ public class Search {
       Set<String> searchResultsSuffixesSet = this.lastSearchResultSet
                                                  .stream()
                                                  .map(e -> {
-                                                   String word = e.getWord();
+                                                   String word = e.getString();
                                                    int wordLength = word.length();
                                                    int searchPatternLength = this.lastSearchPattern.length();
                                                    if (wordLength >= searchPatternLength) {
@@ -224,7 +224,7 @@ public class Search {
     try {
       Set<String> search = this.run(searchPattern).stream()
                                .map(e -> {
-                                 String word = e.getWord();
+                                 String word = e.getString();
                                  int wordLength = word.length();
                                  int searchPatternLength = searchPattern.length();
                                  if (wordLength >= searchPatternLength) {
@@ -289,8 +289,8 @@ public class Search {
     return phraseIsAdded;
   }
   
-  public boolean addEntry(Dictionary userDictionary, String word) {
-    return this.dictionary.addSearchDictionaryEntry(userDictionary, word);
+  public boolean addEntry(Dictionary userDictionary, String string) {
+    return this.dictionary.addSearchDictionaryEntry(userDictionary, string);
   }
   
   public boolean addEntry(Dictionary userDictionary, Entry entry) {
@@ -360,7 +360,7 @@ public class Search {
   }
   
   public SearchDictionaryEntry updateEntry(Dictionary userDictionary, SearchDictionaryEntry entry) {
-    if (userDictionary.updateEntry(entry.getWord(), entry.getFrequency())) {
+    if (userDictionary.updateEntry(entry.getString(), entry.getFrequency())) {
       return this.dictionary.updateSearchDictionaryEntry(entry);
     }
     return null;

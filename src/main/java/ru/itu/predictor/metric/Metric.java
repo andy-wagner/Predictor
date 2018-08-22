@@ -3,6 +3,7 @@ package ru.itu.predictor.metric;
 /**
  * Metric
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public abstract class Metric {
 
 	/**

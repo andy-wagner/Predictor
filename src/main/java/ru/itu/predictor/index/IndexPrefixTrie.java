@@ -128,7 +128,7 @@ public class IndexPrefixTrie extends WordIndex {
   public void insertEntry(SearchDictionaryEntry entry) {
     PrefixTrieNode selected = root;
     String chain = "";
-    for (char ch : entry.getWord().toCharArray()) {
+    for (char ch : entry.getString().toCharArray()) {
       chain += ch;
       int childIndex = alphabet.mapChar(ch);
       PrefixTrieNode next = selected.children[childIndex];

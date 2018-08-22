@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Метрика Дамерау-Левенштейна.
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class DamerauLevensteinMetric extends LevensteinMetric {
 	private static final Logger LOGGER = LogManager.getLogger();
 
@@ -22,7 +23,25 @@ public class DamerauLevensteinMetric extends LevensteinMetric {
 		transpositionRow = new int[maxLength + 1];
 		LOGGER.debug("Damerau Levenstein Metric is has created.");
 	}
-
+	
+	private void calculateEditPrice(CharSequence first, char lastSecondCh, char secondCh, int from, int to, char lastFirstCh) {
+		for (int j = from; j <= to; j++) {
+			char firstCh = first.charAt(j - 1);
+			
+			// Вычисляем минимальную цену перехода в текущее состояние из предыдущих среди удаления, вставки и
+			// замены соответственно.
+			int cost = firstCh == secondCh ? 0 : 1;
+			int value = Math.min(Math.min(currentRow[j - 1] + 1, previousRow[j] + 1), previousRow[j - 1] + cost);
+			
+			// Если вдруг была транспозиция, надо также учесть и её стоимость.
+			if (firstCh == lastSecondCh && secondCh == lastFirstCh)
+				value = Math.min(value, transpositionRow[j - 2] + cost);
+			
+			currentRow[j] = value;
+			lastFirstCh = firstCh;
+		}
+	}
+	
 	/**
 	 * {@inheritDoc} Расстояние Дамерау-Левенштейна вычисляется за асимптотическое время O((max + 1) *
 	 * min(first.length(), second.length()))
@@ -66,21 +85,7 @@ public class DamerauLevensteinMetric extends LevensteinMetric {
 			int to = Math.min(i + max + 1, firstLength);
 
 			char lastFirstCh = 0;
-			for (int j = from; j <= to; j++) {
-				char firstCh = first.charAt(j - 1);
-
-				// Вычисляем минимальную цену перехода в текущее состояние из предыдущих среди удаления, вставки и
-				// замены соответственно.
-				int cost = firstCh == secondCh ? 0 : 1;
-				int value = Math.min(Math.min(currentRow[j - 1] + 1, previousRow[j] + 1), previousRow[j - 1] + cost);
-
-				// Если вдруг была транспозиция, надо также учесть и её стоимость.
-				if (firstCh == lastSecondCh && secondCh == lastFirstCh)
-					value = Math.min(value, transpositionRow[j - 2] + cost);
-
-				currentRow[j] = value;
-				lastFirstCh = firstCh;
-			}
+			calculateEditPrice(first, lastSecondCh, secondCh, from, to, lastFirstCh);
 			lastSecondCh = secondCh;
 
 			int tempRow[] = transpositionRow;
@@ -91,7 +96,7 @@ public class DamerauLevensteinMetric extends LevensteinMetric {
 		return previousRow[firstLength];
 
 	}
-
+	
 	/**
 	 * {@inheritDoc} Префиксное расстояние Дамерау-Левенштейна вычисляется за асимптотическое время O((max + 1) *
 	 * min(prefix.length(), string.length()))
@@ -129,21 +134,7 @@ public class DamerauLevensteinMetric extends LevensteinMetric {
 			int to = Math.min(i + max + 1, prefixLength);
 
 			char lastPrefixCh = 0;
-			for (int j = from; j <= to; j++) {
-				char prefixCh = prefix.charAt(j - 1);
-
-				// Вычисляем минимальную цену перехода в текущее состояние из предыдущих среди удаления, вставки и
-				// замены соответственно.
-				int cost = prefixCh == stringCh ? 0 : 1;
-				int value = Math.min(Math.min(currentRow[j - 1] + 1, previousRow[j] + 1), previousRow[j - 1] + cost);
-
-				// Если вдруг была транспозиция, надо также учесть и её стоимость.
-				if (prefixCh == lastStringCh && stringCh == lastPrefixCh)
-					value = Math.min(value, transpositionRow[j - 2] + cost);
-
-				currentRow[j] = value;
-				lastPrefixCh = prefixCh;
-			}
+			calculateEditPrice(prefix, lastStringCh, stringCh, from, to, lastPrefixCh);
 			lastStringCh = stringCh;
 
 			// Вычисляем минимальное расстояние от заданного префикса ко всем префиксам строки, отличающимся от

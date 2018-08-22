@@ -12,7 +12,7 @@ public class OldSearchDictionaryEntryTests {
   @Test
   public void checkSearchDictionaryInstantiating() {
     SearchDictionaryEntry entry = new SearchDictionaryEntry("some word");
-    assertEquals("Word should be equal to 'some word", "some word", entry.getWord());
+    assertEquals("Word should be equal to 'some word", "some word", entry.getString());
     
     assertEquals("Frequency should be equal to 0", 0, entry.getFrequency(), 0.001);
     entry.setFrequency(111.111);
@@ -40,7 +40,7 @@ public class OldSearchDictionaryEntryTests {
     assertEquals("Frequency should be equal to 333.333", 333.333, entry.getFrequency(), 0.001);
     assertEquals("Local frequency should be equal to 444.444", 444.444, entry.getLocalFrequency(), 0.001);
     entry = new SearchDictionaryEntry("word", 555.555, 666.666, now, 1);
-    assertEquals("Word should be 'word'", "word", entry.getWord());
+    assertEquals("Word should be 'word'", "word", entry.getString());
     assertEquals("Frequency should be 555.555", 555.555, entry.getFrequency(), 0.001);
     assertEquals("Local frequency should be 666.666", 666.666, entry.getLocalFrequency(), 0.001);
     assertEquals("Last use time should be "+now+" ", now, entry.getLastUseTime());

@@ -13,51 +13,51 @@ import java.util.Objects;
  */
 @SuppressWarnings({/*"unused",*/ "WeakerAccess", "UnusedReturnValue"})
 public class SearchDictionaryEntry extends Entry {
-  private Integer distance; //distance from this entry word to search target //TODO absolute or relative distance what kind is preferable???
+  private Integer distance; //distance from this entry string to search target //TODO absolute or relative distance what kind is preferable???
   private Double localFrequency; //frequency from user's dictionaries
   
-  public SearchDictionaryEntry(String word) {
-    this(word, 0D, 0D, null, 0);
+  public SearchDictionaryEntry(String string) {
+    this(string, 0D, 0D, null, 0);
   }
   
   public SearchDictionaryEntry(Entry entry) {
-    this(entry.getWord(), entry.getFrequency(), 0D, entry.getLastUseTime(), 0);
+    this(entry.getString(), entry.getFrequency(), 0D, entry.getLastUseTime(), 0);
   }
   
-  public SearchDictionaryEntry(String word, Double globalFrequency) {
-    this(word, globalFrequency, 0D, null, 0);
+  public SearchDictionaryEntry(String string, Double globalFrequency) {
+    this(string, globalFrequency, 0D, null, 0);
   }
   
-  public SearchDictionaryEntry(String word, Double globalFrequency, Double localFrequency) {
-    this(word, globalFrequency, localFrequency, null, 0);
+  public SearchDictionaryEntry(String string, Double globalFrequency, Double localFrequency) {
+    this(string, globalFrequency, localFrequency, null, 0);
   }
   
   public SearchDictionaryEntry(Entry entry, Integer distance) {
-    this(entry.getWord(), entry.getFrequency(), 0D, entry.getLastUseTime(), distance);
+    this(entry.getString(), entry.getFrequency(), 0D, entry.getLastUseTime(), distance);
   }
   
   public SearchDictionaryEntry(Entry entry, Double localFrequency) {
-    this(entry.getWord(), entry.getFrequency(), localFrequency, null, 0);
+    this(entry.getString(), entry.getFrequency(), localFrequency, null, 0);
   }
   
   public SearchDictionaryEntry(Entry entry, Double localFrequency, LocalDateTime lastUseTime) {
-    this(entry.getWord(), entry.getFrequency(), localFrequency, lastUseTime, 0);
+    this(entry.getString(), entry.getFrequency(), localFrequency, lastUseTime, 0);
   }
   
   public SearchDictionaryEntry(Entry entry, Double localFrequency, Integer distance) {
-    this(entry.getWord(), entry.getFrequency(), localFrequency, entry.getLastUseTime(), distance);
+    this(entry.getString(), entry.getFrequency(), localFrequency, entry.getLastUseTime(), distance);
   }
   
   public SearchDictionaryEntry(Entry entry, Double localFrequency, LocalDateTime lastUseTime, Integer distance) {
-    this(entry.getWord(), entry.getFrequency(), localFrequency, lastUseTime, distance);
+    this(entry.getString(), entry.getFrequency(), localFrequency, lastUseTime, distance);
   }
   
-  public SearchDictionaryEntry(String word, Double globalFrequency, Double localFrequency, LocalDateTime lastUseTime) {
-    this(word, globalFrequency, localFrequency, lastUseTime, 0);
+  public SearchDictionaryEntry(String string, Double globalFrequency, Double localFrequency, LocalDateTime lastUseTime) {
+    this(string, globalFrequency, localFrequency, lastUseTime, 0);
   }
   
-  public SearchDictionaryEntry(String word, Double globalFrequency, Double localFrequency, LocalDateTime lastUseTime, Integer distance) {
-    super(word, globalFrequency, lastUseTime);
+  public SearchDictionaryEntry(String string, Double globalFrequency, Double localFrequency, LocalDateTime lastUseTime, Integer distance) {
+    super(string, globalFrequency, lastUseTime);
     this.localFrequency = localFrequency;
     this.distance = distance;
   }
@@ -86,7 +86,7 @@ public class SearchDictionaryEntry extends Entry {
       }
       SearchDictionaryEntry entry = (SearchDictionaryEntry) o;
       
-      return Objects.equals(entry.getWord(), this.word)
+      return Objects.equals(entry.getString(), this.string)
 //                 && Objects.equals(entry.getFrequency(), this.frequency)
 //                 && Objects.equals(entry.getLocalFrequency(), this.localFrequency)
 //                 && Objects.equals(entry.getLastUseTime(), this.lastUseTime)

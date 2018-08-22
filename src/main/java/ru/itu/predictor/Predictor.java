@@ -251,7 +251,7 @@ public class Predictor {
    * @param word слово для добавления в словарь
    * @return true если дабвление состоялось, false в противном случае
    */
-  public boolean addWord(String word) throws IOException {
+  public boolean addWord(String word) {
     return this.selectedSearch.addWord(word);
   }
   
@@ -270,7 +270,7 @@ public class Predictor {
    * @param phrase фраза для добавления в словарь
    * @return true если дабвление состоялось, false в противном случае
    */
-  public boolean addPhrase(String phrase) throws IOException {
+  public boolean addPhrase(String phrase) {
     return this.selectedSearch.addPhrase(phrase);
   }
   
@@ -534,13 +534,13 @@ public class Predictor {
     }
 
 //    Double rangeOfIPM = this.selectedSearch.getDictionary().getMaxIPM();
-    Double countOfAllUserWordsUses = this.selectedSearch.getDictionary().getTotalUserWordsUses();
+    Double countOfAllUserWordsUses = this.selectedSearch.getDictionary().getTotalUserStringsUses();
     
     if (limit > 0 && limitBeforeRearranging) {
       return this.selectedSearch.getLastSearchResultSet().stream()
                  .limit(limit)
                  .map(e -> new SearchDictionaryEntry(
-                     e.getWord(),
+                     e.getString(),
                      e.getLocalFrequency() > 0 ? e.getLocalFrequency() * liftFactor * 1000000 / countOfAllUserWordsUses : e.getFrequency(),
                      e.getLocalFrequency(),
                      e.getLastUseTime()
@@ -552,13 +552,13 @@ public class Predictor {
                              .thenComparingDouble(SearchDictionaryEntry::getFrequency)
                              .reversed()
                  )
-                 .map(Entry::getWord)
+                 .map(Entry::getString)
                  .toArray(String[]::new)
           ;
     } else if (limit > 0) {
       return this.selectedSearch.getLastSearchResultSet().stream()
                  .map(e -> new SearchDictionaryEntry(
-                     e.getWord(),
+                     e.getString(),
                      e.getLocalFrequency() > 0 ? e.getLocalFrequency() * liftFactor * 1000000 / countOfAllUserWordsUses : e.getFrequency(),
                      e.getLocalFrequency(),
                      e.getLastUseTime()
@@ -570,14 +570,14 @@ public class Predictor {
                              .thenComparingDouble(SearchDictionaryEntry::getFrequency)
                              .reversed()
                  )
-                 .map(Entry::getWord)
+                 .map(Entry::getString)
                  .limit(limit)
                  .toArray(String[]::new)
           ;
     } else {
       return this.selectedSearch.getLastSearchResultSet().stream()
                  .map(e -> new SearchDictionaryEntry(
-                     e.getWord(),
+                     e.getString(),
                      e.getLocalFrequency() > 0 ? e.getLocalFrequency() * liftFactor * 1000000 / countOfAllUserWordsUses : e.getFrequency(),
                      e.getLocalFrequency(),
                      e.getLastUseTime()
@@ -589,7 +589,7 @@ public class Predictor {
                              .thenComparingDouble(SearchDictionaryEntry::getFrequency)
                              .reversed()
                  )
-                 .map(Entry::getWord)
+                 .map(Entry::getString)
                  .toArray(String[]::new)
           ;
     }
@@ -648,6 +648,14 @@ public class Predictor {
       LOGGER.error(e.getMessage());
       return null;
     }
+  }
+  
+  public void saveWords() throws IOException {
+    this.selectedSearch.getDictionary().saveUserWords();
+  }
+  
+  public void savePhrases() throws IOException {
+    this.selectedSearch.getDictionary().saveUserPhrases();
   }
   
 }

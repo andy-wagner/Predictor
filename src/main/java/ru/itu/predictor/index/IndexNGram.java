@@ -38,7 +38,7 @@ public class IndexNGram extends WordIndex {
     
     LOGGER.debug("Counting of n-grams has started...");
     for (SearchDictionaryEntry entry : searchDictionary.getSearchDictionaryEntries()) {//for each entry of getDictionary
-      word = entry.getWord();
+      word = entry.getString();
 //      wordsCount++;//words counter
       for (int k = 0; k < word.length() - n + 1; ++k) {
         int ngram = IndexNGram.getNGram(alphabet, word, k, n);
@@ -52,7 +52,7 @@ public class IndexNGram extends WordIndex {
     
     LOGGER.debug("Filling up of the n-gram map has started...");
     for (int i = 0; i < searchDictionary.getSearchDictionaryEntries().size(); ++i) {
-      word = searchDictionary.getSearchDictionaryEntries().get(i).getWord();
+      word = searchDictionary.getSearchDictionaryEntries().get(i).getString();
       for (int k = 0; k < word.length() - n + 1; ++k) {
         int ngram = IndexNGram.getNGram(alphabet, word, k, n);
         if (ngramMap[ngram] == null) ngramMap[ngram] = new int[ngramCountMap[ngram]];
@@ -102,12 +102,12 @@ public class IndexNGram extends WordIndex {
       if (dictIndexes != null)
         for (int k : dictIndexes) {
           entry = searchDictionary.getSearchDictionaryEntries().get(k);
-          word = entry.getWord();
+          word = entry.getString();
           if (metric != null) {
             currentDistance = metric.getDistance(word, searchPattern, distance, prefixSearch);
             if (currentDistance <= distance) {
               resultEntry = new SearchDictionaryEntry(
-                  entry.getWord(),
+                  entry.getString(),
                   entry.getFrequency(),
                   entry.getLocalFrequency(),
                   entry.getLastUseTime(),

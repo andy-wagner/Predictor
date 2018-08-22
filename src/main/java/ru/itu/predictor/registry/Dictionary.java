@@ -13,7 +13,7 @@ public class Dictionary {
   private Set<Entry> entries;
   private Set<Character> charSet;
   private String isoLanguageName;//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-  private Integer maxWordLength;
+  private Integer maxStringLength;
   private String userId;
   
   public Dictionary() {
@@ -21,7 +21,7 @@ public class Dictionary {
     // reduced charSet for instance)
     this.entries = new HashSet<>();
     this.charSet = new HashSet<>();
-    this.maxWordLength = 0;
+    this.maxStringLength = 0;
     this.isoLanguageName = "";
     this.userId = "";
     LOGGER.debug("Empty dictionary has created");
@@ -44,7 +44,7 @@ public class Dictionary {
     this.charSet = charSet;
     this.isoLanguageName = isoLanguageName;
     this.userId = userId;
-    this.maxWordLength = Dictionary.getMaxWordLength(entries);
+    this.maxStringLength = Dictionary.getMaxStringLength(entries);
     LOGGER.debug("Dictionary has created from an entries set.");
   }
   
@@ -98,8 +98,8 @@ public class Dictionary {
         word = keepLettersCase ? lineFields[2].trim() : lineFields[2].trim().toLowerCase();
         frequency = Double.parseDouble(lineFields[1]);
         
-        if (word.length() > this.maxWordLength) {
-          this.maxWordLength = word.length();
+        if (word.length() > this.maxStringLength) {
+          this.maxStringLength = word.length();
         }
         
         Entry entry = new Entry(word, frequency);
@@ -139,7 +139,7 @@ public class Dictionary {
   public static Set<Character> getCharSet(Set<Entry> entries) {
     Set<Character> result = new HashSet<>();
     for (Entry entry : entries) {
-      char[] chars = entry.getWord().toCharArray();
+      char[] chars = entry.getString().toCharArray();
       for (char ch : chars) {
         result.add(ch);
       }
@@ -203,29 +203,29 @@ public class Dictionary {
    * @param entries - entries set to search in
    * @return - int value of length of the largest word in the entries set
    */
-  static public int getMaxWordLength(Set<Entry> entries) {
-    return entries.stream().mapToInt(entry -> entry.getWord().length()).max().orElse(0);
+  static public int getMaxStringLength(Set<Entry> entries) {
+    return entries.stream().mapToInt(entry -> entry.getString().length()).max().orElse(0);
   }
   
-  public int getMaxWordLength() {
-    return this.getMaxWordLength(false);
+  public int getMaxStringLength() {
+    return this.getMaxStringLength(false);
   }
   
-  public int getMaxWordLength(boolean recalculate) {
+  public int getMaxStringLength(boolean recalculate) {
     if (recalculate) {
-      return Dictionary.getMaxWordLength(this.getEntries());
+      return Dictionary.getMaxStringLength(this.getEntries());
     } else {
-      LOGGER.warn("maxWordLength returned without recalculation be sure that its value is actual");
+      LOGGER.warn("maxStringLength returned without recalculation be sure that its value is actual");
     }
-    return this.maxWordLength;
+    return this.maxStringLength;
   }
   
   public Entry getEntry(String word) {
-    return entries.stream().filter(e -> e.getWord().equals(word)).findAny().orElse(null);
+    return entries.stream().filter(e -> e.getString().equals(word)).findAny().orElse(null);
   }
   
   public Entry getEntry(Entry entry) {
-    return this.getEntry(entry.getWord());
+    return this.getEntry(entry.getString());
   }
   
   public Set<Entry> getEntries() {
@@ -250,9 +250,9 @@ public class Dictionary {
   
   public boolean addEntry(Entry entry) {
     try {
-      Integer newWordLength = entry.getWord().length();
-      if (this.maxWordLength < newWordLength) {
-        this.maxWordLength = newWordLength;
+      Integer newStringLength = entry.getString().length();
+      if (this.maxStringLength < newStringLength) {
+        this.maxStringLength = newStringLength;
       }
       return this.entries.add(entry);
     } catch (Exception e) {
@@ -263,9 +263,9 @@ public class Dictionary {
   
   public boolean addAllEntries(Set<Entry> entries) {
     try {
-      Integer newWordsMaxLength = Dictionary.getMaxWordLength(entries);
-      if (this.maxWordLength < newWordsMaxLength) {
-        this.maxWordLength = newWordsMaxLength;
+      Integer newStringsMaxLength = Dictionary.getMaxStringLength(entries);
+      if (this.maxStringLength < newStringsMaxLength) {
+        this.maxStringLength = newStringsMaxLength;
       }
       return this.entries.addAll(entries);
     } catch (Exception e) {
@@ -281,8 +281,8 @@ public class Dictionary {
   public boolean removeEntry(Entry entry) {
     try {
       boolean result = this.entries.remove(entry);
-      if (this.maxWordLength == entry.getWord().length()) {
-        this.maxWordLength = Dictionary.getMaxWordLength(this.entries);
+      if (this.maxStringLength == entry.getString().length()) {
+        this.maxStringLength = Dictionary.getMaxStringLength(this.entries);
       }
       return result;
     } catch (IllegalArgumentException e) {
@@ -292,10 +292,10 @@ public class Dictionary {
   }
   
   public boolean removeAllEntries(Set<Entry> entries) {
-    Integer removedWordsMaxLength = Dictionary.getMaxWordLength(entries);
+    Integer removedStringsMaxLength = Dictionary.getMaxStringLength(entries);
     boolean isAnythingRemoved = this.entries.removeAll(entries);
-    if (isAnythingRemoved && this.maxWordLength.equals(removedWordsMaxLength)) {
-      this.maxWordLength = Dictionary.getMaxWordLength(this.entries);
+    if (isAnythingRemoved && this.maxStringLength.equals(removedStringsMaxLength)) {
+      this.maxStringLength = Dictionary.getMaxStringLength(this.entries);
     }
     return isAnythingRemoved;
   }
@@ -320,7 +320,7 @@ public class Dictionary {
   }
   
   public boolean updateEntry(Entry entry) {
-    return this.updateEntry(entry.getWord(), entry.getFrequency(), entry.getLastUseTime());
+    return this.updateEntry(entry.getString(), entry.getFrequency(), entry.getLastUseTime());
   }
   
   public boolean updateAllEntries(Set<Entry> entries) {
@@ -351,7 +351,7 @@ public class Dictionary {
     return this;
   }
   
-  public boolean save(String fileName) throws IOException {
+  public boolean save(String fileName) throws IOException {//todo>> add a backup flag (if flag set into true then before saving a new version of the dictionary file old one will be copied into the backup file with an autogenerated name)
     String line;
     int n = 0;
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, false))) {
@@ -362,7 +362,7 @@ public class Dictionary {
       line = "start\r\n";
       writer.append(line);
       for (Entry e : this.entries) {
-        line = Integer.toString(++n) + ", " + Double.toString(e.getFrequency()) + ", " + e.getWord() + "\r\n";
+        line = Integer.toString(++n) + ", " + Double.toString(e.getFrequency()) + ", " + e.getString() + "\r\n";
         writer.append(line);
       }
     } catch (IOException e) {

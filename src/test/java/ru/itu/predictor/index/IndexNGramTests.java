@@ -7,7 +7,6 @@ import ru.itu.predictor.registry.SearchDictionary;
 import ru.itu.predictor.registry.SearchDictionaryEntry;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.Set;
 
@@ -17,7 +16,7 @@ public class IndexNGramTests{
 //  private String MAIN_DICTIONARY_PATH, USER_WORDS_DICTIONARY_PATH, USER_PHRASES_DICTIONARY_PATH;
   
   @Before
-  public void init() throws IOException {
+  public void init() {
     String MAIN_DICTIONARY_PATH, USER_WORDS_DICTIONARY_PATH, USER_PHRASES_DICTIONARY_PATH;
     MAIN_DICTIONARY_PATH = System.getProperty("user.dir") + File.separator
                                + "src" + File.separator
@@ -53,7 +52,7 @@ public class IndexNGramTests{
         index.search(
             "хоккей "
             , 2
-            , new LevensteinMetric(dictionary.getMaxWordLength())
+            , new LevensteinMetric(dictionary.getMaxStringLength())
             , true);
 //    System.out.println("entries: " + index.getEntriesCount()
 //                           + "; index nodes: " + index.getNodesCount()
@@ -66,7 +65,7 @@ public class IndexNGramTests{
                     .thenComparingDouble(SearchDictionaryEntry::getLocalFrequency)
                     .reversed()
         )
-        .map(e -> e.getWord().toUpperCase()
+        .map(e -> e.getString().toUpperCase()
                       + " --> расстояние:" + e.getDistance()
                       + " ч:" + e.getFrequency()
                       + " лч:" + e.getLocalFrequency()

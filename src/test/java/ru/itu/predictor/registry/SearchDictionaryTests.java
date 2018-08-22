@@ -118,7 +118,7 @@ public class SearchDictionaryTests {
     Arrays.sort(outerAlphabetChars);
     assertEquals("Alphabet should be equal to dictionary.alphabet", Arrays.toString(outerAlphabetChars), Arrays.toString(innerAlphabetChars));
     assertEquals("Length of search dictionary should be equal to 69311", 69311, this.dictionary.getSearchDictionaryEntries().size());
-    assertEquals("maxWordLength should be equal to 24", 24, this.dictionary.getMaxWordLength());
+    assertEquals("maxStringLength should be equal to 24", 24, this.dictionary.getMaxStringLength());
   }
   
   @Test
@@ -128,7 +128,7 @@ public class SearchDictionaryTests {
     assertArrayEquals("Alphabet should be equal to dictionary.alphabet", alphabet.getChars(), this.dictionary.getAlphabet().getChars());
     assertEquals("Alphabet length should be equal 33", 33, this.dictionary.getAlphabet().size());
     assertEquals("Length of search dictionary should be equal to 69311", 69311, this.dictionary.getSearchDictionaryEntries().size());
-    assertEquals("maxWordLength should be equal to 24", 24, this.dictionary.getMaxWordLength());
+    assertEquals("maxStringLength should be equal to 24", 24, this.dictionary.getMaxStringLength());
   }
   
   @Test

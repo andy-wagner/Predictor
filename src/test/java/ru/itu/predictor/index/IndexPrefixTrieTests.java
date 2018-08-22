@@ -16,7 +16,7 @@ public class IndexPrefixTrieTests {
 //  private String MAIN_DICTIONARY_PATH, USER_WORDS_DICTIONARY_PATH, USER_PHRASES_DICTIONARY_PATH;
   
   @Before
-  public void init() throws IOException {
+  public void init() {
     String MAIN_DICTIONARY_PATH, USER_WORDS_DICTIONARY_PATH, USER_PHRASES_DICTIONARY_PATH;
     MAIN_DICTIONARY_PATH = System.getProperty("user.dir") + File.separator
                                + "dictionaries" + File.separator
@@ -43,14 +43,14 @@ public class IndexPrefixTrieTests {
         index.search(
             "хоккей"
             , 1
-            , new LevensteinMetric(dictionary.getMaxWordLength())
+            , new LevensteinMetric(dictionary.getMaxStringLength())
             , false);
 //    System.out.println("entries: " + index.getEntriesCount()
 //                           + "; index nodes: " + index.getNodesCount()
 //                           + "; result strings: " + entries.size());
     for (SearchDictionaryEntry entry : entries) {
       System.out.println(
-          entry.getWord()
+          entry.getString()
               + " ч:" + entry.getFrequency()
               + " лч:" + entry.getLocalFrequency()
               + " пссл.время:" + entry.getLastUseTime()

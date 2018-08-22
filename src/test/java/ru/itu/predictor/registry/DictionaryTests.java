@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import ru.itu.predictor.alphabet.Alphabet;
 
 import java.io.*;
 import java.util.HashSet;
@@ -70,7 +69,7 @@ public class DictionaryTests {
     assertEquals("dictionary.entries.size should be equal to 0", 0, dictionary.getEntries().size());
     assertEquals("dictionary.alphabet.size should be equal to 0", 0, dictionary.getCharSet().size());
     assertEquals("dictionary.isoLanguageName should be equal to ''", "", dictionary.getIsoLanguageName());
-    assertEquals("dictionary.maxWordLength should be equal to 0", 0, dictionary.getMaxWordLength());
+    assertEquals("dictionary.maxStringLength should be equal to 0", 0, dictionary.getMaxStringLength());
   }
   
   @Test
@@ -80,7 +79,7 @@ public class DictionaryTests {
     assertEquals("dictionary.entries.size should be equal to 5", 5, dictionary.getEntries().size());
     assertEquals("dictionary.alphabet.size should be equal to 13", 13, dictionary.getCharSet().size());
     assertEquals("dictionary.isoLanguageName should be equal to 'en'", "en", dictionary.getIsoLanguageName());
-    assertEquals("dictionary.maxWordLength should be equal to 6", 5, dictionary.getMaxWordLength());
+    assertEquals("dictionary.maxStringLength should be equal to 6", 5, dictionary.getMaxStringLength());
   }
   
   @Test
@@ -90,7 +89,7 @@ public class DictionaryTests {
     assertEquals("dictionary.entries.size should be equal to 5", 5, dictionary.getEntries().size());
     assertEquals("dictionary.alphabet.size should be equal to 13", 13, dictionary.getCharSet().size());
     assertEquals("dictionary.isoLanguageName should be equal to 'de'", "de", dictionary.getIsoLanguageName());
-    assertEquals("dictionary.maxWordLength should be equal to 6", 5, dictionary.getMaxWordLength());
+    assertEquals("dictionary.maxStringLength should be equal to 6", 5, dictionary.getMaxStringLength());
   }
   
   @Test
@@ -100,7 +99,7 @@ public class DictionaryTests {
     assertEquals("dictionary.entries.size should be equal to 69307", 69307, dictionary.getEntries().size());
     assertEquals("dictionary.alphabet.size should be equal to 32", 32, dictionary.getCharSet().size());
     assertEquals("dictionary.isoLanguageName should be equal to 'ru'", "ru", dictionary.getIsoLanguageName());
-    assertEquals("dictionary.maxWordLength should be equal to 24", 24, dictionary.getMaxWordLength());
+    assertEquals("dictionary.maxStringLength should be equal to 24", 24, dictionary.getMaxStringLength());
   }
   
   @Test
@@ -137,8 +136,8 @@ public class DictionaryTests {
     assertNull("If there is no such entry then getEntry(entry) should return null", dictionary.getEntry(entry));
     assertEquals("Size of the dictionary with one more entry deleted should be equal to 1", 1, dictionary.getEntries().size());
     
-    String lastWord = dictionary.getEntries().iterator().next().getWord();
-    assertEquals("Last entry word should be 'word3", "word3", lastWord);
+    String lastString = dictionary.getEntries().iterator().next().getString();
+    assertEquals("Last entry word should be 'word3", "word3", lastString);
     
     dictionary.removeEntry("word1");
     assertEquals("Size of the dictionary after an attempt of deleting an absent entry shouldn't change and should be equal to 1 as before the removeEntry operation", 1, dictionary.getEntries().size());

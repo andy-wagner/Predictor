@@ -9,26 +9,26 @@ import org.apache.logging.log4j.Logger;
 @SuppressWarnings({"unused", "UnusedReturnValue", "WeakerAccess"})
 public class Entry implements Comparable<Entry> {
   private static final Logger LOGGER = LogManager.getLogger();
-  String word;
+  String string;
   Double frequency;
   LocalDateTime lastUseTime;
   
-  public Entry(String word) {
-    this(word, 1D, null);
+  public Entry(String string) {
+    this(string, 1D, null);
   }
   
-  public Entry(String word, Double frequency) {
-    this(word, frequency, null);
+  public Entry(String string, Double frequency) {
+    this(string, frequency, null);
   }
   
-  public Entry(String word, Double frequency, LocalDateTime lastUseTime){
-    this.word = word;
+  public Entry(String string, Double frequency, LocalDateTime lastUseTime){
+    this.string = string;
     this.frequency = frequency;
     this.lastUseTime = lastUseTime;
   }
   
   public int hashCode() {
-    return Objects.hash(this.word);
+    return Objects.hash(this.string);
   }
   
   public Double getFrequency() {
@@ -39,12 +39,12 @@ public class Entry implements Comparable<Entry> {
     this.frequency = newFrequency;
   }
   
-  public String getWord() {
-    return this.word;
+  public String getString() {
+    return this.string;
   }
   
-  public void setWord(String word) {
-    this.word = word;
+  public void setString(String string) {
+    this.string = string;
   }
   
   public LocalDateTime getLastUseTime(){
@@ -61,7 +61,7 @@ public class Entry implements Comparable<Entry> {
         return true;
       }
       Entry entry = (Entry) o;
-      return Objects.equals(entry.getWord(), this.word)
+      return Objects.equals(entry.getString(), this.string)
       ;
     } catch (ClassCastException e) {
       return false;
