@@ -14,7 +14,7 @@ public class SearchTests {
   private Search search;
   
   @Before
-  public void init() throws IOException {
+  public void init() {
     search = new Search(System.getProperty("user.dir") + File.separator
                             + "src" + File.separator
                             + "test" + File.separator
@@ -49,14 +49,18 @@ public class SearchTests {
   @Test
   public void checkAddingAndRemovingWords() {
     int size = search.getDictionary().getSearchDictionaryEntries().size();
+    String word = "каземат";
     
-    search.addWord("кaземат");
+    search.addWord(word);
     assertEquals("New size should be increased by 1", size + 1, search.getDictionary().getSearchDictionaryEntries().size());
+//    assertEquals("Added word should be among dictionary entries", word, search.getDictionary().getSearchDictionaryEntry("каземат").getWord());
+//    assertEquals("New word should be findable", 1, search.run(word, 0).size());
     
     search.addPhrase("идите в сад");
     assertEquals("New size should be increased by 2", size + 2, search.getDictionary().getSearchDictionaryEntries().size());
+//    assertEquals("New phrase should be findable", 1, search.run("каземат", 0).size());
     
-    double frequency = search.getEntry("кaземат").getFrequency();
+    double frequency = search.getEntry(word).getFrequency();
     assertEquals("Frequency of just added user's word should be equal to 1", 1, frequency, 0.0001);
     frequency = search.getEntry("идите в сад").getLocalFrequency();
     assertEquals("Frequency of just added user's word should be equal to 1", 1, frequency, 0.0001);

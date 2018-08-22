@@ -34,13 +34,13 @@ public class SearchDictionary {
   private Dictionary userWordsDictionary;
   private Dictionary userPhrasesDictionary;
   
-  private FileTime mainDictionaryFileLastModifiedTime = FileTime.fromMillis(0);
-  private FileTime userWordsDictionaryFileLastModifiedTime = FileTime.fromMillis(0);
-  private FileTime userPhrasesDictionaryFileLastModifiedTime = FileTime.fromMillis(0);
+  private FileTime mainDictionaryFileLastModifiedTime;
+  private FileTime userWordsDictionaryFileLastModifiedTime;
+  private FileTime userPhrasesDictionaryFileLastModifiedTime;
   
   //statistical values
   private Integer maxWordLength;
-  private Double rangeOfIPM;
+  private Double maxIPM;
   private Double totalUserWordsUses;
   
   public SearchDictionary(Dictionary mainDictionary, Dictionary userWordsDictionary, Dictionary userPhrasesDictionary) {
@@ -51,24 +51,10 @@ public class SearchDictionary {
     this.mainDictionary = mainDictionary;
     this.userWordsDictionary = userWordsDictionary;
     this.userPhrasesDictionary = userPhrasesDictionary;
-    
-    this.isoLanguageName = mainDictionary.getIsoLanguageName();//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
-    this.userId = userWordsDictionary.getUserId();
-    
-    makeSearchDictionary();
-    
-    if (alphabet == null) {
-      this.alphabet = new Alphabet(this.getCharSet(), this.isoLanguageName);
-      this.alphabet = new Alphabet(mainDictionary.getCharSet(), this.isoLanguageName);
-    } else if (this.isoLanguageName.equals(alphabet.getIsoLanguageName())) {
-      this.alphabet = alphabet;
-    } else {
-      LOGGER.error("Runtime error in SearchDictionary constructor: Language of the alphabet specified doesn't match with searchDictionary language");
-      throw new RuntimeException("Error: Language of the alphabet specified doesn't match with searchDictionary language");
-    }
+    makeSearchDictionary(alphabet);
   }
   
-  public SearchDictionary(String mainDictionaryFileName) throws IOException {
+  public SearchDictionary(String mainDictionaryFileName) {
     this(
         mainDictionaryFileName,
         "",
@@ -77,7 +63,7 @@ public class SearchDictionary {
     );
   }
   
-  public SearchDictionary(String mainDictionaryFileName, String userWordsDictionaryFileName) throws IOException {
+  public SearchDictionary(String mainDictionaryFileName, String userWordsDictionaryFileName) {
     this(
         mainDictionaryFileName,
         userWordsDictionaryFileName,
@@ -86,7 +72,7 @@ public class SearchDictionary {
     );
   }
   
-  public SearchDictionary(String mainDictionaryFileName, String userWordsDictionaryFileName, String userPhrasesDictionaryFileName) throws IOException {
+  public SearchDictionary(String mainDictionaryFileName, String userWordsDictionaryFileName, String userPhrasesDictionaryFileName) {
     this(
         mainDictionaryFileName,
         userWordsDictionaryFileName,
@@ -128,17 +114,7 @@ public class SearchDictionary {
       this.isoLanguageName = mainDictionary.getIsoLanguageName();//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
       this.userId = userWordsDictionary.getUserId();
   
-      this.makeSearchDictionary();
-  
-      if (alphabet == null) {
-        this.alphabet = new Alphabet(this.getCharSet(), this.isoLanguageName);
-        this.alphabet = new Alphabet(mainDictionary.getCharSet(), this.isoLanguageName);
-      } else if (this.isoLanguageName.equals(alphabet.getIsoLanguageName())) {
-        this.alphabet = alphabet;
-      } else {
-        LOGGER.error("Runtime error in SearchDictionary constructor: Language of the alphabet specified doesn't match with searchDictionary language");
-        throw new Error("Error: Language of the alphabet specified doesn't match with searchDictionary language");
-      }
+      this.makeSearchDictionary(alphabet);
   
       LOGGER.debug("Building of the search dictionary with dictionaries:" +
                        "\r\n\t - main dictionary '{}'" +
@@ -153,14 +129,17 @@ public class SearchDictionary {
     }
   }
   
-  public void makeSearchDictionary() {
-    boolean dictionariesAreOfTheSameLanguage = (this.mainDictionary.getIsoLanguageName().equals(this.userWordsDictionary.getIsoLanguageName()))
-                                                   && (this.mainDictionary.getIsoLanguageName().equals(this.userPhrasesDictionary.getIsoLanguageName()));
+  public void makeSearchDictionary(Alphabet alphabet) {
+    boolean dictionariesAreOfTheSameLanguage = (mainDictionary.getIsoLanguageName().equals(userWordsDictionary.getIsoLanguageName()))
+                                                   && (mainDictionary.getIsoLanguageName().equals(userPhrasesDictionary.getIsoLanguageName()));
     if (!dictionariesAreOfTheSameLanguage) {
       LOGGER.error("Error: main dictionary and users dictionary should be the same language to make search dictionary.");
       throw new RuntimeException("Error: main dictionary and users dictionary should be the same language to make search dictionary.");
     }
-    
+  
+    this.isoLanguageName = this.mainDictionary.getIsoLanguageName();//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+    this.userId = this.userWordsDictionary.getUserId();
+  
     Set<SearchDictionaryEntry> entriesSet = new HashSet<>();
     entriesSet.addAll(this.userWordsDictionary.getEntries().stream()
                           .map(e -> new SearchDictionaryEntry(e.getWord(), 0D, e.getFrequency(), e.getLastUseTime()))
@@ -179,8 +158,8 @@ public class SearchDictionary {
         .mergeDictionary(this.userWordsDictionary, false)
         .mergeDictionary(this.userPhrasesDictionary, false)
     ;
-    this.maxWordLength = mainDictionary.getMaxWordLength();
-    this.rangeOfIPM = this.mainDictionary.getEntries().stream().map(Entry::getFrequency).max(Double::compare).orElse(0D);
+    this.maxWordLength = this.mainDictionary.getMaxWordLength();
+    this.maxIPM = this.mainDictionary.getEntries().stream().map(Entry::getFrequency).max(Double::compare).orElse(0D);
     this.totalUserWordsUses = this.userWordsDictionary.getEntries().stream().mapToDouble(Entry::getFrequency).sum()
                                   + this.userPhrasesDictionary.getEntries().stream().mapToDouble(Entry::getFrequency).sum();
     
@@ -190,7 +169,17 @@ public class SearchDictionary {
     ;
     
     this.entries = new ArrayList<>(entriesSet);
-    
+  
+    if (alphabet == null) {
+//      this.alphabet = new Alphabet(this.getCharSet(), this.isoLanguageName);
+      this.alphabet = new Alphabet(mainDictionary.getCharSet(), this.isoLanguageName);
+    } else if (this.isoLanguageName.equals(alphabet.getIsoLanguageName())) {
+      this.alphabet = alphabet;
+    } else {
+      LOGGER.error("Runtime error in SearchDictionary constructor: Language of the alphabet specified doesn't match with searchDictionary language");
+      throw new RuntimeException("Error: Language of the alphabet specified doesn't match with searchDictionary language");
+    }
+  
   }
   
   public Dictionary getMainDictionary() {
@@ -205,8 +194,8 @@ public class SearchDictionary {
     return userPhrasesDictionary;
   }
   
-  public Double getRangeOfIPM() {
-    return this.rangeOfIPM;
+  public Double getMaxIPM() {
+    return this.maxIPM;
   }
   
   public Double getTotalUserWordsUses() {
@@ -324,31 +313,32 @@ public class SearchDictionary {
     this.entries = entries;
   }
   
-  public boolean addSearchDictionaryEntry(String word) {
-    return this.addSearchDictionaryEntry(word, 1D, 1D, null);
+  public boolean addSearchDictionaryEntry(Dictionary userDictionary, String word) {
+    return this.addSearchDictionaryEntry(userDictionary, word, 1D, 1D, null);
   }
   
-  public boolean addSearchDictionaryEntry(String word, Double frequency) {
-    return this.addSearchDictionaryEntry(word, frequency, frequency, null);
+  public boolean addSearchDictionaryEntry(Dictionary userDictionary, String word, Double frequency) {
+    return this.addSearchDictionaryEntry(userDictionary, word, frequency, frequency, null);
   }
   
-  public boolean addSearchDictionaryEntry(Entry entry) {
-    return this.addSearchDictionaryEntry(entry.getWord(), entry.frequency, entry.frequency, null);
+  public boolean addSearchDictionaryEntry(Dictionary userDictionary, Entry entry) {
+    return this.addSearchDictionaryEntry(userDictionary, entry.getWord(), entry.frequency, entry.frequency, null);
   }
   
-  public boolean addSearchDictionaryEntry(String word, Double frequency, Double localFrequency, LocalDateTime lastUseTime) {
-    return this.addSearchDictionaryEntry(new SearchDictionaryEntry(word, frequency, localFrequency, lastUseTime));
+  public boolean addSearchDictionaryEntry(Dictionary userDictionary, String word, Double frequency, Double localFrequency, LocalDateTime lastUseTime) {
+    return this.addSearchDictionaryEntry(userDictionary, new SearchDictionaryEntry(word, frequency, localFrequency, lastUseTime));
   }
   
-  public boolean addSearchDictionaryEntry(SearchDictionaryEntry entry) {
+  public boolean addSearchDictionaryEntry(Dictionary userDictionary, SearchDictionaryEntry entry) {
     try {
       String word = entry.getWord();
-      if (this.userWordsDictionary.addEntry(word, entry.getFrequency())) {
+      if (userDictionary.addEntry(word, entry.getFrequency())) {
         if (word.length() > this.maxWordLength) {
           this.maxWordLength = word.length();
         }
+        return this.entries.add(entry);
       }
-      return this.entries.add(entry);
+      return false;
     } catch (Exception e) {
       LOGGER.error(e.getMessage());
       return false;

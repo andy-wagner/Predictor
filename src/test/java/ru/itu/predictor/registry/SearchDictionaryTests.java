@@ -8,6 +8,9 @@ import ru.itu.predictor.alphabet.Alphabet;
 
 import java.io.IOException;
 import java.io.File;
+import java.nio.file.attribute.FileTime;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.Hashtable;
 
@@ -79,7 +82,6 @@ public class SearchDictionaryTests {
     assertNotNull("Search dictionary created successfully from dictionaries with arbitrary alphabet parameter", dictionary);
   }
   
-  //      throw new Error("Error: Language of the alphabet specified doesn't match with searchDictionary language");
   @Rule
   public ExpectedException thrownFromMakeSearchDictionaryErrorCheck = ExpectedException.none();
   
@@ -102,7 +104,7 @@ public class SearchDictionaryTests {
   }
   
   @Test
-  public void checkSearchDictionaryInstantiationFromFilesWithoutAlphabet() throws IOException {
+  public void checkSearchDictionaryInstantiationFromFilesWithoutAlphabet() {
     dictionary = new SearchDictionary(
         MAIN_DICTIONARY_PATH,
         USER_WORDS_DICTIONARY_PATH,
@@ -173,11 +175,36 @@ public class SearchDictionaryTests {
   
   @Test
   public void checkLastModificationTimeGetter() {
-  
+    FileTime[] fileTimes = this.dictionary.getDictionariesLastModifiedTimes();
+    LocalDateTime timeOfMainDictionaryFile = LocalDateTime.ofInstant(fileTimes[0].toInstant(), ZoneOffset.UTC);
+    LocalDateTime timeOfUserWordsFile = LocalDateTime.ofInstant(fileTimes[1].toInstant(), ZoneOffset.UTC);
+    LocalDateTime timeOfUserPhrasesFile = LocalDateTime.ofInstant(fileTimes[2].toInstant(), ZoneOffset.UTC);
+    int year = LocalDateTime.now().getYear();
+    int month = LocalDateTime.now().getMonthValue();
+    assertEquals("Year and month should be equal to current year and month", year, timeOfMainDictionaryFile.getYear());
+    assertEquals("Year and month should be equal to current year and month", year, timeOfUserWordsFile.getYear());
+    assertEquals("Year and month should be equal to current year and month", year, timeOfUserPhrasesFile.getYear());
+    assertEquals("Year and month should be equal to current year and month", month, timeOfMainDictionaryFile.getMonthValue());
+    assertEquals("Year and month should be equal to current year and month", month, timeOfUserWordsFile.getMonthValue());
+    assertEquals("Year and month should be equal to current year and month", month, timeOfUserPhrasesFile.getMonthValue());
+    this.dictionary.setDictionariesLastModifiedTimes(fileTimes);
+    fileTimes = this.dictionary.getDictionariesLastModifiedTimes();
+    timeOfMainDictionaryFile = LocalDateTime.ofInstant(fileTimes[0].toInstant(), ZoneOffset.UTC);
+    timeOfUserWordsFile = LocalDateTime.ofInstant(fileTimes[1].toInstant(), ZoneOffset.UTC);
+    timeOfUserPhrasesFile = LocalDateTime.ofInstant(fileTimes[2].toInstant(), ZoneOffset.UTC);
+    year = LocalDateTime.now().getYear();
+    month = LocalDateTime.now().getMonthValue();
+    assertEquals("Year and month should be equal to current year and month", year, timeOfMainDictionaryFile.getYear());
+    assertEquals("Year and month should be equal to current year and month", year, timeOfUserWordsFile.getYear());
+    assertEquals("Year and month should be equal to current year and month", year, timeOfUserPhrasesFile.getYear());
+    assertEquals("Year and month should be equal to current year and month", month, timeOfMainDictionaryFile.getMonthValue());
+    assertEquals("Year and month should be equal to current year and month", month, timeOfUserWordsFile.getMonthValue());
+    assertEquals("Year and month should be equal to current year and month", month, timeOfUserPhrasesFile.getMonthValue());
   }
   
   @Test
   public void checkSearchDictionaryEntryAddGetUpdateRemove() {
+//    this.dictionary.addAllEntries()
     assertEquals("Size of the search dictionary before adding entry should be equal to 69311", 69311, dictionary.getSearchDictionaryEntries().size());
 //    dictionary.addSearchDictionaryEntry("")
   }

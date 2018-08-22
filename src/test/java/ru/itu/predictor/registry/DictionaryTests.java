@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import ru.itu.predictor.alphabet.Alphabet;
 
 import java.io.*;
 import java.util.HashSet;
@@ -53,7 +54,7 @@ public class DictionaryTests {
     characters.add('g');
     characters.add('j');
     dictionaryToSave = new Dictionary(
-        System.getProperty("user.dir")+ File.separator
+        System.getProperty("user.dir") + File.separator
             + "src" + File.separator
             + "test" + File.separator
             + "resources" + File.separator

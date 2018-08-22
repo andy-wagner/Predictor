@@ -119,6 +119,23 @@ public class Dictionary {
     LOGGER.debug("Dictionary has created from a file '{}'", dictionaryFileName);
   }
   
+  public static Set<Character> getCharSet(char[] chars){
+    Set<Character> result = new HashSet<>();
+    for (char ch : chars) {
+      result.add(ch);
+    }
+    return result;
+  }
+  
+  public static Set<Character> getCharSet(String string){
+    Set<Character> result = new HashSet<>();
+    char[] chars = string.toCharArray();
+    for (char ch : chars) {
+      result.add(ch);
+    }
+    return result;
+  }
+  
   public static Set<Character> getCharSet(Set<Entry> entries) {
     Set<Character> result = new HashSet<>();
     for (Entry entry : entries) {

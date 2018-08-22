@@ -93,7 +93,7 @@ public class Search {
       e.printStackTrace();
       throw new RuntimeException("Error: " + e.getMessage());
     }
-  
+    
   }
   
   /**
@@ -127,7 +127,7 @@ public class Search {
       this.dictionary.setDictionariesLastModifiedTimes(new FileTime[]{
           mainDictionaryLastModified, userWordsDictionaryLastModified, userPhrasesDictionaryLastModified}
       );
-      this.makeIndex();
+      this.makeIndex(true);
     }
     this.lastSearchResultSet = this.index.search(searchPattern, maxDistance, metric, prefix);
     this.lastSearchPattern = searchPattern;
@@ -142,9 +142,11 @@ public class Search {
     return this.lastSearchPattern;
   }
   
-  private void makeIndex() throws IOException {
+  private void makeIndex(boolean reloadNeeded) {
     this.lastSearchResultSet = new HashSet<>();
-    this.dictionary = new SearchDictionary(this.mainDictionaryFileName, this.userWordsDictionaryFileName, this.userPhrasesDictionaryFileName);
+    if(reloadNeeded) {
+      this.dictionary = new SearchDictionary(this.mainDictionaryFileName, this.userWordsDictionaryFileName, this.userPhrasesDictionaryFileName);
+    }
     this.index = new IndexNGram(this.dictionary, n);
     this.metric = new LevensteinMetric(dictionary.getMaxWordLength());
   }
@@ -272,32 +274,31 @@ public class Search {
   }
   
   public boolean addWord(String word) {
-    return this.addEntry(this.dictionary.getUserWordsDictionary(), word);
+    boolean wordIsAdded = this.addEntry(this.dictionary.getUserWordsDictionary(), word);
+    if (wordIsAdded) {
+      this.makeIndex(false);
+    }
+    return wordIsAdded;
   }
   
   public boolean addPhrase(String phrase) {
-    return this.addEntry(this.dictionary.getUserPhrasesDictionary(), phrase);
+    boolean phraseIsAdded = this.addEntry(this.dictionary.getUserPhrasesDictionary(), phrase);
+    if (phraseIsAdded) {
+      this.makeIndex(false);
+    }
+    return phraseIsAdded;
   }
   
   public boolean addEntry(Dictionary userDictionary, String word) {
-    if (userDictionary.addEntry(word)) {
-      return this.dictionary.addSearchDictionaryEntry(word);
-    }
-    return false;
+    return this.dictionary.addSearchDictionaryEntry(userDictionary, word);
   }
   
   public boolean addEntry(Dictionary userDictionary, Entry entry) {
-    if (userDictionary.addEntry(entry)) {
-      return this.dictionary.addSearchDictionaryEntry(entry);
-    }
-    return false;
+    return this.dictionary.addSearchDictionaryEntry(userDictionary, entry);
   }
   
   public boolean addEntry(Dictionary userDictionary, SearchDictionaryEntry entry) {
-    if (userDictionary.addEntry(entry)) {
-      return this.dictionary.addSearchDictionaryEntry(entry);
-    }
-    return false;
+    return this.dictionary.addSearchDictionaryEntry(userDictionary, entry);
   }
   
   public SearchDictionaryEntry removeWord(String word) {

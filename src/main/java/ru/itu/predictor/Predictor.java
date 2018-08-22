@@ -251,7 +251,7 @@ public class Predictor {
    * @param word слово для добавления в словарь
    * @return true если дабвление состоялось, false в противном случае
    */
-  public boolean addWord(String word) {
+  public boolean addWord(String word) throws IOException {
     return this.selectedSearch.addWord(word);
   }
   
@@ -270,8 +270,8 @@ public class Predictor {
    * @param phrase фраза для добавления в словарь
    * @return true если дабвление состоялось, false в противном случае
    */
-  public boolean addPhrase(String phrase) {
-    return this.selectedSearch.addWord(phrase);
+  public boolean addPhrase(String phrase) throws IOException {
+    return this.selectedSearch.addPhrase(phrase);
   }
   
   /*
@@ -533,7 +533,7 @@ public class Predictor {
                                      "float value in a range from 0 to 1");
     }
 
-//    Double rangeOfIPM = this.selectedSearch.getDictionary().getRangeOfIPM();
+//    Double rangeOfIPM = this.selectedSearch.getDictionary().getMaxIPM();
     Double countOfAllUserWordsUses = this.selectedSearch.getDictionary().getTotalUserWordsUses();
     
     if (limit > 0 && limitBeforeRearranging) {

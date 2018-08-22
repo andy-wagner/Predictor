@@ -47,7 +47,7 @@ public class EntryTests {
   }
   
   @Test
-  public void checkGetAndSetFrequency() {
+  public void checkGettersAndSetters() {
     entry.setFrequency(1D);
     assertEquals("Frequency should be equal to 1", 1, entry.getFrequency(), 0.001);
     entry.setWord("TestTest");
