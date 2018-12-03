@@ -1,2 +1,2 @@
-# Predictor
+# AnTextipator
 Fuzzy search provider
