@@ -59,8 +59,8 @@ public class Predictor {
    */
   
   /**
-   * Конструктор - создаёт новый экземпляр класса Predictor используя конфигурационный файл и устанавливает активный
-   * языя эквивалентный текущему языку операционной системы
+   * Конструктор - создаёт новый экземпляр класса Predictor используя конфигурационный файл и устанавливает в качестве
+   * активного текущий язык операционной системы
    * <p>
    * активный язык - язык по словарям которого будет вестись поиск при вызове метода search экземпляра класса Predictor
    *
@@ -73,7 +73,7 @@ public class Predictor {
     Path path = Paths.get(configFileName);
     
     try (BufferedReader reader = new BufferedReader(new FileReader(configFileName))) {
-      LOGGER.debug("An attempt to create an instance of Predictor class from configurations described in '{}'", configFileName);
+      LOGGER.debug("An attempt to create an instance of the Predictor class from configurations described in '{}'", configFileName);
       while ((line = reader.readLine()) != null) {
         lineFields = line.split("=");
         if (line.length() == 0 || lineFields[0].trim().toCharArray()[0] == '#' || lineFields.length != 2) {
@@ -252,7 +252,7 @@ public class Predictor {
    * @return true если дабвление состоялось, false в противном случае
    */
   public boolean addWord(String word) {
-    return this.selectedSearch.addWord(word);
+    return this.selectedSearch.addWord(word.toLowerCase());
   }
   
   /*
@@ -271,7 +271,7 @@ public class Predictor {
    * @return true если дабвление состоялось, false в противном случае
    */
   public boolean addPhrase(String phrase) {
-    return this.selectedSearch.addPhrase(phrase);
+    return this.selectedSearch.addPhrase(phrase.toLowerCase());
   }
   
   /*
