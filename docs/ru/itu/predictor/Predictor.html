@@ -99,7 +99,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>ru.itu.predictor.Predictor</li>
+<li>predictor.Predictor</li>
 </ul>
 </li>
 </ul>
@@ -201,7 +201,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.alphabet.Alphabet</code></td>
+<td class="colFirst"><code>predictor.alphabet.Alphabet</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#getAlphabet--">getAlphabet</a></span>()</code>
 <div class="block">Возвращает объект класса Alphabet для текущего активного языка, *активный язык - язык по словарям которого будет вестись поиск при вызове метода search экземпляра класса Predictor</div>
 </td>
@@ -213,7 +213,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#getEntry-java.lang.String-">getEntry</a></span>(java.lang.String&nbsp;wordOrPhrase)</code>
 <div class="block">Находит слово или фразу и возвращает объект класса SearchDictionaryEntry в поисковом словаре текущего языка,
  *словарь поиска или поисковый словарь - словарь созданный во время создания объекта класса Predictor путём
@@ -227,19 +227,19 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.alphabet.Alphabet</code></td>
+<td class="colFirst"><code>predictor.alphabet.Alphabet</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#getNextSymbolAlphabet--">getNextSymbolAlphabet</a></span>()</code>
 <div class="block">Возвращает объект Alphabet содержащий редуцированный/усечённый алфавит, т.е.</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>ru.itu.predictor.alphabet.Alphabet</code></td>
+<td class="colFirst"><code>predictor.alphabet.Alphabet</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#getReducedAlphabet--">getReducedAlphabet</a></span>()</code>
 <div class="block">Возвращает объект Alphabet содержащий редуцированный/усечённый алфавит, т.е.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.search.Search</code></td>
+<td class="colFirst"><code>predictor.search.Search</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#getSelectedSearch--">getSelectedSearch</a></span>()</code>
 <div class="block">Возвращает объект класса Search, поисковый движок, для активного языка, созданный при создании объекта класса
  Predictor, *активный язык - язык по словарям которого будет вестись поиск при вызове метода search экземпляра класса
@@ -254,7 +254,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i12" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#removePhrase-java.lang.String-">removePhrase</a></span>(java.lang.String&nbsp;phrase)</code>
 <div class="block">Находит и удаляет запись соответствующую искомой фразе (объект класса SearchDictionaryEntry) из словаря поиска и
  пользовательского словаря фраз, *словарь поиска или поисковый словарь - словарь созданный во время создания объекта
@@ -262,7 +262,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i13" class="rowColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#removeWord-java.lang.String-">removeWord</a></span>(java.lang.String&nbsp;word)</code>
 <div class="block">Находит и удаляет запись соответствующую искомому слову (объект класса SearchDictionaryEntry) из словаря поиска и
  пользовательского словаря слов, *словарь поиска или поисковый словарь - словарь созданный во время создания объекта
@@ -290,7 +290,7 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>java.util.Set&lt;ru.itu.predictor.registry.SearchDictionaryEntry&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#search-java.lang.String-int-ru.itu.predictor.metric.Metric-boolean-">search</a></span>(java.lang.String&nbsp;searchPattern,
       int&nbsp;maxDistance,
-      ru.itu.predictor.metric.Metric&nbsp;metric,
+      Metric&nbsp;metric,
       boolean&nbsp;prefix)</code>
 <div class="block">Осуществляет нечёткий поиск по образцу и возвращает множество записей (объектов класса SearchDictionaryEntry) из
  поискового словаря префиксы или полные значения слов или фраз которых отстоят от поискового образца не дальше чем
@@ -305,7 +305,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i18" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#updatePhrase-java.lang.String-java.lang.Double-java.lang.Double-java.time.LocalDateTime-">updatePhrase</a></span>(java.lang.String&nbsp;phrase,
             java.lang.Double&nbsp;frequency,
             java.lang.Double&nbsp;localFrequency,
@@ -317,7 +317,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i19" class="rowColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictor/Predictor.html#updateWord-java.lang.String-java.lang.Double-java.lang.Double-java.time.LocalDateTime-">updateWord</a></span>(java.lang.String&nbsp;word,
           java.lang.Double&nbsp;frequency,
           java.lang.Double&nbsp;localFrequency,

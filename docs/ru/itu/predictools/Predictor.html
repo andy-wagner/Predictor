@@ -98,7 +98,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>ru.itu.predictor.Predictor</li>
+<li>predictor.Predictor</li>
 </ul>
 </li>
 </ul>
@@ -191,7 +191,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.alphabet.Alphabet</code></td>
+<td class="colFirst"><code>predictor.alphabet.Alphabet</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#getAlphabet--">getAlphabet</a></span>()</code>
 <div class="block">Returns alphabet object of the dictionaries of the currently selected language</div>
 </td>
@@ -203,7 +203,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#getEntry-java.lang.String-">getEntry</a></span>(java.lang.String&nbsp;wordOrPhrase)</code>
 <div class="block">Finds and Returns SearchDictionaryEntry object from search dictionary of currently selected language</div>
 </td>
@@ -215,19 +215,19 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.alphabet.Alphabet</code></td>
+<td class="colFirst"><code>predictor.alphabet.Alphabet</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#getNextSymbolAlphabet--">getNextSymbolAlphabet</a></span>()</code>
 <div class="block">Returns reduced alphabet object of the next possible symbols from the last search result by dictionaries of currently selected language</div>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
-<td class="colFirst"><code>ru.itu.predictor.alphabet.Alphabet</code></td>
+<td class="colFirst"><code>predictor.alphabet.Alphabet</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#getReducedAlphabet--">getReducedAlphabet</a></span>()</code>
 <div class="block">Returns reduced alphabet object of the last search result by dictionaries of currently selected language</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.search.Search</code></td>
+<td class="colFirst"><code>predictor.search.Search</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#getSelectedSearch--">getSelectedSearch</a></span>()</code>
 <div class="block">Returns reference to the search engine built on the dictionaries for the currently selected language</div>
 </td>
@@ -239,13 +239,13 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i12" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#removePhrase-java.lang.String-">removePhrase</a></span>(java.lang.String&nbsp;phrase)</code>
 <div class="block">Removes word from the dictionaries of the selected language</div>
 </td>
 </tr>
 <tr id="i13" class="rowColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#removeWord-java.lang.String-">removeWord</a></span>(java.lang.String&nbsp;word)</code>
 <div class="block">Removes word from the dictionaries of the selected language</div>
 </td>
@@ -267,7 +267,7 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>java.util.Set&lt;ru.itu.predictor.registry.SearchDictionaryEntry&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#search-java.lang.String-int-ru.itu.predictools.metric.Metric-boolean-">search</a></span>(java.lang.String&nbsp;searchPattern,
       int&nbsp;maxDistance,
-      ru.itu.predictor.metric.Metric&nbsp;metric,
+      Metric&nbsp;metric,
       boolean&nbsp;prefix)</code>
 <div class="block">Makes search and returns result set of search</div>
 </td>
@@ -279,7 +279,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i18" class="altColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#updatePhrase-java.lang.String-java.lang.Double-java.lang.Double-java.time.LocalDateTime-">updatePhrase</a></span>(java.lang.String&nbsp;phrase,
             java.lang.Double&nbsp;frequency,
             java.lang.Double&nbsp;localFrequency,
@@ -288,7 +288,7 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i19" class="rowColor">
-<td class="colFirst"><code>ru.itu.predictor.registry.SearchDictionaryEntry</code></td>
+<td class="colFirst"><code>predictor.registry.SearchDictionaryEntry</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../ru/itu/predictools/Predictor.html#updateWord-java.lang.String-java.lang.Double-java.lang.Double-java.time.LocalDateTime-">updateWord</a></span>(java.lang.String&nbsp;word,
           java.lang.Double&nbsp;frequency,
           java.lang.Double&nbsp;localFrequency,
