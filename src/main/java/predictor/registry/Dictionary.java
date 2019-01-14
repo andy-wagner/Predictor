@@ -58,7 +58,7 @@ public class Dictionary {
     this();//Create empty dictionary first
     LOGGER.debug("The empty dictionary has created to be filled with data from the dictionary file '{}'", dictionaryFileName);
     
-    BufferedReader reader = new BufferedReader(new FileReader(dictionaryFileName));
+    BufferedReader reader = new BufferedReader(new FileReader(dictionaryFileName));//todo?? maybe it would be better off to use Scanner instead of BufferedReader
     
     String line, word, command;
     Double frequency;

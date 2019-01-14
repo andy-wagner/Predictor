@@ -10,6 +10,7 @@ import predictor.registry.SearchDictionaryTests;
 import predictor.search.SearchTests;
 
 @RunWith(Suite.class)
+
 @Suite.SuiteClasses({
     AlphabetTests.class,
     EntryTests.class,
@@ -20,5 +21,4 @@ import predictor.search.SearchTests;
     PredictorTests.class
 })
 public class PredictorFullSuiteTest {
-
 }

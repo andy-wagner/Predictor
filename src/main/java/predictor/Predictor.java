@@ -1,3 +1,5 @@
+//todo?? replace all String objects to StringBuffer objects for apps with multiple threads or to StringBuilder for single thread app (second is faster)
+//todo?? maybe it would be better off to use Scanner instead of String
 package predictor;
 
 import predictor.alphabet.Alphabet;
@@ -66,9 +68,9 @@ public class Predictor {
    *
    * @param configFileName имя кофигурациооного файла
    */
-  public Predictor(String configFileName) {//todo>>
+  public Predictor(String configFileName) {
     String line;
-    String[] lineFields;
+    String[] lineFields;//todo?? maybe it would be better off to use Scanner instead of String
     Map<String, String> searchConfigurationFiles = new HashMap<>();
     Path path = Paths.get(configFileName);
     
@@ -89,7 +91,8 @@ public class Predictor {
       e.printStackTrace();
     }
     try {
-      searchConfigurationFiles.forEach((language, fileName) -> this.languageSpecificSearchEngines.put(language, new Search(fileName)));
+      searchConfigurationFiles.forEach((language, fileName) ->
+                                           this.languageSpecificSearchEngines.put(language, new Search(fileName)));
     } catch (Exception e) {
       LOGGER.error(e.getMessage());
       e.printStackTrace();
@@ -150,7 +153,7 @@ public class Predictor {
       this.selectedSearch = languageSpecificSearchEngines.get(this.activeLanguageIsoName);
       return true;
     }
-    this.activeLanguageIsoName = this.languageSpecificSearchEngines.entrySet().stream().map(Map.Entry::getKey).findAny().toString();
+    this.activeLanguageIsoName = this.languageSpecificSearchEngines.keySet().stream().findAny().toString();
     this.selectedSearch = languageSpecificSearchEngines.get(this.activeLanguageIsoName);
     return false;
   }

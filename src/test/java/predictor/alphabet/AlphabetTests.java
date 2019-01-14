@@ -1,14 +1,17 @@
 package predictor.alphabet;
 
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runners.MethodSorters;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
 
+//@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AlphabetTests {
   private Alphabet alphabet;
   private char[] chars;
