@@ -19,7 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 /*
  * Predictor is a container class that includes methods for making and managing adaptive fuzzy predictive search
- * through main language national corpus dictionary and user's words and phrases dictionaries.
+ * through the main language national corpus dictionary and user's words and phrases dictionaries.
  * <p>
  * User's dictionaries could be changed by adding, removing and updating dictionaries' entries.
  * <p>
@@ -55,7 +55,7 @@ public class Predictor {
   private Map<Integer, Set<Character>> specialSymbolsSet = new HashMap<>();
   
   /*
-   * Construct a new Predictor object using configuration file and active language equal to current local default keyboard language
+   * Constructs a new Predictor object using configuration file and active language equal to current local default keyboard language
    *
    * @param configFileName path to Predictor's configuration file
    */
