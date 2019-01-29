@@ -1,11 +1,9 @@
 package predictor.alphabet;
 
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runners.MethodSorters;
 
 import java.util.*;
 
