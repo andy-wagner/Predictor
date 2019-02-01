@@ -42,8 +42,8 @@ public class SearchTests {
     search.run("по");
     assertNotNull("reduced alphabet is not empty after search has performed", search.getReducedAlphabet());
     assertNotNull("next symbols alphabet is not empty search has performed", search.getNextSymbolAlphabet());
-    char[] alphabet = search.getReducedAlphabet().getChars();
-    assertArrayEquals("alphabets should be equal", alphabet, search.getReducedAlphabet("по").getChars());
+    char[] alphabet = search.getReducedAlphabet().chars;
+    assertArrayEquals("alphabets should be equal", alphabet, search.getReducedAlphabet("по").chars);
   }
   
 //  @Test

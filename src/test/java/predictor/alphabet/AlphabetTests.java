@@ -29,8 +29,8 @@ public class AlphabetTests {
   @Test
   public void testAlphabetInstantiatingFromStringRepresentation() {
     alphabet = new Alphabet(new String(chars), "en");//ok
-    assertArrayEquals("alphabet getChars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.getChars());
-    assertEquals("Input isoLanguageName and alphabet.getIsoLanguageName should be equal", "en", alphabet.getIsoLanguageName());
+    assertArrayEquals("alphabet getChars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.chars);
+    assertEquals("Input isoLanguageName and alphabet.getIsoLanguageName should be equal", "en", alphabet.isoLanguageName);
   }
   
   @Test
@@ -40,26 +40,26 @@ public class AlphabetTests {
       characters.add(c);
     }
     alphabet = new Alphabet(characters, "en");//ok
-    assertArrayEquals("alphabet getChars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.getChars());
-    assertEquals("Input isoLanguageName and alphabet.getIsoLanguageName should be equal", "en", alphabet.getIsoLanguageName());
+    assertArrayEquals("alphabet getChars should be equal to {'a', 'b', 'c', 'd', 'e'}", chars, alphabet.chars);
+    assertEquals("Input isoLanguageName and alphabet.getIsoLanguageName should be equal", "en", alphabet.isoLanguageName);
   }
   
   @Test
   public void isoLanguageNameSetAndGetCheck(){
-    alphabet.setIsoLanguageName("ru");
-    assertEquals("Should be equal to 'ru' after assignment with setIsoLanguageName", "ru", alphabet.getIsoLanguageName());
-    alphabet.setIsoLanguageName("en");
-    assertEquals("Should be equal to 'ru' after assignment with setIsoLanguageName", "en", alphabet.getIsoLanguageName());
+    alphabet = new Alphabet(new String(chars), "en");//ok
+    assertEquals("Should be equal to 'ru' after assignment with setIsoLanguageName", "en", alphabet.isoLanguageName);
+    alphabet = new Alphabet(new String(chars), "ru");//ok
+    assertEquals("Should be equal to 'ru' after assignment with setIsoLanguageName", "ru", alphabet.isoLanguageName);
   }
   
   @Test
   public void isAlphabetCharCheck(){
-    assertTrue("isAlphabetChar should return true for symbol 'c' and alphabet 'abcde'", alphabet.isAlphabetChar('c'));
-    assertFalse("isAlphabetChar should return false for symbol 'z' and alphabet 'abcde'", alphabet.isAlphabetChar('z'));
-    assertTrue("isAlphabetChar should return true for symbol with index 0 and alphabet 'abcde'", alphabet.isAlphabetChar(0));
-    assertTrue("isAlphabetChar should return true for symbol with index 4 and alphabet 'abcde'", alphabet.isAlphabetChar(4));
-    assertFalse("isAlphabetChar should return false for symbol with index -1 and alphabet 'abcde'", alphabet.isAlphabetChar(-1));
-    assertFalse("isAlphabetChar should return false for symbol with index 5 and alphabet 'abcde'", alphabet.isAlphabetChar(5));
+    assertTrue("hasChar should return true for symbol 'c' and alphabet 'abcde'", alphabet.hasChar('c'));
+    assertFalse("hasChar should return false for symbol 'z' and alphabet 'abcde'", alphabet.hasChar('z'));
+    assertTrue("hasChar should return true for symbol with index 0 and alphabet 'abcde'", alphabet.hasChar(0));
+    assertTrue("hasChar should return true for symbol with index 4 and alphabet 'abcde'", alphabet.hasChar(4));
+    assertFalse("hasChar should return false for symbol with index -1 and alphabet 'abcde'", alphabet.hasChar(-1));
+    assertFalse("hasChar should return false for symbol with index 5 and alphabet 'abcde'", alphabet.hasChar(5));
   }
   
   @Test//(expected = RuntimeException.class)
@@ -93,7 +93,7 @@ public class AlphabetTests {
   @Test
   public void charsCheck(){
     alphabet = new Alphabet(new String(chars), "en");//ok
-    assertArrayEquals("getChars array should be equal to 'abcde'", chars, alphabet.getChars());
+    assertArrayEquals("getChars array should be equal to 'abcde'", chars, alphabet.chars);
   }
   
   @Test

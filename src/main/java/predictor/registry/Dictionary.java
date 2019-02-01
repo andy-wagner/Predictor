@@ -167,7 +167,7 @@ public class Dictionary {
     this.charSet = charSet;
   }
   
-  public String getIsoLanguageName() {
+  public String isoLanguageName {
     return this.isoLanguageName;
   }
   
@@ -337,7 +337,7 @@ public class Dictionary {
   }
   
   public Dictionary mergeDictionary(Dictionary dictionary, boolean update) throws RuntimeException {
-    if (this.isoLanguageName.equals(dictionary.getIsoLanguageName())) {
+    if (this.isoLanguageName.equals(dictionary.isoLanguageName)) {
       if (update) {
         this.addAllEntries(dictionary.getEntries());
         this.updateAllEntries(dictionary.getEntries());

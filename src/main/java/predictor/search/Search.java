@@ -164,7 +164,7 @@ public class Search {
   }
   
   public String getLanguage() {
-    return this.getAlphabet().getIsoLanguageName();
+    return this.getAlphabet().isoLanguageName;
   }
   
   public Alphabet getAlphabet() {
@@ -213,7 +213,7 @@ public class Search {
                                                  .filter(Objects::nonNull)
                                                  .distinct()
                                                  .collect(Collectors.toSet());
-      return Alphabet.getAlphabet(searchResultsSuffixesSet, this.dictionary.getIsoLanguageName());
+      return Alphabet.getAlphabet(searchResultsSuffixesSet, this.dictionary.isoLanguageName);
     } catch (Exception e) {
       LOGGER.error(e.getMessage());
       return null;
@@ -236,7 +236,7 @@ public class Search {
                                .filter(Objects::nonNull)
                                .distinct()
                                .collect(Collectors.toSet());
-      return Alphabet.getAlphabet(search, this.dictionary.getIsoLanguageName());
+      return Alphabet.getAlphabet(search, this.dictionary.isoLanguageName);
     } catch (Exception e) {
       LOGGER.error(e.getMessage());
       return null;
@@ -244,12 +244,12 @@ public class Search {
   }
   
   public Alphabet getReducedAlphabet() {
-    return SearchDictionary.getAlphabet(this.lastSearchResultSet, this.dictionary.getIsoLanguageName());
+    return SearchDictionary.getAlphabet(this.lastSearchResultSet, this.dictionary.isoLanguageName);
   }
   
   public Alphabet getReducedAlphabet(String searchPattern) {
     try {
-      return SearchDictionary.getAlphabet(this.run(searchPattern), this.dictionary.getIsoLanguageName());
+      return SearchDictionary.getAlphabet(this.run(searchPattern), this.dictionary.isoLanguageName);
     } catch (Exception e) {
       LOGGER.error(e.getMessage());
       e.printStackTrace();

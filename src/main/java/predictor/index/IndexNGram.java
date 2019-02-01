@@ -66,7 +66,7 @@ public class IndexNGram extends WordIndex {
   private static int getNGram(Alphabet alphabet, CharSequence string, int start, int n) {
     int ngram = 0;
     for (int i = start; i < start + n; ++i)
-      if (alphabet.isAlphabetChar(string.charAt(i)))//if symbol is not alphabetic then it will be ignored
+      if (alphabet.hasChar(string.charAt(i)))//if symbol is not alphabetic then it will be ignored
         //ngram is represented as a number in a positional number system with a base equal to the length of the alphabet
         //(the calculation is performed in decimal)
         ngram = ngram * alphabet.size() + alphabet.mapChar(string.charAt(i));

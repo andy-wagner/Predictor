@@ -200,7 +200,7 @@ public class Predictor {
    * @return массив char[] символов алфавита активного языка, *активный язык - язык по словарям которого будет вестись поиск при вызове метода search экземпляра класса Predictor
    */
   public char[] getAlphabetChars() {
-    return this.getAlphabet().getChars();
+    return this.getAlphabet().chars;
   }
   
   /*

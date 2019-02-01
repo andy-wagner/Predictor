@@ -110,7 +110,7 @@ public class IndexPrefixTrie extends WordIndex {
     private void assembleSubtree(PrefixTrieNode node, List<Entry> subtree) {
         if(node == null) { subtree.clear(); return; }
 
-        for (char ch: alphabet.getChars()){
+        for (char ch: alphabet.chars){
             int childIndex=alphabet.mapChar(ch);
             PrefixTrieNode child = node.children[childIndex];
             if (child != null) assembleSubtree(child, subtree);
@@ -153,7 +153,7 @@ public class IndexPrefixTrie extends WordIndex {
     String currentString = "";
     PrefixTrieNode selected = root;
     for (char ch : prefix.toCharArray()) {
-      if (alphabet.isAlphabetChar(Character.toUpperCase(ch))) {//todo>> eliminate toUpperCase, the symbols case should be determined in upper levels where the alphabet is generating
+      if (alphabet.hasChar(Character.toUpperCase(ch))) {//todo>> eliminate toUpperCase, the symbols case should be determined in upper levels where the alphabet is generating
         int childIndex = alphabet.mapChar(ch);
         if (childIndex > alphabet.size() - 1 || childIndex < 0) return null;
         PrefixTrieNode next = selected.children[childIndex];
@@ -195,7 +195,7 @@ public class IndexPrefixTrie extends WordIndex {
       return;
     }
     
-    for (char ch : alphabet.getChars()) {
+    for (char ch : alphabet.chars) {
       int childIndex = alphabet.mapChar(ch);
       PrefixTrieNode child = node.children[childIndex];
       if (child != null) assembleSubtree(child, subtree);
@@ -208,7 +208,7 @@ public class IndexPrefixTrie extends WordIndex {
   
 /*
     private <P> void processSubtree(PrefixTrieNode node, P param, BiConsumer<PrefixTrieNode, P> processNode){
-        for (char ch: alphabet.getChars()){
+        for (char ch: alphabet.chars){
             int childIndex=alphabet.mapChar(ch);
             PrefixTrieNode child = node.children[childIndex];
             if (child != null) processSubtree(child, param, processNode);
@@ -217,7 +217,7 @@ public class IndexPrefixTrie extends WordIndex {
     }
 
     private <F,P> F reduceSubtree(PrefixTrieNode node, P param, BiFunction<PrefixTrieNode, P, F> processNode){
-        for (char ch: alphabet.getChars()){
+        for (char ch: alphabet.chars){
             int childIndex=alphabet.mapChar(ch);
             PrefixTrieNode child = node.children[childIndex];
             if (child != null) reduceSubtree(child, param, processNode);

@@ -110,7 +110,7 @@ public class SearchDictionary {
         this.userPhrasesDictionary = new predictor.registry.Dictionary();
       }
       
-      this.isoLanguageName = mainDictionary.getIsoLanguageName();//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+      this.isoLanguageName = mainDictionary.isoLanguageName;//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
       this.userId = userWordsDictionary.getUserId();
       
       this.makeSearchDictionary(alphabet);
@@ -128,14 +128,14 @@ public class SearchDictionary {
   }
   
   public void makeSearchDictionary(Alphabet alphabet) {
-    boolean dictionariesAreOfTheSameLanguage = (mainDictionary.getIsoLanguageName().equals(userWordsDictionary.getIsoLanguageName()))
-                                                   && (mainDictionary.getIsoLanguageName().equals(userPhrasesDictionary.getIsoLanguageName()));
+    boolean dictionariesAreOfTheSameLanguage = (mainDictionary.isoLanguageName.equals(userWordsDictionary.isoLanguageName))
+                                                   && (mainDictionary.isoLanguageName.equals(userPhrasesDictionary.isoLanguageName));
     if (!dictionariesAreOfTheSameLanguage) {
       LOGGER.error("Error: main dictionary and users dictionary should be the same language to make search dictionary.");
       throw new RuntimeException("Error: main dictionary and users dictionary should be the same language to make search dictionary.");
     }
     
-    this.isoLanguageName = this.mainDictionary.getIsoLanguageName();//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+    this.isoLanguageName = this.mainDictionary.isoLanguageName;//ISO 639-1 https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
     this.userId = this.userWordsDictionary.getUserId();
     
     Set<SearchDictionaryEntry> entriesSet = new HashSet<>();
@@ -171,7 +171,7 @@ public class SearchDictionary {
     if (alphabet == null) {
 //      this.alphabet = new Alphabet(this.getCharSet(), this.isoLanguageName);
       this.alphabet = new Alphabet(mainDictionary.getCharSet(), this.isoLanguageName);
-    } else if (this.isoLanguageName.equals(alphabet.getIsoLanguageName())) {
+    } else if (this.isoLanguageName.equals(alphabet.isoLanguageName)) {
       this.alphabet = alphabet;
     } else {
       LOGGER.error("Runtime error in SearchDictionary constructor: Language of the alphabet specified doesn't match with searchDictionary language");
@@ -235,7 +235,7 @@ public class SearchDictionary {
   
   public static Alphabet getAlphabet(String dictionaryFileName) throws IOException {
     predictor.registry.Dictionary dictionary = new predictor.registry.Dictionary(dictionaryFileName);
-    return new Alphabet(dictionary.getCharSet(), dictionary.getIsoLanguageName());
+    return new Alphabet(dictionary.getCharSet(), dictionary.isoLanguageName);
   }
   
   public static Alphabet getAlphabet(Set<SearchDictionaryEntry> entries, String isoLanguageName) {
@@ -257,14 +257,14 @@ public class SearchDictionary {
   }
   
   public boolean setAlphabet(Alphabet alphabet) {
-    if (alphabet.getIsoLanguageName().equals(this.isoLanguageName)) {
+    if (alphabet.isoLanguageName.equals(this.isoLanguageName)) {
       this.alphabet = alphabet;
       return true;
     }
     return false;
   }
   
-  public String getIsoLanguageName() {
+  public String isoLanguageName {
     return this.isoLanguageName;
   }
   

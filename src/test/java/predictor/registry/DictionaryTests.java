@@ -68,7 +68,7 @@ public class DictionaryTests {
     dictionary = new Dictionary();
     assertEquals("dictionary.entries.size should be equal to 0", 0, dictionary.getEntries().size());
     assertEquals("dictionary.alphabet.size should be equal to 0", 0, dictionary.getCharSet().size());
-    assertEquals("dictionary.isoLanguageName should be equal to ''", "", dictionary.getIsoLanguageName());
+    assertEquals("dictionary.isoLanguageName should be equal to ''", "", dictionary.isoLanguageName);
     assertEquals("dictionary.maxStringLength should be equal to 0", 0, dictionary.getMaxStringLength());
   }
   
@@ -78,7 +78,7 @@ public class DictionaryTests {
     assertEquals("charSet should be equal to [e, f, g, h, i, n, o, r, s, t, u, v, x]", "[e, f, g, h, i, n, o, r, s, t, u, v, x]", dictionary.getCharSet().toString());
     assertEquals("dictionary.entries.size should be equal to 5", 5, dictionary.getEntries().size());
     assertEquals("dictionary.alphabet.size should be equal to 13", 13, dictionary.getCharSet().size());
-    assertEquals("dictionary.isoLanguageName should be equal to 'en'", "en", dictionary.getIsoLanguageName());
+    assertEquals("dictionary.isoLanguageName should be equal to 'en'", "en", dictionary.isoLanguageName);
     assertEquals("dictionary.maxStringLength should be equal to 6", 5, dictionary.getMaxStringLength());
   }
   
@@ -88,7 +88,7 @@ public class DictionaryTests {
     assertEquals("charSet should be equal to [e, f, g, h, i, n, o, r, s, t, u, v, x]", "[e, f, g, h, i, n, o, r, s, t, u, v, x]", dictionary.getCharSet().toString());
     assertEquals("dictionary.entries.size should be equal to 5", 5, dictionary.getEntries().size());
     assertEquals("dictionary.alphabet.size should be equal to 13", 13, dictionary.getCharSet().size());
-    assertEquals("dictionary.isoLanguageName should be equal to 'de'", "de", dictionary.getIsoLanguageName());
+    assertEquals("dictionary.isoLanguageName should be equal to 'de'", "de", dictionary.isoLanguageName);
     assertEquals("dictionary.maxStringLength should be equal to 6", 5, dictionary.getMaxStringLength());
   }
   
@@ -98,7 +98,7 @@ public class DictionaryTests {
     assertEquals("charSet should be equal to [р, с, т, у, ф, х, ц, ч, ш, щ, ъ, ы, ь, э, ю, я, а, б, в, г, д, е, ж, з, и, й, к, л, м, н, о, п]", "[р, с, т, у, ф, х, ц, ч, ш, щ, ъ, ы, ь, э, ю, я, а, б, в, г, д, е, ж, з, и, й, к, л, м, н, о, п]", dictionary.getCharSet().toString());
     assertEquals("dictionary.entries.size should be equal to 69307", 69307, dictionary.getEntries().size());
     assertEquals("dictionary.alphabet.size should be equal to 32", 32, dictionary.getCharSet().size());
-    assertEquals("dictionary.isoLanguageName should be equal to 'ru'", "ru", dictionary.getIsoLanguageName());
+    assertEquals("dictionary.isoLanguageName should be equal to 'ru'", "ru", dictionary.isoLanguageName);
     assertEquals("dictionary.maxStringLength should be equal to 24", 24, dictionary.getMaxStringLength());
   }
   
@@ -161,7 +161,7 @@ public class DictionaryTests {
   public void checkGettersAndSetters() {
     dictionary = new Dictionary();
     dictionary.setIsoLanguageName("ru");
-    assertEquals("ISO Language name should be equal to 'ru'", "ru", dictionary.getIsoLanguageName());
+    assertEquals("ISO Language name should be equal to 'ru'", "ru", dictionary.isoLanguageName);
     
   }
   

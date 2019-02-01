@@ -91,7 +91,7 @@ public class SearchDictionaryTests {
     thrownFromMakeSearchDictionaryErrorCheck.expect(RuntimeException.class);
     thrownFromMakeSearchDictionaryErrorCheck.expectMessage("Error: Language of the alphabet specified doesn't match with searchDictionary language");
     SearchDictionary dictionary = new SearchDictionary(mainDictionary, userWordsDictionary, userPhrasesDictionary, alphabet);
-    assertEquals("Dictionaries and alphabet should have same languages", "ru", dictionary.getIsoLanguageName());
+    assertEquals("Dictionaries and alphabet should have same languages", "ru", dictionary.isoLanguageName);
   }
   
   @Test
@@ -100,7 +100,7 @@ public class SearchDictionaryTests {
     thrownFromMakeSearchDictionaryErrorCheck.expect(RuntimeException.class);
     thrownFromMakeSearchDictionaryErrorCheck.expectMessage("Error: main dictionary and users dictionary should be the same language to make search dictionary.");
     SearchDictionary dictionary = new SearchDictionary(mainDictionary, userWordsDictionary, enUserDictionary);
-    assertEquals("Dictionaries should have same languages", "ru", dictionary.getIsoLanguageName());
+    assertEquals("Dictionaries should have same languages", "ru", dictionary.isoLanguageName);
   }
   
   @Test
@@ -110,10 +110,10 @@ public class SearchDictionaryTests {
         USER_WORDS_DICTIONARY_PATH,
         USER_PHRASES_DICTIONARY_PATH
     );
-    assertEquals("Search dictionary language should be equal to 'ru'", "ru", this.dictionary.getIsoLanguageName());
+    assertEquals("Search dictionary language should be equal to 'ru'", "ru", this.dictionary.isoLanguageName);
     assertEquals("User if should be equal to 'boris'", "boris", this.dictionary.getUserId());
-    char[] innerAlphabetChars = dictionary.getAlphabet().getChars();
-    char[] outerAlphabetChars = this.alphabet.getChars();
+    char[] innerAlphabetChars = dictionary.getAlphabet().chars;
+    char[] outerAlphabetChars = this.alphabet.chars;
     Arrays.sort(innerAlphabetChars);
     Arrays.sort(outerAlphabetChars);
     assertEquals("Alphabet should be equal to dictionary.alphabet", Arrays.toString(outerAlphabetChars), Arrays.toString(innerAlphabetChars));
@@ -123,9 +123,9 @@ public class SearchDictionaryTests {
   
   @Test
   public void checkSearchDictionaryInstantiationFromFilesWithAlphabet() {
-    assertEquals("Search dictionary language should be equal to 'ru'", "ru", this.dictionary.getAlphabet().getIsoLanguageName());
+    assertEquals("Search dictionary language should be equal to 'ru'", "ru", this.dictionary.getAlphabet().isoLanguageName);
     assertEquals("User if should be equal to 'boris'", "boris", this.dictionary.getUserId());
-    assertArrayEquals("Alphabet should be equal to dictionary.alphabet", alphabet.getChars(), this.dictionary.getAlphabet().getChars());
+    assertArrayEquals("Alphabet should be equal to dictionary.alphabet", alphabet.chars, this.dictionary.getAlphabet().chars);
     assertEquals("Alphabet length should be equal 33", 33, this.dictionary.getAlphabet().size());
     assertEquals("Length of search dictionary should be equal to 69311", 69311, this.dictionary.getSearchDictionaryEntries().size());
     assertEquals("maxStringLength should be equal to 24", 24, this.dictionary.getMaxStringLength());
@@ -226,7 +226,7 @@ public class SearchDictionaryTests {
         "абвгдежзийклмнопрстуфхцчшщъыьэюя"
         , "ru"
     );
-    char[] outerAlphabetChars = this.alphabet.getChars();
+    char[] outerAlphabetChars = this.alphabet.chars;
 //    Arrays.sort(innerAlphabetChars);
     Arrays.sort(outerAlphabetChars);
     
@@ -234,12 +234,12 @@ public class SearchDictionaryTests {
   
   @Test
   public void getAlphabetFromDictionaryFileCheck() throws IOException {
-    char[] innerAlphabetChars = SearchDictionary.getAlphabet(MAIN_DICTIONARY_PATH).getChars();
+    char[] innerAlphabetChars = SearchDictionary.getAlphabet(MAIN_DICTIONARY_PATH).chars;
     alphabet = new Alphabet(
         "абвгдежзийклмнопрстуфхцчшщъыьэюя"
         , "ru"
     );
-    char[] outerAlphabetChars = this.alphabet.getChars();
+    char[] outerAlphabetChars = this.alphabet.chars;
     Arrays.sort(innerAlphabetChars);
     Arrays.sort(outerAlphabetChars);
     assertArrayEquals("SearchDictionary.getAlphabet should be equal to dictionary.alphabet", innerAlphabetChars, outerAlphabetChars);
