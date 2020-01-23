@@ -1,2 +1,2 @@
 # Predictor
-Fuzzy search provider with the ability to anticipate further input of user's words and phrases.
+Fuzzy search provider with the ability to anticipate user's input of words and phrases.
